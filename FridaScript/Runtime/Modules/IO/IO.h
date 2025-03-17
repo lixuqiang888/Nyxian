@@ -26,9 +26,6 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <FridaScript-Swift.h>
 
-// error definitions
-//#define EW_IO_
-
 @protocol IOModuleExport <JSExport>
 
 /*

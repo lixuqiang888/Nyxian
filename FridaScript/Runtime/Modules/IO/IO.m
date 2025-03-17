@@ -104,7 +104,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     
     if(!_term)
     {
-        return JS_THROW_ERROR(EW_MEMORY);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     dispatch_sync(dispatch_get_main_queue(), ^{
@@ -216,7 +216,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 - (id)open:(NSString *)path withFlags:(int)flags perms:(UInt16)perms {
     const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
     if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_ARGUMENT);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
 
     int fd = -1;
@@ -228,8 +228,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     }
     
     if (fd == -1) {
-        perror("Error opening file");
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     [self addFD:fd];
@@ -241,11 +240,11 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isFDThere:fd])
     {
-        return JS_THROW_ERROR(EW_SAFETY);
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     if(close(fd) == -1) {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     [self removeFD:fd];
@@ -255,16 +254,21 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
 - (id)write:(int)fd text:(NSString*)text size:(UInt16)size
 {
+    if(size == 0)
+    {
+        return JS_THROW_ERROR(EW_INVALID_INPUT);
+    }
+    
     if(![self isFDThere:fd])
     {
-        return JS_THROW_ERROR(EW_SAFETY);
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     const char *buffer = [text UTF8String];
     ssize_t bytesWritten = write(fd, buffer, size);
     
     if (bytesWritten < 0) {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     return @(bytesWritten);
@@ -274,12 +278,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(size == 0)
     {
-        return JS_THROW_ERROR(EW_ARGUMENT);
+        return JS_THROW_ERROR(EW_INVALID_INPUT);
     }
     
     if(![self isFDThere:fd])
     {
-        return JS_THROW_ERROR(EW_SAFETY);
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     NSMutableData *buffer = [NSMutableData dataWithLength:size];
@@ -288,23 +292,17 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     
     if (bytesRead < 0)
     {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     if (bytesRead == 0)
     {
         // EOF
-        return [JSValue valueWithNullInContext:[JSContext currentContext]];
+        return NULL;
     }
     
     NSData *resultData = [NSData dataWithBytes:buffer.bytes length:bytesRead];
-    
     NSString *resultString = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
-        
-    if(resultString == NULL)
-    {
-        return JS_THROW_ERROR(EW_ACTION);
-    }
     
     return ReturnObjectBuilder(@{
         @"bytesRead": @(bytesRead),
@@ -316,13 +314,13 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isFDThere:fd])
     {
-        return JS_THROW_ERROR(EW_SAFETY);
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     struct stat statbuf;
     if (fstat(fd, &statbuf) < 0)
     {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     return buildStat(statbuf);
@@ -332,12 +330,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isFDThere:fd])
     {
-        return JS_THROW_ERROR(EW_SAFETY);
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     if(lseek(fd, position, flags) != 0)
     {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     return NULL;
@@ -347,7 +345,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
     if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_ARGUMENT);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     return [[NSNumber alloc] initWithInt: access(cPath, flags)];
@@ -357,12 +355,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
     if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_ARGUMENT);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     if (remove(cPath) != 0)
     {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     return NULL;
@@ -372,7 +370,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
     if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_ARGUMENT);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     int result = 0;
@@ -385,7 +383,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     
     if(result != 0)
     {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     return NULL;
@@ -395,12 +393,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
     if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_ARGUMENT);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     if(rmdir(cPath) != 0)
     {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     return NULL;
@@ -410,12 +408,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
     if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_ARGUMENT);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     if(chown(cPath, uid, gid) != 0)
     {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     return NULL;
@@ -425,12 +423,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
     if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_ARGUMENT);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     if(chmod(cPath, (mode_t)flags) != 0)
     {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     return NULL;
@@ -441,7 +439,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
     if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_ARGUMENT);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     // getting the file
@@ -450,7 +448,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     // checking if file was allocated
     if(file == NULL)
     {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
 
     // getting file descriptor of file
@@ -459,7 +457,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     // checking fd
     if(fd == -1)
     {
-        return JS_THROW_ERROR(EW_SAFETY);
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     // adding it to the file descriptor system
@@ -473,7 +471,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(fileObject == NULL)
     {
-        return JS_THROW_ERROR(EW_ARGUMENT);
+        return JS_THROW_ERROR(EW_INVALID_INPUT);
     }
     
     FILE *file = restoreFILE(fileObject);
@@ -481,7 +479,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     // checking if file was allocated
     if(file == NULL)
     {
-        return JS_THROW_ERROR(EW_ACTION);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     // getting file descriptor of file
@@ -490,17 +488,17 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     // checking fd
     if(fd == -1)
     {
-        return jsDoThrowError(@"File descriptor gotten from opened file is invalid\n");
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     if(![self isFDThere:fd])
     {
-        return jsDoThrowError(@"File descriptor was never opened or is already closed\n");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     if(fclose(file) != 0)
     {
-        return jsDoThrowError(@"Failed to close file\n");
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     [self removeFD:fd];
@@ -514,7 +512,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(fileObject == NULL)
     {
-        return jsDoThrowError(@"FILE object was not passed\n");
+        return JS_THROW_ERROR(EW_INVALID_INPUT);
     }
     
     FILE *file = restoreFILE(fileObject);
@@ -522,7 +520,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     // checking if file was allocated
     if(file == NULL)
     {
-        return jsDoThrowError(@"Failed to restore FILE structure\n");
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     // getting file descriptor of file
@@ -530,19 +528,19 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     
     if(![self isFDThere:fd])
     {
-        return jsDoThrowError(@"File descriptor was never opened or is already closed\n");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     FILE *reopenedfile = freopen([path UTF8String], [mode UTF8String], file);
     if (reopenedfile == NULL)
     {
-        return jsDoThrowError(@"Failed to reopen file\n");
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     int reopenedfd = fileno(reopenedfile);
     if(reopenedfd == -1)
     {
-        return jsDoThrowError(@"Failed to reopen file\n");
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     [self removeFD:fd];
@@ -558,14 +556,14 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
     if (cPath == NULL) {
-        return jsDoThrowError(@"Failed to convert string\n");
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     DIR *directory = opendir(cPath);
     
     if(directory == NULL)
     {
-        return jsDoThrowError(@"Failed to open directory\n");
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     [self addFD:directory->__dd_fd];
@@ -577,23 +575,23 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(DIR_obj == NULL)
     {
-        return jsDoThrowError(@"DIR object was not passed\n");
+        return JS_THROW_ERROR(EW_INVALID_INPUT);
     }
     
     DIR *directory = buildBackDIR(DIR_obj);
     if (directory == NULL) {
-        return jsDoThrowError(@"Invalid directory object provided.\n");
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
     UInt64 fd = directory->__dd_fd;
     if(![self isFDThere:fd])
     {
-        return jsDoThrowError(@"File descriptor was never opened or is already closed\n");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     if (closedir(directory) != 0)
     {
-        return jsDoThrowError(@"Failed to close directory\n");
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     }
     
     [self removeFD:fd];
@@ -605,28 +603,24 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(DIR_obj == NULL)
     {
-        return jsDoThrowError(@"DIR object was not passed\n");
+        return JS_THROW_ERROR(EW_INVALID_INPUT);
     }
     
     DIR *directory = buildBackDIR(DIR_obj);
     if (directory == NULL) {
-        return jsDoThrowError(@"Invalid directory object provided.\n");
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
 
     UInt64 fd = directory->__dd_fd;
     if (![self isFDThere:fd]) {
-        return jsDoThrowError(@"File descriptor was never opened or is already closed.\n");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
 
     errno = 0;
     struct dirent *result = readdir(directory);
 
     if (result == NULL) {
-        if (errno != 0) {
-            return jsDoThrowError([NSString stringWithFormat:@"readdir() failed: %s\n", strerror(errno)]);
-        } else {
-            return [JSValue valueWithNullInContext:[JSContext currentContext]];
-        }
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
 
     struct dirent dir;
@@ -643,17 +637,17 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(DIR_obj == NULL)
     {
-        return jsDoThrowError(@"DIR object was not passed\n");
+        return JS_THROW_ERROR(EW_INVALID_INPUT);
     }
     
     DIR *directory = buildBackDIR(DIR_obj);
     if (directory == NULL) {
-        return jsDoThrowError(@"Invalid directory object provided.\n");
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     }
 
     UInt64 fd = directory->__dd_fd;
     if (![self isFDThere:fd]) {
-        return jsDoThrowError(@"File descriptor was never opened or is already closed.\n");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     rewinddir(directory);

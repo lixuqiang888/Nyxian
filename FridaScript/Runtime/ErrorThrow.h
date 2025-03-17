@@ -30,10 +30,28 @@
 
 // premade errors
 #define EW_ARGUMENT        @"Parameter failure"
-#define EW_RUNTIME_SAFETY  @"Runtime safety is enabled, please disable it by calling disable_safety_checks();"
-#define EW_MEMORY          @"Memory allocation failure"
-#define EW_ACTION          @"Failed to execute action"
-#define EW_SAFETY          @"Safety failure"
+#define EW_RUNTIME_SAFETY  @"Safety compromise detected, runtime safety is enabled, please disable it by calling disable_safety_checks();"
+#define EW_UNEXPECTED      @"An unexpected mistake happened"
+#define EW_PERMISSION      @"Permission denied"
+#define EW_NULL_POINTER    @"Null pointer exception"
+#define EW_OUT_OF_BOUNDS   @"Index out of bounds"
+#define EW_MEMORY_LEAK     @"Memory leak detected"
+#define EW_MEMORY_UAF      @"Attempt to use memory after freed detected"
+#define EW_UNAUTHORIZED    @"Unauthorized access"
+#define EW_INVALID_STATE   @"Invalid state encountered"
+#define EW_TIMEOUT         @"Operation timed out"
+#define EW_NETWORK_ERROR   @"Network error occurred"
+#define EW_FILE_NOT_FOUND  @"File not found"
+#define EW_INVALID_FORMAT  @"Invalid format"
+#define EW_DIVIDE_BY_ZERO  @"Attempt to divide by zero"
+#define EW_INTERNAL_ERROR  @"Internal error occurred"
+#define EW_INVALID_INPUT   @"Invalid input provided"
+#define EW_OVERFLOW        @"Buffer overflow detected"
+#define EW_CONVERSION_ERROR @"Type conversion failed"
+#define EW_RESOURCE_EXCEEDED @"Resource limit exceeded"
+#define EW_UNSUPPORTED_OPERATION @"Operation not supported"
+#define EW_DISK_FULL       @"Disk is full"
+#define EW_UNKNOWN_ERROR   @"An unknown error occurred"
 
 JSValue* jsDoThrowError(NSString *msg);
 

@@ -100,7 +100,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isPtrThere:pointer])
     {
-        return jsDoThrowError(@"Pointer is not pointing to allocated memory");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     void *ptr = (void*)pointer;
@@ -118,7 +118,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isPtrThere:pointer])
     {
-        return jsDoThrowError(@"Pointer is not pointing to allocated memory");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     uint8_t *ptr = (uint8_t*)pointer;
@@ -129,7 +129,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isPtrThere:pointer])
     {
-        return jsDoThrowError(@"Pointer is not pointing to allocated memory");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     uint16_t *ptr = (uint16_t*)pointer;
@@ -140,7 +140,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isPtrThere:pointer])
     {
-        return jsDoThrowError(@"Pointer is not pointing to allocated memory");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     uint32_t *ptr = (uint32_t*)pointer;
@@ -151,7 +151,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isPtrThere:pointer])
     {
-        return jsDoThrowError(@"Pointer is not pointing to allocated memory");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     uint64_t *ptr = (uint64_t*)pointer;
@@ -165,7 +165,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isPtrThere:pointer])
     {
-        return jsDoThrowError(@"Pointer is not pointing to allocated memory");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     uint8_t *ptr = (uint8_t*)pointer;
@@ -178,7 +178,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isPtrThere:pointer])
     {
-        return jsDoThrowError(@"Pointer is not pointing to allocated memory");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     uint16_t *ptr = (uint16_t*)pointer;
@@ -191,7 +191,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isPtrThere:pointer])
     {
-        return jsDoThrowError(@"Pointer is not pointing to allocated memory");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     uint32_t *ptr = (uint32_t*)pointer;
@@ -204,7 +204,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(![self isPtrThere:pointer])
     {
-        return jsDoThrowError(@"Pointer is not pointing to allocated memory");
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
     uint64_t *ptr = (uint64_t*)pointer;

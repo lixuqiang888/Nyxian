@@ -67,6 +67,11 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return getegid();
 }
 
+- (UInt32)getpgid:(UInt32)pid
+{
+    return getpgid(pid);
+}
+
 - (id)setuid:(UInt32)uid
 {
     if(!FJ_RUNTIME_SAFETY_ENABLED) { return @(setuid(uid)); }
@@ -77,12 +82,6 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     if(!FJ_RUNTIME_SAFETY_ENABLED) { return @(setgid(gid)); }
     return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
-}
-
-
-- (UInt32)getpgid:(UInt32)pid
-{
-    return getpgid(pid);
 }
 
 - (id)setpgid:(UInt32)pid pgid:(UInt32)pgid
