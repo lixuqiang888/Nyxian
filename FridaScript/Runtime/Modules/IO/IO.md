@@ -343,7 +343,8 @@ try {
 ```
 Opens a file for reading, writing, or appending using the specified flags. Optionally, a mode can be set if the file needs to be created. Returns the file descriptor.
 
-## close
+### close
+
 ```
 try {
     io.close(<integer:fd>);
@@ -353,7 +354,8 @@ try {
 ```
 Closes the file descriptor passed as an argument.
 
-## write
+### write
+
 ```
 try {
     io.write(<integer:fd>, <string:content>, <integer:size>);
@@ -363,7 +365,8 @@ try {
 ```
 Writes the specified content to the file descriptor, limited by the specified size. Returns the number of bytes written.
 
-## read
+### read
+
 ```
 try {
     let ret = io.read(<integer:fd>, <integer:size>);
@@ -373,7 +376,8 @@ try {
 ```
 Reads data from the specified file descriptor. Returns an object containing the `size` of the buffer and the `buffer` itself, representing the data read.
 
-## stat
+### stat
+
 ```
 try {
     let stat = io.stat(<integer:fd>);
@@ -383,7 +387,8 @@ try {
 ```
 Returns a `stat` object containing detailed information about the file descriptor.
 
-## seek
+### seek
+
 ```
 try {
     io.seek(<integer:fd>, <integer:position>, <integer:flags>);
@@ -393,7 +398,8 @@ try {
 ```
 Moves the file pointer to the specified position, using the given flags (e.g., `SEEK_SET`).
 
-## access
+### access
+
 ```
 try {
     io.access(<string:path>, <integer:flags>);
@@ -403,7 +409,8 @@ try {
 ```
 Checks the specified file path for access rights based on the flags (e.g., `F_OK`). Returns an integer value indicating success or failure.
 
-## remove
+### remove
+
 ```
 try {
     io.remove(<string:path>);
@@ -413,7 +420,8 @@ try {
 ```
 Removes the file or directory at the given path.
 
-## mkdir
+### mkdir
+
 ```
 try {
     io.mkdir(<string:path>, <integer:mode>);
@@ -423,7 +431,8 @@ try {
 ```
 Creates a new directory at the specified path with the given mode.
 
-## rmdir
+### rmdir
+
 ```
 try {
     io.rmdir(<string:path>);
@@ -433,7 +442,8 @@ try {
 ```
 Removes the directory at the specified path.
 
-## chown
+### chown
+
 ```
 try {
     io.chown(<string:path>, <integer:uid>, <integer:gid>);
@@ -443,7 +453,8 @@ try {
 ```
 Changes the ownership of the file or directory at the specified path.
 
-## chmod
+### chmod
+
 ```
 try {
     io.chmod(<string:path>, <integer:flags>);
@@ -453,7 +464,8 @@ try {
 ```
 Changes the permissions of the file or directory at the specified path using the given flags.
 
-## fopen
+### fopen
+
 ```
 try {
     let file = io.fopen(<string:path>, <string:mode>);
@@ -462,7 +474,8 @@ try {
 }
 ```
 
-## fclose
+### fclose
+
 ```
 try {
     io.fclose(<FILE:file object>);
@@ -472,7 +485,8 @@ try {
 ```
 Opens a file with the specified path and mode. Similar to open but takes a mode string (e.g., "r", "w").
 
-## freopen
+### freopen
+
 ```
 try {
     let file = io.freopen(<string:path>, <string:mode>, <FILE:file object>);
@@ -482,7 +496,8 @@ try {
 ```
 This function reopens a file with a different mode. It is useful when you want to change the file mode of an already opened file without closing it and reopening it. The function returns the file object after reopening the file.
 
-## opendir
+### opendir
+
 ```
 try {
     let dir = io.opendir(<string:path>);
@@ -492,7 +507,8 @@ try {
 ```
 This function opens a directory stream, which can be used to read the contents of a directory.
 
-## closedir
+### closedir
+
 ```
 try {
     io.closedir(<DIR:directory object>);
@@ -502,7 +518,8 @@ try {
 ```
 This function closes a previously opened directory stream. It's important to call this when you're done reading the directory contents to release resources.
 
-## readdir
+### readdir
+
 ```
 try {
     let dirent = io.readdir(<DIR:directory object>);
@@ -512,7 +529,8 @@ try {
 ```
 This function reads the next directory entry from the opened directory stream. It returns an object containing the file/directory name.
 
-## rewinddir
+### rewinddir
+
 ```
 try {
     let dir = io.rewinddir(<DIR:directory object>);
