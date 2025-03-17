@@ -213,9 +213,4 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return NULL;
 }
 
-- (id)ptrstring:(UInt64)pointer
-{
-    return [NSString stringWithFormat:@"%p", (void*)pointer];
-}
-
 @end
