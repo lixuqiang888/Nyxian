@@ -316,15 +316,21 @@ Module to interact with the file system and the console.
 
 ## Functions
 ### print
-`io.print(<string:content>);`
+```
+io.print(<string:content>);
+```
 Prints the specified string to the console.
 
 ### readline
-`let ret = io.readline(<string:prompt>);`
+```
+let ret = io.readline(<string:prompt>);
+```
 Displays a prompt message and waits for the user to input a line. Returns the inputted string when the user presses Enter.
 
 ### getchar
-`let ret = io.getchar();`
+```
+let ret = io.getchar();
+```
 Waits for the user to input a single character and returns it once typed.
 
 ### open
