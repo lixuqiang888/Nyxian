@@ -25,6 +25,7 @@
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <FridaScript-Swift.h>
+#import <Runtime/Modules/IO/Macro.h>
 
 @protocol IOModuleExport <JSExport>
 
