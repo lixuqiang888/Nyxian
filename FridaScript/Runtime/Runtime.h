@@ -1,0 +1,56 @@
+/*
+ MIT License
+
+ Copyright (c) 2025 SeanIsTethered
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
+
+#ifndef FJS_RUNTIME_H
+#define FJS_RUNTIME_H
+
+#import <Foundation/Foundation.h>
+#import <JavaScriptCore/JavaScriptCore.h>
+#import <UIKit/UIKit.h>
+#include <pthread.h>
+
+@interface FJ_Runtime : NSObject
+
+@property (nonatomic,strong,readonly) JSContext *Context;
+@property (nonatomic,readonly) pthread_t Thread;
+
+// Main Runtime functions you should focus on
+- (instancetype)init:(UIView*)ptr;
+- (void)run:(NSString*)code;
+
+// Module Handoff
+- (void)handoffIOModule:(id)object;
+- (void)handoffMemoryModule:(id)object;
+- (void)tuirun:(NSString*)code;
+- (void)cleanup;
+
+@end
+
+@interface JSContext ()
+
+@property (nonatomic,strong) FJ_Runtime *fj_runtime;
+
+@end
+
+#endif
