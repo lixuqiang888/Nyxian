@@ -60,8 +60,6 @@ JSExportAs(mwrite64,
 - (id)mwrite64:(UInt64)pointer value:(UInt64)value
 );
 
-- (id)ptrstring:(UInt64)pointer;
-
 @end
 
 @interface MemoryModule : NSObject <MemoryModuleExport>
