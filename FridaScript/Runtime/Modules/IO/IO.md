@@ -147,15 +147,15 @@ Module to interact with the file system and the console.
   <tbody>
     <tr>
       <td><code>SEEK_SET</code></td>
-      <td>Set file offset to a specific position relative to the **beginning of the file**.</td>
+      <td>Set file offset to a specific position relative to the <strong>beginning of the file</strong>.</td>
     </tr>
     <tr>
       <td><code>SEEK_CUR</code></td>
-      <td>Set file offset **relative to the current file position**.</td>
+      <td>Set file offset <strong>relative to the current file position</strong>.</td>
     </tr>
     <tr>
       <td><code>SEEK_END</code></td>
-      <td>Set file offset relative to the **end of the file**.</td>
+      <td>Set file offset relative to the <strong>end of the file</strong>.</td>
     </tr>
   </tbody>
 </table>
@@ -176,79 +176,79 @@ Module to interact with the file system and the console.
     </tr>
     <tr>
       <td><code>S_IFSOCK</code></td>
-      <td>File type: **socket**.</td>
+      <td>File type: <strong>socket</strong>.</td>
     </tr>
     <tr>
       <td><code>S_IFLNK</code></td>
-      <td>File type: **symbolic link**.</td>
+      <td>File type: <strong>symbolic link</strong>.</td>
     </tr>
     <tr>
       <td><code>S_IFREG</code></td>
-      <td>File type: **regular file**.</td>
+      <td>File type: <strong>regular file</strong>.</td>
     </tr>
     <tr>
       <td><code>S_IFBLK</code></td>
-      <td>File type: **block device**.</td>
+      <td>File type: <strong>block device</strong>.</td>
     </tr>
     <tr>
       <td><code>S_IFDIR</code></td>
-      <td>File type: **directory**.</td>
+      <td>File type: <strong>directory</strong>.</td>
     </tr>
     <tr>
       <td><code>S_IFCHR</code></td>
-      <td>File type: **character device**.</td>
+      <td>File type: <strong>character device</strong>.</td>
     </tr>
     <tr>
       <td><code>S_IFIFO</code></td>
-      <td>File type: **FIFO (named pipe)**.</td>
+      <td>File type: <strong>FIFO (named pipe)</strong>.</td>
     </tr>
     <tr>
       <td><code>S_IRWXU</code></td>
-      <td>Owner permissions: **read, write, execute** (rwx).</td>
+      <td>Owner permissions: <strong>read, write, execute</strong> (rwx).</td>
     </tr>
     <tr>
       <td><code>S_IRUSR</code></td>
-      <td>Owner permission: **read** (r).</td>
+      <td>Owner permission: <strong>read</strong> (r).</td>
     </tr>
     <tr>
       <td><code>S_IWUSR</code></td>
-      <td>Owner permission: **write** (w).</td>
+      <td>Owner permission: <strong>write</strong> (w).</td>
     </tr>
     <tr>
       <td><code>S_IXUSR</code></td>
-      <td>Owner permission: **execute/search** (x).</td>
+      <td>Owner permission: <strong>execute/search</strong> (x).</td>
     </tr>
     <tr>
       <td><code>S_IRWXG</code></td>
-      <td>Group permissions: **read, write, execute** (rwx).</td>
+      <td>Group permissions: <strong>read, write, execute</strong> (rwx).</td>
     </tr>
     <tr>
       <td><code>S_IRGRP</code></td>
-      <td>Group permission: **read** (r).</td>
+      <td>Group permission: <strong>read</strong> (r).</td>
     </tr>
     <tr>
       <td><code>S_IWGRP</code></td>
-      <td>Group permission: **write** (w).</td>
+      <td>Group permission: <strong>write</strong> (w).</td>
     </tr>
     <tr>
       <td><code>S_IXGRP</code></td>
-      <td>Group permission: **execute/search** (x).</td>
+      <td>Group permission: <strong>execute/search</strong> (x).</td>
     </tr>
     <tr>
       <td><code>S_IRWXO</code></td>
-      <td>Others permissions: **read, write, execute** (rwx).</td>
+      <td>Others permissions: <strong>read, write, execute</strong> (rwx).</td>
     </tr>
     <tr>
       <td><code>S_IROTH</code></td>
-      <td>Others permission: **read** (r).</td>
+      <td>Others permission: <strong>read</strong> (r).</td>
     </tr>
     <tr>
       <td><code>S_IWOTH</code></td>
-      <td>Others permission: **write** (w).</td>
+      <td>Others permission: <strong>write</strong> (w).</td>
     </tr>
     <tr>
       <td><code>S_IXOTH</code></td>
-      <td>Others permission: **execute/search** (x).</td>
+      <td>Others permission: <strong>execute/search</strong> (x).</td>
     </tr>
     <tr>
       <td><code>S_ISUID</code></td>
