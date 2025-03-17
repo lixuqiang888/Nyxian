@@ -48,8 +48,6 @@ void fj_include(FJ_Runtime *Runtime, TerminalWindow *Term, NSString *LibName)
 {
     if ([LibName isEqualToString:@"io"]) {
         IO_MACRO_MAP();
-        
-        // Importing the module it self
         IOModule *ioModule = [[IOModule alloc] init:Term];
         [Runtime.Context setObject:ioModule forKeyedSubscript:@"io"];
         [Runtime handoffIOModule:ioModule];

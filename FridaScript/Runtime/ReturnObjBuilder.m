@@ -30,7 +30,7 @@ JSValue *ReturnObjectBuilder(NSDictionary *dictionary) {
         return nil;
     }
 
-    JSValue *jsObject = [JSValue valueWithObject:nil inContext:context];
+    JSValue *jsObject = [JSValue valueWithObject:@{} inContext:context];
 
     for (NSString *key in dictionary) {
         id value = dictionary[key];
