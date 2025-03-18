@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef JS_MATH_H
-#define JS_MATH_H
+#ifndef FS_MODULE_MATH_H
+#define FS_MODULE_MATH_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

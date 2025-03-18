@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef JSKERN_DIR_H
-#define JSKERN_DIR_H
+#ifndef FS_MODULE_IO_TYPE_DIR_H
+#define FS_MODULE_IO_TYPE_DIR_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

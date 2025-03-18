@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef MODULE_PROC_H
-#define MODULE_PROC_H
+#ifndef FS_MODULE_PROC_H
+#define FS_MODULE_PROC_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

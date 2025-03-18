@@ -22,6 +22,9 @@
  SOFTWARE.
  */
 
+#ifndef FS_MODULE_IO_H
+#define FS_MODULE_IO_H
+
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <FridaScript-Swift.h>
@@ -74,7 +77,6 @@ JSExportAs(mkdir,
 - (id)mkdir:(NSString*)path perms:(UInt16)perms
 );
 
-
 - (id)rmdir:(NSString*)path;
 
 JSExportAs(chown,
@@ -110,3 +112,5 @@ JSExportAs(freopen,
 - (NSString*)moduleCleanup;
 
 @end
+
+#endif

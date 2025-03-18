@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FJ_MEMORY_H
-#define FJ_MEMORY_H
+#ifndef FS_MODULE_MEMORY_H
+#define FS_MODULE_MEMORY_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

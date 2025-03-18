@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef NSStringCpy_H
-#define NSStringCpy_H
+#ifndef FS_MODULE_IO_HELPER_NSSTRINGCPY_H
+#define FS_MODULE_IO_HELPER_NSSTRINGCPY_H
 
 #import <Foundation/Foundation.h>
 

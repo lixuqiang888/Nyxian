@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef UNIORIGHOLDER_H
-#define UNIORIGHOLDER_H
+#ifndef FS_MODULE_IO_HELPER_UNIORIGHOLDER_H
+#define FS_MODULE_IO_HELPER_UNIORIGHOLDER_H
 
 #import <Foundation/Foundation.h>
 

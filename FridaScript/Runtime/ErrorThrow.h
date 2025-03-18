@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef ERRORTHROW_H
-#define ERRORTHROW_H
+#ifndef FS_ERRORTHROW_H
+#define FS_ERRORTHROW_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

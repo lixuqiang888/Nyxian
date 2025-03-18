@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FJS_RUNTIME_H
-#define FJS_RUNTIME_H
+#ifndef FS_RUNTIME_H
+#define FS_RUNTIME_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

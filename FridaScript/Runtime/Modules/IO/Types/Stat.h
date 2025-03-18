@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef JSKERN_STAT_H
-#define JSKERN_STAT_H
+#ifndef FS_MODULE_IO_TYPE_STAT_H
+#define FS_MODULE_IO_TYPE_STAT_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

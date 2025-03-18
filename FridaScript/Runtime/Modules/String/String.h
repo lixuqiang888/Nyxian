@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef JSKERN_STRING_H
-#define JSKERN_STRING_H
+#ifndef FS_MODULE_STRING_H
+#define FS_MODULE_STRING_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

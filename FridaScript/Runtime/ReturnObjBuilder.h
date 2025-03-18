@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef RETOBJBUILD_H
-#define RETOBJBUILD_H
+#ifndef FS_RETURNOBJBUILD_H
+#define FS_RETURNOBJBUILD_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

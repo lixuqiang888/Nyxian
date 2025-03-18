@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FJ_INCLUDE_H
-#define FJ_INCLUDE_H
+#ifndef FS_INCLUDE_H
+#define FS_INCLUDE_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
