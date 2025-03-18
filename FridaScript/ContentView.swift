@@ -51,7 +51,9 @@ struct RuntimeView: UIViewRepresentable {
             
             DispatchQueue.main.async {
                 runtime = nil
-                closable = false
+                withAnimation {
+                    closable = false
+                }
             }
         }
         
@@ -83,12 +85,15 @@ struct RuntimeRunnerView: View {
                     }
                     ToolbarItem(placement: .navigationBarTrailing)
                     {
-                        Button(action:{
-                            runtime?.kill()
-                        })
+                        if(closable)
                         {
-                            Text("Kill")
-                                .foregroundColor(Color.red)
+                            Button(action:{
+                                runtime?.kill()
+                            })
+                            {
+                                Text("Kill")
+                                    .foregroundColor(Color.red)
+                            }
                         }
                     }
                 }
