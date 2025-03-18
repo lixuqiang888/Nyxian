@@ -46,7 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// Main Runtime functions you should focus on
 - (instancetype)init:(UIView*)ptr;
 - (void)run:(NSString*)code;
-- (void)tuirun:(NSString*)code;
 - (void)kill;
 - (void)cleanup;
 

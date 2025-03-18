@@ -106,9 +106,6 @@ void* runner(void *args)
     
     // cleaning up
     [self cleanup];
-    
-    // restoring the environment variables
-    [_envRecover restoreBackup];
 }
 
 /// relatively new function to terminate the JSContext execution
@@ -118,24 +115,6 @@ void* runner(void *args)
     for (id item in _array) {
         dispatch_semaphore_signal([item giveSemaphore]);
     }
-}
-
-- (void)tuirun:(NSString*)code
-{
-    // Initial TUI run
-    __block TerminalWindow *BlockSerial = _Serial;
-    _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"\n%@\n", exception];
-        });
-    };
-    [_Context evaluateScript:code];
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        if ([BlockSerial.terminalText.text length] > 0 &&
-            [BlockSerial.terminalText.text characterAtIndex:[BlockSerial.terminalText.text length] - 1] != '\n') {
-            BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"\n"];
-        }
-    });
 }
 
 /// Private cleanup function
@@ -153,6 +132,8 @@ void* runner(void *args)
     });
     
     _Context = nil;
+    
+    [_envRecover restoreBackup];
 }
 
 /// Module Handoff function

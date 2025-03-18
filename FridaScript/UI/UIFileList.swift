@@ -67,6 +67,7 @@ struct FileObject: View {
 }
 
 var code: String = ""
+
 struct FileList: View {
    var title: String?
    var directoryPath: URL
@@ -86,11 +87,6 @@ struct FileList: View {
    @State private var cmacro: String = ""
     
    @State private var sheet: Bool = false
-   @State private var cli: Bool = false
-
-   // GitHub
-   @AppStorage("GIT_ENABLED") var enabled: Bool = false
-   @AppStorage("GIT_TOKEN") var token: String = ""
    var body: some View {
        List {
            Section {
@@ -119,11 +115,6 @@ struct FileList: View {
                    }
                    .contextMenu {
                        Button(action: {
-                           sheet = true
-                       }) {
-                           Label("Run Code", systemImage: "bolt.fill")
-                       }
-                       Button(action: {
                            let readcode = {
                                do {
                                    return try String(contentsOfFile: item.path)
@@ -133,8 +124,9 @@ struct FileList: View {
                                }
                            }()
                            code = readcode
+                           sheet = true
                        }) {
-                           Label("Load Code", systemImage: "bolt.fill")
+                           Label("Run Code", systemImage: "bolt.fill")
                        }
                        Section {
                            Button(action: {
@@ -226,14 +218,6 @@ struct FileList: View {
                    Label("", systemImage: "ellipsis.circle")
                }
            }
-           ToolbarItem(placement: .navigationBarLeading)
-           {
-               Button(action: {
-                   cli = true
-               }) {
-                   Label("", systemImage: "apple.terminal")
-               }
-           }
        }
        .sheet(item: $activeSheet) { sheet in
            Group {
@@ -272,9 +256,6 @@ struct FileList: View {
        }
        .fullScreenCover(isPresented: $sheet) {
            RuntimeRunnerView(sheet: $sheet, code: code)
-       }
-       .fullScreenCover(isPresented: $cli) {
-           CLIView()
        }
    }
 
