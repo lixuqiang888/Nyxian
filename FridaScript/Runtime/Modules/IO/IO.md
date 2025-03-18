@@ -315,25 +315,27 @@ Module to interact with the file system and the console.
 </table>
 
 ## Functions
-### print
+### Console Functions
+#### print
 ```
 io.print(<string:content>);
 ```
 Prints the specified string to the console.
 
-### readline
+#### readline
 ```
 let ret = io.readline(<string:prompt>);
 ```
 Displays a prompt message and waits for the user to input a line. Returns the inputted string when the user presses Enter.
 
-### getchar
+#### getchar
 ```
 let ret = io.getchar();
 ```
 Waits for the user to input a single character and returns it once typed.
 
-### open
+### File Descriptor Functions
+#### open
 ```
 try {
     let fd = io.open(<string:path>, <integer:flags>, <integer:mode>);
@@ -343,7 +345,7 @@ try {
 ```
 Opens a file for reading, writing, or appending using the specified flags. Optionally, a mode can be set if the file needs to be created. Returns the file descriptor.
 
-### close
+#### close
 
 ```
 try {
@@ -354,7 +356,7 @@ try {
 ```
 Closes the file descriptor passed as an argument.
 
-### write
+#### write
 
 ```
 try {
@@ -365,7 +367,7 @@ try {
 ```
 Writes the specified content to the file descriptor, limited by the specified size. Returns the number of bytes written.
 
-### read
+#### read
 
 ```
 try {
@@ -376,7 +378,7 @@ try {
 ```
 Reads data from the specified file descriptor. Returns an object containing the `size` of the buffer and the `buffer` itself, representing the data read.
 
-### stat
+#### stat
 
 ```
 try {
@@ -387,7 +389,7 @@ try {
 ```
 Returns a `stat` object containing detailed information about the file descriptor.
 
-### seek
+#### seek
 
 ```
 try {
@@ -398,7 +400,7 @@ try {
 ```
 Moves the file pointer to the specified position, using the given flags (e.g., `SEEK_SET`).
 
-### access
+#### access
 
 ```
 try {
@@ -409,7 +411,7 @@ try {
 ```
 Checks the specified file path for access rights based on the flags (e.g., `F_OK`). Returns an integer value indicating success or failure.
 
-### remove
+#### remove
 
 ```
 try {
@@ -420,7 +422,7 @@ try {
 ```
 Removes the file or directory at the given path.
 
-### mkdir
+#### mkdir
 
 ```
 try {
@@ -431,7 +433,7 @@ try {
 ```
 Creates a new directory at the specified path with the given mode.
 
-### rmdir
+#### rmdir
 
 ```
 try {
@@ -442,7 +444,7 @@ try {
 ```
 Removes the directory at the specified path.
 
-### chown
+#### chown
 
 ```
 try {
@@ -453,7 +455,7 @@ try {
 ```
 Changes the ownership of the file or directory at the specified path.
 
-### chmod
+#### chmod
 
 ```
 try {
@@ -464,7 +466,8 @@ try {
 ```
 Changes the permissions of the file or directory at the specified path using the given flags.
 
-### fopen
+### File Pointer Functions
+#### fopen
 
 ```
 try {
@@ -474,7 +477,7 @@ try {
 }
 ```
 
-### fclose
+#### fclose
 
 ```
 try {
@@ -485,7 +488,7 @@ try {
 ```
 Opens a file with the specified path and mode. Similar to open but takes a mode string (e.g., "r", "w").
 
-### freopen
+#### freopen
 
 ```
 try {
@@ -496,7 +499,8 @@ try {
 ```
 This function reopens a file with a different mode. It is useful when you want to change the file mode of an already opened file without closing it and reopening it. The function returns the file object after reopening the file.
 
-### opendir
+### Directory Pointer Functions
+#### opendir
 
 ```
 try {
@@ -507,7 +511,7 @@ try {
 ```
 This function opens a directory stream, which can be used to read the contents of a directory.
 
-### closedir
+#### closedir
 
 ```
 try {
@@ -518,7 +522,7 @@ try {
 ```
 This function closes a previously opened directory stream. It's important to call this when you're done reading the directory contents to release resources.
 
-### readdir
+#### readdir
 
 ```
 try {
@@ -529,7 +533,7 @@ try {
 ```
 This function reads the next directory entry from the opened directory stream. It returns an object containing the file/directory name.
 
-### rewinddir
+#### rewinddir
 
 ```
 try {
@@ -539,3 +543,44 @@ try {
 }
 ```
 This function resets the position of the directory stream, allowing you to start reading the directory from the beginning again.
+
+### Environment Variable Functions
+#### getenv
+```
+try {
+    let value = io.getenv(<string:env>);
+} catch(error) {
+    io.print(error);
+}
+```
+This function returns the value of a passed environment variable.
+
+#### setenv
+```
+try {
+    io.setenv(<string:env>, <string:value>);
+} catch(error) {
+    io.print(error);
+}
+```
+This function sets the value of a givven environment variable to a givven value.
+
+#### unsetenv
+```
+try {
+    io.unsetenv(<string:env>);
+} catch(error) {
+    io.print(error);
+}
+```
+This function unsets a givven environment variable.
+
+#### getcwd
+```
+try {
+    let value = io.getcwd();
+} catch(error) {
+    io.print(error);
+}
+```
+This function returns the current working directory path. You can pass also one argument to predefine the buffer lenght.

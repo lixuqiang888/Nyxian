@@ -28,6 +28,11 @@
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+/// Function to build a return object
 JSValue *ReturnObjectBuilder(NSDictionary *dictionary);
+
+NS_ASSUME_NONNULL_END
 
 #endif

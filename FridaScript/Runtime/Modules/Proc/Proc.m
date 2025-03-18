@@ -29,6 +29,9 @@
 
 extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
+/*
+ @Brief Proc Module Implementation
+ */
 @implementation ProcModule
 
 - (instancetype)init
@@ -37,6 +40,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return self;
 }
 
+/// Low level process functions
 - (UInt32)getpid
 {
     return getpid();

@@ -1,31 +1,26 @@
 /*
-UICodeEditor.swift
- 
-Copyright (C) 2024 fridakitten
+ MIT License
 
-This file is part of JSTerm.
+ Copyright (c) 2025 SeanIsTethered
 
-FridaCodeManager is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
 
-FridaCodeManager is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
 
-You should have received a copy of the GNU General Public License
-along with FridaCodeManager. If not, see <https://www.gnu.org/licenses/>.
-
- ______    _     _         _____        __ _                           ______                    _       _   _
-|  ___|  (_)   | |       /  ___|      / _| |                          |  ___|                  | |     | | (_)
-| |_ _ __ _  __| | __ _  \ `--.  ___ | |_| |___      ____ _ _ __ ___  | |_ ___  _   _ _ __   __| | __ _| |_ _  ___  _ __
-|  _| '__| |/ _` |/ _` |  `--. \/ _ \|  _| __\ \ /\ / / _` | '__/ _ \ |  _/ _ \| | | | '_ \ / _` |/ _` | __| |/ _ \| '_ \
-| | | |  | | (_| | (_| | /\__/ / (_) | | | |_ \ V  V / (_| | | |  __/ | || (_) | |_| | | | | (_| | (_| | |_| | (_) | | | |
-\_| |_|  |_|\__,_|\__,_| \____/ \___/|_|  \__| \_/\_/ \__,_|_|  \___| \_| \___/ \__,_|_| |_|\__,_|\__,_|\__|_|\___/|_| |_|
-Founded by. Sean Boleslawski, Benjamin Hornbeck and Lucienne Salim in 2023
-*/
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
 
 // MARK: Code Editor
 import SwiftUI
@@ -83,15 +78,15 @@ struct NavigationBarViewControllerRepresentable: UIViewControllerRepresentable {
         meow.font = UIFont.monospacedSystemFont(ofSize: CGFloat(UserDefaults.standard.double(forKey: "CEFontSize")), weight: UIFont.Weight.medium)
 
         if userInterfaceStyle == .light {
-            meow.background = light_background
-            meow.selection = light_selection
-            meow.current = light_current
-            meow.standard = light_standard
+            meow.background = neoRGB(255, 255, 255)
+            meow.selection = neoRGB(164, 205, 255)
+            meow.current = neoRGB(232, 242, 255)
+            meow.standard = UIColor.black
         } else {
-            meow.background = dark_background
-            meow.selection = dark_selection
-            meow.current = dark_current
-            meow.standard = dark_standard
+            meow.background = neoRGB(31, 31, 36)
+            meow.selection = neoRGB(81, 91, 112)
+            meow.current = neoRGB(35, 37, 43)
+            meow.standard = UIColor.white
         }
 
         return meow
@@ -242,8 +237,6 @@ struct NeoEditor: UIViewRepresentable {
         textView.isUserInteractionEnabled = true
         textView.layoutManager.addTextContainer(textView.textContainer)
         textView.layoutManager.ensureLayout(for: textView.textContainer)
-
-        var claimed: [Int] = []
 
         if enableToolbar {
             setupToolbar(textView: textView)
@@ -829,33 +822,33 @@ class ClosureButton: UIButton {
 func grule(_ isaythis: String) -> [HighlightRule] {
     let userInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
 
-    var color1: UIColor = UIColor.clear   // Keywords
-    var color2: UIColor = UIColor.clear   // Structure or Class Name
-    var color4: UIColor = UIColor.clear   // Numbers
-    var color5: UIColor = UIColor.clear   // Comments
-    var color6: UIColor = UIColor.clear   // Strings
-    var color7: UIColor = UIColor.clear   // Functions
-    var color8: UIColor = UIColor.clear   // Function/Variable names
-    var color10: UIColor = UIColor.clear  // Preprocessor Statements
+    var color1: UIColor = UIColor.clear     // Keywords
+    //var color2: UIColor = UIColor.clear   // Structure or Class Name
+    //var color4: UIColor = UIColor.clear   // Numbers
+    var color5: UIColor = UIColor.clear     // Comments
+    var color6: UIColor = UIColor.clear     // Strings
+    //var color7: UIColor = UIColor.clear   // Functions
+    var color8: UIColor = UIColor.clear     // Function/Variable names
+    //var color10: UIColor = UIColor.clear  // Preprocessor Statements
 
     if userInterfaceStyle == .light {
-        color1 = light_color1
-        color2 = light_color2
-        color4 = light_color4
-        color5 = light_color5
-        color6 = light_color6
-        color7 = light_color7
-        color8 = light_color8
-        color10 = light_color10
+        color1 = neoRGB(155, 35, 147)
+        //color2 = neoRGB(28, 70, 74)
+        //color4 = neoRGB(28, 0, 207)
+        color5 = neoRGB(93, 108, 121)
+        color6 = neoRGB(196, 26, 22)
+        //color7 = neoRGB(57, 0, 160)
+        color8 = neoRGB(15, 104, 160)
+        //color10 = neoRGB(100, 56, 32)
     } else {
-        color1 = dark_color1
-        color2 = dark_color2
-        color4 = dark_color4
-        color5 = dark_color5
-        color6 = dark_color6
-        color7 = dark_color7
-        color8 = dark_color8
-        color10 = dark_color10
+        color1 = neoRGB(252, 95, 163)
+        //color2 = neoRGB(93, 216, 255)
+        //color4 = neoRGB(208, 191, 105)
+        color5 = neoRGB(108, 121, 134)
+        color6 = neoRGB(252, 106, 93)
+        //color7 = neoRGB(208, 168, 255)
+        color8 = neoRGB(65, 161, 192)
+        //color10 = neoRGB(253, 143, 63)
     }
 
     switch(isaythis) {
@@ -873,51 +866,6 @@ func grule(_ isaythis: String) -> [HighlightRule] {
     }
 }
 
-// MARK: Theming
-// XCode format
-// 1: Keywords
-// 2: Type Declarations
-// 4: Numbers
-// 5: Comments
-// 6: Strings
-// 7: Other Class Names
-// 8: Other Declarations
-// 10: Project Preprocessor Macros
-
-// MARK: Color Storage
-// Light Color storage
-var light_color1: UIColor = neoRGB(155, 35, 147)
-var light_color2: UIColor = neoRGB(28, 70, 74)
-var light_color4: UIColor = neoRGB(28, 0, 207)
-var light_color5: UIColor = neoRGB(93, 108, 121)
-var light_color6: UIColor = neoRGB(196, 26, 22)
-var light_color7: UIColor = neoRGB(57, 0, 160)
-var light_color8: UIColor = neoRGB(15, 104, 160)
-var light_color10: UIColor = neoRGB(100, 56, 32)
-
-// Dark Color storage
-var dark_color1: UIColor = neoRGB(252, 95, 163)
-var dark_color2: UIColor = neoRGB(93, 216, 255)
-var dark_color4: UIColor = neoRGB(208, 191, 105)
-var dark_color5: UIColor = neoRGB(108, 121, 134)
-var dark_color6: UIColor = neoRGB(252, 106, 93)
-var dark_color7: UIColor = neoRGB(208, 168, 255)
-var dark_color8: UIColor = neoRGB(65, 161, 192)
-var dark_color10: UIColor = neoRGB(253, 143, 63)
-
-var light_standard: UIColor = UIColor.black
-var light_background: UIColor = neoRGB(255, 255, 255)
-var light_selection: UIColor = neoRGB(164, 205, 255)
-var light_current: UIColor = neoRGB(232, 242, 255)
-var light_cursor: UIColor = neoRGB(0, 0, 0)
-
-var dark_standard: UIColor = UIColor.white
-var dark_background: UIColor = neoRGB(31, 31, 36)
-var dark_selection: UIColor = neoRGB(81, 91, 112)
-var dark_current: UIColor = neoRGB(35, 37, 43)
-var dark_cursor: UIColor = neoRGB(255, 255, 255)
-
-// MARK: Theme system
 func neoRGB(_ red: CGFloat,_ green: CGFloat,_ blue: CGFloat ) -> UIColor {
     return UIColor(red: red/255.0, green: green/255.0, blue: blue/255.0, alpha: 1.0)
 }

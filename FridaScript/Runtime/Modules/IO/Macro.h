@@ -22,8 +22,17 @@
  SOFTWARE.
  */
 
+/// Header to the MacroHelper needed to build the macro map
 #include <Runtime/Modules/MacroHelper.h>
 
+/// Headers required to even build the macro map
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <dirent.h>
+
+/// Macro map of the I/O module
 #define IO_MACRO_MAP() \
 DECLARE_CONTEXT_MAPPING(O_RDONLY) \
 DECLARE_CONTEXT_MAPPING(O_WRONLY) \

@@ -31,6 +31,9 @@
 
 extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
+/*
+ @Brief Memory Module Implementation
+ */
 @implementation MemoryModule
 
 - (instancetype)init
@@ -40,25 +43,17 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return self;
 }
 
-- (NSString*)moduleCleanup
+- (void)moduleCleanup
 {
-    NSString *buffer = @"";
-    
     if(FJ_RUNTIME_SAFETY_ENABLED)
     {
         for (id item in _array) {
-            buffer = [buffer stringByAppendingFormat:@"%@", [NSString stringWithFormat:@"Pointer %p was not freed, freeing it for you <3\n", (void*)[item unsignedLongLongValue]]];
-            // if free fails then app crashes anyways
             free((void*)[item unsignedLongLongValue]);
         }
     }
-    
-    return buffer;
 }
 
-/*
- @Brief memory safety
- */
+/// Runtime Safety
 - (void)addPtr:(UInt64)pointer
 {
     if(FJ_RUNTIME_SAFETY_ENABLED)
@@ -84,9 +79,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     }
 }
 
-/*
- @Brief Heap memory handling functions
- */
+/// Low level memory handling functions
 - (UInt64)malloc:(size_t)size
 {
     UInt64 pointer;
@@ -111,9 +104,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return NULL;
 }
 
-/*
- @Brief low level functions to read memory
- */
+/// Low level memory reading functions
 - (id)mread8:(UInt64)pointer
 {
     if(![self isPtrThere:pointer])
@@ -158,9 +149,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return [[NSNumber alloc] initWithUnsignedLong:*ptr];
 }
 
-/*
- @Brief low level functions to write memory
- */
+/// Low level memory writing functions
 - (id)mwrite8:(UInt64)pointer value:(UInt8)value
 {
     if(![self isPtrThere:pointer])

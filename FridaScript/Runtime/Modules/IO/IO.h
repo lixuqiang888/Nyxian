@@ -30,18 +30,19 @@
 #import <FridaScript-Swift.h>
 #import <Runtime/Modules/IO/Macro.h>
 
-@protocol IOModuleExport <JSExport>
+NS_ASSUME_NONNULL_BEGIN
 
 /*
- @Brief console functions
+ @Brief JSExport Protocol for I/O Module
  */
+@protocol IOModuleExport <JSExport>
+
+/// Console functions
 - (id)print:(NSString*)buffer;
 - (id)readline:(NSString*)prompt;
 - (id)getchar;
 
-/*
- @Brief macro functions
- */
+/// File mode macros
 - (BOOL)S_ISDIR:(UInt64)m;
 - (BOOL)S_ISREG:(UInt64)m;
 - (BOOL)S_ISLNK:(UInt64)m;
@@ -50,67 +51,53 @@
 - (BOOL)S_ISFIFO:(UInt64)m;
 - (BOOL)S_ISSOCK:(UInt64)m;
 
-/*
- @Brief file descriptor functions
- */
-JSExportAs(open,
-- (id)open:(NSString *)path withFlags:(int)flags perms:(UInt16)perms
-);
-
+/// File descriptor functions
 - (id)close:(int)fd;
-
-JSExportAs(write,
-- (id)write:(int)fd text:(NSString*)text size:(UInt16)size
-);
-JSExportAs(read,
-- (id)read:(int)fd size:(UInt16)size
-);
 - (id)stat:(int)fd;
-JSExportAs(seek,
-- (id)seek:(int)fd position:(UInt16)position flags:(int)flags
-);
-JSExportAs(access,
-- (id)access:(NSString*)path flags:(int)flags
-);
 - (id)remove:(NSString*)path;
-JSExportAs(mkdir,
-- (id)mkdir:(NSString*)path perms:(UInt16)perms
-);
-
 - (id)rmdir:(NSString*)path;
+- (id)chdir:(NSString*)path;
+JSExportAs(open,    - (id)open:(NSString *)path withFlags:(int)flags perms:(UInt16)perms                );
+JSExportAs(write,   - (id)write:(int)fd text:(NSString*)text size:(UInt16)size                          );
+JSExportAs(read,    - (id)read:(int)fd size:(UInt16)size                                                );
+JSExportAs(seek,    - (id)seek:(int)fd position:(UInt16)position flags:(int)flags                       );
+JSExportAs(access,  - (id)access:(NSString*)path flags:(int)flags                                       );
+JSExportAs(mkdir,   - (id)mkdir:(NSString*)path perms:(UInt16)perms                                     );
+JSExportAs(chown,   - (id)chown:(NSString*)path uid:(int)uid gid:(int)gid                               );
+JSExportAs(chmod,   - (id)chmod:(NSString*)path flags:(UInt16)flags                                     );
 
-JSExportAs(chown,
-- (id)chown:(NSString*)path uid:(int)uid gid:(int)gid
-);
-JSExportAs(chmod,
-- (id)chmod:(NSString*)path flags:(UInt16)flags
-);
-
-// file functions
-JSExportAs(fopen,
-- (id)fopen:(NSString*)path mode:(NSString*)mode
-);
+/// File pointer functions
 - (id)fclose:(JSValue*)fileObject;
-JSExportAs(freopen,
-- (id)freopen:(NSString*)path mode:(NSString*)mode fileObject:(JSValue*)fileObject
-);
+JSExportAs(fopen,   - (id)fopen:(NSString*)path mode:(NSString*)mode                                    );
+JSExportAs(freopen, - (id)freopen:(NSString*)path mode:(NSString*)mode fileObject:(JSValue*)fileObject  );
 
-// directory functions
+/// Directory pointer functions
 - (id)opendir:(NSString*)path;
 - (id)closedir:(JSValue*)DIR_obj;
 - (id)readdir:(JSValue*)DIR_obj;
 - (id)rewinddir:(JSValue*)DIR_obj;
 
+/// Environment variable functions
+- (id)getenv:(NSString*)env;
+- (id)unsetenv:(NSString*)env;
+- (id)getcwd:(UInt16)size;
+JSExportAs(setenv,  - (id)setenv:(NSString*)env value:(NSString*)value overwrite:(UInt32)overwrite      );
+
 @end
 
+/*
+ @Brief I/O Module Interface
+ */
 @interface IOModule : NSObject <IOModuleExport>
 
 @property (nonatomic,strong) TerminalWindow *term;
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *array;
 
 - (instancetype)init:(TerminalWindow*)term;
-- (NSString*)moduleCleanup;
+- (void)moduleCleanup;
 
 @end
 
-#endif
+NS_ASSUME_NONNULL_END
+
+#endif /* FS_MODULE_IO_H */

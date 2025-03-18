@@ -28,47 +28,43 @@
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
-@protocol MemoryModuleExport <JSExport>
+NS_ASSUME_NONNULL_BEGIN
 
 /*
- @Brief low level memory handline
+ @Brief JSExport Protocol for Memory Module
  */
+@protocol MemoryModuleExport <JSExport>
+
+/// Low level memory handling functions
 - (UInt64)malloc:(size_t)size;
 - (id)free:(UInt64)pointer;
 
-/*
- @Brief low level memory read
- */
+/// Low level memory reading functions
 - (id)mread8:(UInt64)pointer;
 - (id)mread16:(UInt64)pointer;
 - (id)mread32:(UInt64)pointer;
 - (id)mread64:(UInt64)pointer;
 
-/*
- @Brief low level memory write
- */
-JSExportAs(mwrite8,
-- (id)mwrite8:(UInt64)pointer value:(UInt8)value
-);
-JSExportAs(mwrite16,
-- (id)mwrite16:(UInt64)pointer value:(UInt16)value
-);
-JSExportAs(mwrite32,
-- (id)mwrite32:(UInt64)pointer value:(UInt32)value
-);
-JSExportAs(mwrite64,
-- (id)mwrite64:(UInt64)pointer value:(UInt64)value
-);
+/// Low level memory writing functions
+JSExportAs(mwrite8, - (id)mwrite8:(UInt64)pointer value:(UInt8)value                                    );
+JSExportAs(mwrite16,- (id)mwrite16:(UInt64)pointer value:(UInt16)value                                  );
+JSExportAs(mwrite32,- (id)mwrite32:(UInt64)pointer value:(UInt32)value                                  );
+JSExportAs(mwrite64,- (id)mwrite64:(UInt64)pointer value:(UInt64)value                                  );
 
 @end
 
+/*
+ @Brief Memory Module Interface
+ */
 @interface MemoryModule : NSObject <MemoryModuleExport>
 
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *array;
 
-- (NSString*)moduleCleanup;
+- (instancetype)init;
+- (void)moduleCleanup;
 
 @end
 
+NS_ASSUME_NONNULL_END
 
-#endif
+#endif /* FS_MODULE_MEMORY_H */

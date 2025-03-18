@@ -30,6 +30,11 @@
 #import <UIKit/UIKit.h>
 #import <Runtime/Runtime.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+/// Symbol to append the include symbol it self to the JSContext
 void add_include_symbols(FJ_Runtime *Runtime, UIView *Term);
+
+NS_ASSUME_NONNULL_END
 
 #endif

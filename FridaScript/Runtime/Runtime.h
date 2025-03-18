@@ -30,16 +30,21 @@
 #import <UIKit/UIKit.h>
 #include <pthread.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+/*
+ @Brief Interface of the FridaScript runtime
+ */
 @interface FJ_Runtime : NSObject
 
 @property (nonatomic,strong,readonly) JSContext *Context;
 @property (nonatomic,readonly) pthread_t Thread;
 
-// Main Runtime functions you should focus on
+/// Main Runtime functions you should focus on
 - (instancetype)init:(UIView*)ptr;
 - (void)run:(NSString*)code;
 
-// Module Handoff
+/// Module Handoff functions
 - (void)handoffIOModule:(id)object;
 - (void)handoffMemoryModule:(id)object;
 - (void)tuirun:(NSString*)code;
@@ -47,10 +52,6 @@
 
 @end
 
-@interface JSContext ()
-
-@property (nonatomic,strong) FJ_Runtime *fj_runtime;
-
-@end
+NS_ASSUME_NONNULL_END
 
 #endif

@@ -22,25 +22,19 @@
  SOFTWARE.
  */
 
+/// Runtime Headers
 #import <Runtime/Include.h>
 #import <Runtime/ErrorThrow.h>
 
-// Module Headers
+/// Module Headers
 #import <Runtime/Modules/IO/IO.h>
 #import <Runtime/Modules/Memory/Memory.h>
 #import <Runtime/Modules/String/String.h>
 #import <Runtime/Modules/Math/Math.h>
 #import <Runtime/Modules/Proc/Proc.h>
 
-// UI Headers
+/// UI Headers
 #import <FridaScript-Swift.h>
-
-// IO Headers for Macros
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <dirent.h>
 
 extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 

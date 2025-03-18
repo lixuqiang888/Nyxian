@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_MATH_H
-#define FS_MODULE_MATH_H
+#ifndef FS_ENVRECOVER_H
+#define FS_ENVRECOVER_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
@@ -31,37 +31,16 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /*
- @Brief JSExport Protocol for Math Module
+ @Brief Interface for EnvRecover
  */
-@protocol MathModuleExport <JSExport>
+@interface EnvRecover : NSObject
 
-/// Math functions
-- (int)abs:(int)x;
-- (int)sqrt:(int)x;
-- (double)sin:(double)x;
-- (double)cos:(double)x;
-- (double)tan:(double)x;
-- (double)log:(double)x;
-- (double)exp:(double)x;
-- (double)floor:(double)x;
-- (double)ceil:(double)x;
-- (double)round:(double)x;
-- (int)min:(int)x y:(int)y;
-- (int)max:(int)x y:(int)y;
-- (int)rand;
-JSExportAs(pow,     - (double)pow:(double)x y:(double)y                                                 );
-
-@end
-
-/*
- @Brief Math Module Interface
- */
-@interface MathModule : NSObject <MathModuleExport>
-
-- (instancetype)init;
+/// Functions to create and restore backup of the environment variables
+- (void)createBackup;
+- (void)restoreBackup;
 
 @end
 
 NS_ASSUME_NONNULL_END
 
-#endif /* FS_MODULE_MATH_H */
+#endif

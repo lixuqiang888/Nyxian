@@ -28,16 +28,27 @@
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+/*
+ @Brief JSExport Protocol for String Module
+ */
 @protocol StringModuleExport <JSExport>
 
+/// String manipulation functions
 - (id)strlen:(NSString*)string;
 
 @end
 
+/*
+ @Brief String Module Interface
+ */
 @interface StringModule : NSObject <StringModuleExport>
 
 - (instancetype)init;
 
 @end
 
-#endif
+NS_ASSUME_NONNULL_END
+
+#endif /* FS_MODULE_STRING_H */

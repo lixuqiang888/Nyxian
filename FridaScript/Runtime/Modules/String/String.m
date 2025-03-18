@@ -27,6 +27,9 @@
 
 #include <string.h>
 
+/*
+ @Brief String Module Implementation
+ */
 @implementation StringModule
 
 - (instancetype)init
@@ -35,6 +38,7 @@
     return self;
 }
 
+/// String manipulation functions
 - (id)strlen:(NSString*)string
 {
     if(!string)

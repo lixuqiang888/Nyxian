@@ -38,6 +38,9 @@
 
 extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
+/*
+ @Brief I/O Module Implementation
+ */
 @implementation IOModule
 
 - (instancetype)init:(TerminalWindow*)term
@@ -48,26 +51,17 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return self;
 }
 
-- (NSString*)moduleCleanup
+- (void)moduleCleanup
 {
-    NSString *buffer = @"";
-    
     if(FJ_RUNTIME_SAFETY_ENABLED)
     {
         for (id item in _array) {
-            buffer = [buffer stringByAppendingFormat:@"%@", [NSString stringWithFormat:@"File Descriptor %d was not closed, closing it for you <3\n", [item intValue]]];
-            if (close([item intValue]) != 0) {
-                buffer = [buffer stringByAppendingFormat:@"%@", [NSString stringWithFormat:@"Failed to close file descriptor %d :c\n", [item intValue]]];
-            };
+            close([item intValue]);
         }
     }
-    
-    return buffer;
 }
 
-/*
- @Brief functions for fd preservation
- */
+/// Runtime Safety
 - (void)addFD:(UInt64)fd
 {
     if(FJ_RUNTIME_SAFETY_ENABLED)
@@ -94,10 +88,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 }
 
 
-/*
- @Brief console functions
- */
-
+/// Console functions
 - (id)print:(NSString*)buffer
 {
     usleep(1);
@@ -124,13 +115,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     dispatch_async(dispatch_get_main_queue(), ^{
         BlockTerm.terminalText.text = [BlockTerm.terminalText.text stringByAppendingFormat:@"%@", prompt];
         [self->_term setInput:^(NSString *input) {
+            BlockTerm.terminalText.text = [BlockTerm.terminalText.text stringByAppendingFormat:@"%@", input];
             if([input isEqual:@"\n"])
             {
-                BlockTerm.terminalText.text = [BlockTerm.terminalText.text stringByAppendingFormat:@"%@", input];
                 dispatch_semaphore_signal(semaphore);
                 return;
             }
-            BlockTerm.terminalText.text = [BlockTerm.terminalText.text stringByAppendingFormat:@"%@", input];
             captured = [captured stringByAppendingFormat:@"%@", input];
         }];
         [self->_term setDeletion:^(NSString *input) {
@@ -172,9 +162,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return captured;
 }
 
-/*
- @Brief Macro Functions
- */
+/// File mode macros
 - (BOOL)S_ISDIR:(UInt64)m
 {
     return S_ISDIR(m);
@@ -210,14 +198,9 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return S_ISSOCK(m);
 }
 
-/*
- @Brief file descriptor functions
- */
+/// File descriptor functions
 - (id)open:(NSString *)path withFlags:(int)flags perms:(UInt16)perms {
-    const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
-    if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_NULL_POINTER);
-    }
+    const char *cPath = [path UTF8String];
 
     int fd = -1;
     if(perms != 0)
@@ -343,20 +326,14 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
 - (id)access:(NSString*)path flags:(int)flags
 {
-    const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
-    if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_NULL_POINTER);
-    }
-    
+    const char *cPath = [path UTF8String];
+
     return [[NSNumber alloc] initWithInt: access(cPath, flags)];
 }
 
 - (id)remove:(NSString*)path
 {
-    const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
-    if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_NULL_POINTER);
-    }
+    const char *cPath = [path UTF8String];
     
     if (remove(cPath) != 0)
     {
@@ -368,10 +345,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
 - (id)mkdir:(NSString*)path perms:(UInt16)perms
 {
-    const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
-    if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_NULL_POINTER);
-    }
+    const char *cPath = [path UTF8String];
     
     int result = 0;
     if(perms != 0)
@@ -391,10 +365,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
 - (id)rmdir:(NSString*)path
 {
-    const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
-    if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_NULL_POINTER);
-    }
+    const char *cPath = [path UTF8String];
     
     if(rmdir(cPath) != 0)
     {
@@ -406,10 +377,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
 - (id)chown:(NSString*)path uid:(int)uid gid:(int)gid
 {
-    const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
-    if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_NULL_POINTER);
-    }
+    const char *cPath = [path UTF8String];
     
     if(chown(cPath, uid, gid) != 0)
     {
@@ -421,10 +389,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
 - (id)chmod:(NSString*)path flags:(UInt16)flags
 {
-    const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
-    if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_NULL_POINTER);
-    }
+    const char *cPath = [path UTF8String];
     
     if(chmod(cPath, (mode_t)flags) != 0)
     {
@@ -434,13 +399,22 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return NULL;
 }
 
-// File functions
+- (id)chdir:(NSString*)path
+{
+    const char *cPath = [path UTF8String];
+    
+    if(chdir(cPath) != 0)
+    {
+        return JS_THROW_ERROR(EW_PERMISSION);
+    }
+    
+    return NULL;
+}
+
+/// File pointer functions
 - (id)fopen:(NSString*)path mode:(NSString*)mode
 {
-    const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
-    if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_NULL_POINTER);
-    }
+    const char *cPath = [path UTF8String];
     
     // getting the file
     FILE *file = fopen(cPath, [mode UTF8String]);
@@ -551,13 +525,10 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return fileObject;
 }
 
-// Directory functions
+/// Directory pointer functions
 - (id)opendir:(NSString*)path
 {
-    const char *cPath = [[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path] UTF8String];
-    if (cPath == NULL) {
-        return JS_THROW_ERROR(EW_NULL_POINTER);
-    }
+    const char *cPath = [path UTF8String];
     
     DIR *directory = opendir(cPath);
     
@@ -655,6 +626,65 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     updateDIR(directory, DIR_obj);
     
     return NULL;
+}
+
+/// Environment variable functions
+- (id)getenv:(NSString*)env
+{
+    const char *utf8_env = [env UTF8String];
+    const char *env_value = getenv(utf8_env);
+    
+    if(!env_value)
+    {
+        return JS_THROW_ERROR(EW_NULL_POINTER);
+    }
+    
+    return @(env_value);
+}
+
+- (id)setenv:(NSString*)env value:(NSString*)value overwrite:(UInt32)overwrite
+{
+    const char *utf8_env = [env UTF8String];
+    const char *utf8_value = [value UTF8String];
+    
+    if(setenv(utf8_env, utf8_value, overwrite) != 0)
+    {
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    }
+    
+    return NULL;
+}
+
+- (id)unsetenv:(NSString*)env
+{
+    const char *utf8_env = [env UTF8String];
+    
+    if(unsetenv(utf8_env) != 0)
+    {
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    }
+    
+    return NULL;
+}
+
+- (id)getcwd:(UInt16)size
+{
+    if(size == 0)
+    {
+        size = 2048;
+    }
+    
+    char *rw_buffer = malloc(size);
+    if(getcwd(rw_buffer, size) == NULL)
+    {
+        free(rw_buffer);
+        return JS_THROW_ERROR(EW_NULL_POINTER);
+    }
+    
+    NSString *buffer = @(rw_buffer);
+    free(rw_buffer);
+    
+    return buffer;
 }
 
 @end

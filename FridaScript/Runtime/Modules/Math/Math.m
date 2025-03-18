@@ -24,6 +24,9 @@
 
 #import "Math.h"
 
+/*
+ @Brief Math Module Implementation
+ */
 @implementation MathModule
 
 - (instancetype)init
@@ -32,6 +35,7 @@
     return self;
 }
 
+/// Math functions
 - (int)abs:(int)x
 {
     return abs(x);

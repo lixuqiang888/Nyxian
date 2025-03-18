@@ -28,7 +28,12 @@
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
-// premade errors
+NS_ASSUME_NONNULL_BEGIN
+
+/// Function for throwing errors to JSContext
+JSValue* jsDoThrowError(NSString *msg);
+
+/// Premade errors
 #define EW_ARGUMENT        @"Parameter failure"
 #define EW_RUNTIME_SAFETY  @"Safety compromise detected, runtime safety is enabled, please disable it by calling disable_safety_checks();"
 #define EW_UNEXPECTED      @"An unexpected mistake happened"
@@ -53,8 +58,7 @@
 #define EW_DISK_FULL       @"Disk is full"
 #define EW_UNKNOWN_ERROR   @"An unknown error occurred"
 
-JSValue* jsDoThrowError(NSString *msg);
-
+/// Macro to automize symbol printint
 #if __has_feature(objc_arc) && !defined(__cplusplus)
     #define JS_THROW_ERROR(msg) \
         jsDoThrowError([NSString stringWithFormat:@"%@ %@", NSStringFromSelector(_cmd), msg])
@@ -62,5 +66,7 @@ JSValue* jsDoThrowError(NSString *msg);
     #define JS_THROW_ERROR(msg) \
         jsDoThrowError([NSString stringWithFormat:@"'%s': %@", __func__, msg])
 #endif
+
+NS_ASSUME_NONNULL_END
 
 #endif

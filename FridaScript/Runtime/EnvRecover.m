@@ -22,46 +22,62 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_MATH_H
-#define FS_MODULE_MATH_H
+#import "EnvRecover.h"
 
-#import <Foundation/Foundation.h>
-#import <JavaScriptCore/JavaScriptCore.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-NS_ASSUME_NONNULL_BEGIN
+extern char **environ;
 
 /*
- @Brief JSExport Protocol for Math Module
+ @Brief extension of EnvRecover holding the sensitive backup safely
  */
-@protocol MathModuleExport <JSExport>
+@interface EnvRecover ()
 
-/// Math functions
-- (int)abs:(int)x;
-- (int)sqrt:(int)x;
-- (double)sin:(double)x;
-- (double)cos:(double)x;
-- (double)tan:(double)x;
-- (double)log:(double)x;
-- (double)exp:(double)x;
-- (double)floor:(double)x;
-- (double)ceil:(double)x;
-- (double)round:(double)x;
-- (int)min:(int)x y:(int)y;
-- (int)max:(int)x y:(int)y;
-- (int)rand;
-JSExportAs(pow,     - (double)pow:(double)x y:(double)y                                                 );
+@property (nonatomic,readonly) char **backup;
 
 @end
 
 /*
- @Brief Math Module Interface
+ @Brief NSObject to handle changes to environment variables
+ basically resetting them after use
  */
-@interface MathModule : NSObject <MathModuleExport>
+@implementation EnvRecover
 
-- (instancetype)init;
+- (instancetype)init
+{
+    self = [super init];
+    return self;
+}
+
+- (void)createBackup
+{
+    size_t total_size = 0;
+    char **env = environ;
+    while (*env != NULL) {
+        total_size += strlen(*env) + 1;
+        env++;
+    }
+    total_size += sizeof(char **) * (env - environ);
+    _backup = malloc(total_size);
+    memcpy(_backup, environ, total_size);
+}
+
+- (void)restoreBackup
+{
+    size_t total_size = 0;
+    char **env = _backup;
+    
+    while (*env != NULL) {
+        total_size += strlen(*env) + 1;
+        env++;
+    }
+    
+    total_size += sizeof(char **) * (env - _backup);
+    memcpy(environ, _backup, total_size);
+    free(_backup);
+}
+
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#endif /* FS_MODULE_MATH_H */

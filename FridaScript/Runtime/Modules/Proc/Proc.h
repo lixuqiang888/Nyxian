@@ -28,8 +28,14 @@
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+/*
+ @Brief JSExport Protocol for Proc Module
+ */
 @protocol ProcModuleExport <JSExport>
 
+/// Low level process functions
 - (UInt32)getpid;
 - (UInt32)getppid;
 - (UInt32)getuid;
@@ -39,14 +45,19 @@
 - (id)setuid:(UInt32)uid;
 - (id)setgid:(UInt32)gid;
 - (UInt32)getpgid:(UInt32)pid;
-JSExportAs(setpgid,
-           - (id)setpgid:(UInt32)pid pgid:(UInt32)pgid
-           );
+JSExportAs(setpgid, - (id)setpgid:(UInt32)pid pgid:(UInt32)pgid                                         );
 
 @end
 
+/*
+ @Brief Proc Module Interface
+ */
 @interface ProcModule : NSObject <ProcModuleExport>
 
+- (instancetype)init;
+
 @end
 
-#endif
+NS_ASSUME_NONNULL_END
+
+#endif /* FS_MODULE_PROC_H */
