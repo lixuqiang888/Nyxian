@@ -65,30 +65,7 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
     };
     [_Context evaluateScript:code];
     
-    // Module Cleanup on condition
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"\nRUNTIME END\n[Module Cleanup]\n"];
-    });
-    if(_ioModule != NULL)
-    {
-        __block NSString *buffer = [_ioModule moduleCleanup];
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"%@", buffer];
-        });
-    }
-    if(_memoryModule != NULL)
-    {
-        __block NSString *buffer = [_memoryModule moduleCleanup];
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"%@", buffer];
-        });
-    }
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"[EXIT]\n"];
-    });
-    
-    // Hope ARC will clean JSContext
-    _Context = nil;
+    [self cleanup];
 }
 
 - (void)tuirun:(NSString*)code {
