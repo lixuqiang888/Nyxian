@@ -27,6 +27,6 @@
 
 /// Macro helper to easily add macros to the JSContext on module includation
 #define DECLARE_CONTEXT_MAPPING(name) \
-    Runtime.Context[@(name)] = @(name);
+    Runtime.Context[[NSString stringWithFormat:@"%s", #name]] = @(name);
 
 #endif /* FS_MODULE_MACROHELPER_H */
