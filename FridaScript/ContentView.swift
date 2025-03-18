@@ -83,6 +83,7 @@ struct ContentView: View {
         NavigationView {
             FileList(title: "Root", directoryPath: URL(fileURLWithPath: RootPath), actpath: $actpath, action: $action)
         }
+        .navigationViewStyle(.stack)
         .accentColor(.primary)
         .tint(.primary)
     }
