@@ -24,7 +24,6 @@
 
 import SwiftUI
 import Foundation
-import UniformTypeIdentifiers
 
 private let invalidFS: Set<Character> = ["/", "\\", ":", "*", "?", "\"", "<", ">", "|"]
 
@@ -611,8 +610,6 @@ func share(url: URL, remove: Bool = false) -> Void {
         }
     }
 }
-
-import Foundation
 
 func cfolder(atPath path: String) -> Void {
    do {

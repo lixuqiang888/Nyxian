@@ -24,15 +24,18 @@
 
 import SwiftUI
 
+var runtime: FJ_Runtime? = nil
+
 struct RuntimeView: UIViewRepresentable {
+    @Binding var closable: Bool
     var view: TerminalWindow
-    let runtime: FJ_Runtime
     var code: String = ""
     
-    init(code: String) {
+    init(code: String, closable: Binding<Bool>) {
         self.code = code
         self.view = TerminalWindow()
-        self.runtime = FJ_Runtime(self.view)
+        runtime = FJ_Runtime(self.view)
+        _closable = closable
     }
     
     func makeUIView(context: Context) -> UIView {
@@ -44,7 +47,12 @@ struct RuntimeView: UIViewRepresentable {
         view.addSubview(terminalView)
         
         DispatchQueue.global(qos: .utility).async {
-            self.runtime.run(code)
+            runtime?.run(code)
+            
+            DispatchQueue.main.async {
+                runtime = nil
+                closable = false
+            }
         }
         
         return view
@@ -56,10 +64,11 @@ struct RuntimeView: UIViewRepresentable {
 struct RuntimeRunnerView: View {
     @Binding var sheet: Bool
     @State var code: String
+    @State var closable: Bool = true
     
     var body: some View {
         NavigationView {
-            RuntimeView(code: code)
+            RuntimeView(code: code, closable: $closable)
                 .navigationTitle("Console")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -70,8 +79,20 @@ struct RuntimeRunnerView: View {
                             sheet = false
                         }
                         .accentColor(.primary)
+                        .disabled(closable)
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing)
+                    {
+                        Button(action:{
+                            runtime?.kill()
+                        })
+                        {
+                            Text("Kill")
+                                .foregroundColor(Color.red)
+                        }
                     }
                 }
+                .accentColor(.primary)
         }
     }
 }

@@ -28,7 +28,19 @@
 #import <Runtime/EnvRecover.h>
 #import <FridaScript-Swift.h>
 
+/// Header for threading
+#include <pthread.h>
+
 extern bool FJ_RUNTIME_SAFETY_ENABLED;
+
+/*
+ @Brief Structure to make our lifes easier
+ */
+typedef struct {
+    JSContext *context;
+    NSString *code;
+    TerminalWindow *term;
+} FridaScript_Runtime_Thread_t;
 
 /*
  @Brief FridaScript runtime extension
@@ -61,22 +73,55 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
     return self;
 }
 
-/// Main Runtime functions you should focus on
-- (void)run:(NSString*)code {
-    // Initial run
-    __block TerminalWindow *BlockSerial = _Serial;
-    _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
+void* runner(void *args)
+{
+    // getting the arguments
+    FridaScript_Runtime_Thread_t *rtargs = (FridaScript_Runtime_Thread_t*)args;
+    JSContext *context = rtargs->context;
+    NSString *code = rtargs->code;
+    
+    __block TerminalWindow *BlockSerial = rtargs->term;
+    context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
         dispatch_sync(dispatch_get_main_queue(), ^{
             BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"\nFridaScript Error: %@", exception];
         });
     };
-    [_Context evaluateScript:code];
+    [context evaluateScript:code];
     
+    return NULL;
+}
+
+/// Main Runtime functions you should focus on
+- (void)run:(NSString*)code
+{
+    // building the thread args
+    FridaScript_Runtime_Thread_t *args = malloc(sizeof(FridaScript_Runtime_Thread_t));
+    args->context = _Context;
+    args->term = _Serial;
+    args->code = code;
+    
+    // creating the pthread
+    pthread_create(&_thread, NULL, runner, (void*)args);
+    pthread_join(_thread, NULL);
+    
+    // cleaning up
     [self cleanup];
+    
+    // restoring the environment variables
     [_envRecover restoreBackup];
 }
 
-- (void)tuirun:(NSString*)code {
+/// relatively new function to terminate the JSContext execution
+- (void)kill
+{
+    pthread_cancel(_thread);
+    for (id item in _array) {
+        dispatch_semaphore_signal([item giveSemaphore]);
+    }
+}
+
+- (void)tuirun:(NSString*)code
+{
     // Initial TUI run
     __block TerminalWindow *BlockSerial = _Serial;
     _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
@@ -85,6 +130,12 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
         });
     };
     [_Context evaluateScript:code];
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        if ([BlockSerial.terminalText.text length] > 0 &&
+            [BlockSerial.terminalText.text characterAtIndex:[BlockSerial.terminalText.text length] - 1] != '\n') {
+            BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"\n"];
+        }
+    });
 }
 
 /// Private cleanup function

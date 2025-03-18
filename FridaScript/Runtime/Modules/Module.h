@@ -29,7 +29,10 @@
 
 @interface Module : NSObject
 
+@property (nonatomic,strong) dispatch_semaphore_t semaphore;
+
 - (void)moduleCleanup;
+- (dispatch_semaphore_t)giveSemaphore;
 
 @end
 

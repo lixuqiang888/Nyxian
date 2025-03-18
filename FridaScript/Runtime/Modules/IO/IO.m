@@ -109,7 +109,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 - (id)readline:(NSString*)prompt
 {
     usleep(1);
-    __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block dispatch_semaphore_t semaphore = [self giveSemaphore];
     __block NSString *captured = @"";
     __block TerminalWindow *BlockTerm = _term;
     
@@ -144,7 +144,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 - (id)getchar
 {
     usleep(1);
-    __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block dispatch_semaphore_t semaphore = [self giveSemaphore];
     __block NSString *captured = @"";
     
     dispatch_async(dispatch_get_main_queue(), ^{
