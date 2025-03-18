@@ -89,7 +89,7 @@ void add_include_symbols(FJ_Runtime *Runtime, TerminalWindow *Term)
             {
                 return NULL;
             } else {
-                return jsDoThrowError(@"User decided to not consent\n");
+                return jsDoThrowError([NSString stringWithFormat:@"disable_safety_checks: %@", EW_PERMISSION]);
             }
         } forKeyedSubscript:@"disable_safety_checks"];
     }
