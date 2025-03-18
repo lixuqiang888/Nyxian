@@ -25,6 +25,7 @@
 #ifndef FS_MODULE_PROC_H
 #define FS_MODULE_PROC_H
 
+#import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
@@ -52,7 +53,7 @@ JSExportAs(setpgid, - (id)setpgid:(UInt32)pid pgid:(UInt32)pgid                 
 /*
  @Brief Proc Module Interface
  */
-@interface ProcModule : NSObject <ProcModuleExport>
+@interface ProcModule : Module <ProcModuleExport>
 
 - (instancetype)init;
 

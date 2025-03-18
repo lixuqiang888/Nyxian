@@ -28,10 +28,6 @@
 #import <Runtime/EnvRecover.h>
 #import <FridaScript-Swift.h>
 
-/// Header of modules that have a cleanup function
-#import <Runtime/Modules/IO/IO.h>
-#import <Runtime/Modules/Memory/Memory.h>
-
 extern bool FJ_RUNTIME_SAFETY_ENABLED;
 
 /*
@@ -41,9 +37,8 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
 
 @property (nonatomic,strong) TerminalWindow *Serial;
 
-@property (nonatomic,strong) IOModule *ioModule;
-@property (nonatomic,strong) MemoryModule *memoryModule;
-@property (nonatomic,strong) EnvRecover *envManager;
+@property (nonatomic,strong) NSMutableArray<Module*> *array;
+@property (nonatomic,strong) EnvRecover *envRecover;
 
 @end
 
@@ -58,10 +53,9 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
     FJ_RUNTIME_SAFETY_ENABLED = true;
     _Serial = (TerminalWindow*)ptr;
     _Context = [[JSContext alloc] init];
-    _envManager = [[EnvRecover alloc] init];
-    [_envManager createBackup];
-    _ioModule = NULL;
-    _memoryModule = NULL;
+    _envRecover = [[EnvRecover alloc] init];
+    [_envRecover createBackup];
+    _array = [[NSMutableArray alloc] init];
     add_include_symbols(self, ptr);
     chdir([[NSString stringWithFormat:@"%@/Documents", NSHomeDirectory()] UTF8String]);
     return self;
@@ -79,7 +73,7 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
     [_Context evaluateScript:code];
     
     [self cleanup];
-    [_envManager restoreBackup];
+    [_envRecover restoreBackup];
 }
 
 - (void)tuirun:(NSString*)code {
@@ -98,8 +92,10 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
 {
     __block TerminalWindow *BlockSerial = _Serial;
     
-    [_ioModule moduleCleanup];
-    [_memoryModule moduleCleanup];
+    for (id item in _array) {
+        [item moduleCleanup];
+        [_array removeObject:item];
+    }
     
     dispatch_sync(dispatch_get_main_queue(), ^{
         BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"[EXIT]\n"];
@@ -108,15 +104,10 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
     _Context = nil;
 }
 
-/// Module Handoff functions
-- (void)handoffIOModule:(id)object
+/// Module Handoff function
+- (void)handoffModule:(Module*)module
 {
-    _ioModule = object;
-}
-
-- (void)handoffMemoryModule:(id)object
-{
-    _memoryModule = object;
+    [_array addObject:module];
 }
 
 @end

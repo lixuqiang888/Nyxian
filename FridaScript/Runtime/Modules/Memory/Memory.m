@@ -45,6 +45,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
 - (void)moduleCleanup
 {
+    [super moduleCleanup];
     if(FJ_RUNTIME_SAFETY_ENABLED)
     {
         for (id item in _array) {

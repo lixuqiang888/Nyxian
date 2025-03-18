@@ -44,20 +44,22 @@ void fj_include(FJ_Runtime *Runtime, TerminalWindow *Term, NSString *LibName)
         IO_MACRO_MAP();
         IOModule *ioModule = [[IOModule alloc] init:Term];
         [Runtime.Context setObject:ioModule forKeyedSubscript:@"io"];
-        [Runtime handoffIOModule:ioModule];
+        [Runtime handoffModule:ioModule];
     } else if ([LibName isEqual:@"string"]) {
         StringModule *stringModule = [[StringModule alloc] init];
         [Runtime.Context setObject:stringModule forKeyedSubscript:@"string"];
     } else if ([LibName isEqualToString:@"memory"]) {
         MemoryModule *memoryModule = [[MemoryModule alloc] init];
         [Runtime.Context setObject:memoryModule forKeyedSubscript:@"memory"];
-        [Runtime handoffMemoryModule:memoryModule];
+        [Runtime handoffModule:memoryModule];
     } else if ([LibName isEqualToString:@"math"]) {
         MathModule *mathModule = [[MathModule alloc] init];
         [Runtime.Context setObject:mathModule forKeyedSubscript:@"math"];
+        [Runtime handoffModule:mathModule];
     } else if ([LibName isEqualToString:@"proc"]) {
         ProcModule *procModule = [[ProcModule alloc] init];
         [Runtime.Context setObject:procModule forKeyedSubscript:@"proc"];
+        [Runtime handoffModule:procModule];
     }
 }
 

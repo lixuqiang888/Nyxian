@@ -25,6 +25,7 @@
 #ifndef FS_MODULE_IO_H
 #define FS_MODULE_IO_H
 
+#import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <FridaScript-Swift.h>
@@ -88,7 +89,7 @@ JSExportAs(setenv,  - (id)setenv:(NSString*)env value:(NSString*)value overwrite
 /*
  @Brief I/O Module Interface
  */
-@interface IOModule : NSObject <IOModuleExport>
+@interface IOModule : Module <IOModuleExport>
 
 @property (nonatomic,strong) TerminalWindow *term;
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *array;

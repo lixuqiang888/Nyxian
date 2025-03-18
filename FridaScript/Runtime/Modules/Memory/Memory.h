@@ -25,8 +25,10 @@
 #ifndef FS_MODULE_MEMORY_H
 #define FS_MODULE_MEMORY_H
 
+#import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -56,7 +58,7 @@ JSExportAs(mwrite64,- (id)mwrite64:(UInt64)pointer value:(UInt64)value          
 /*
  @Brief Memory Module Interface
  */
-@interface MemoryModule : NSObject <MemoryModuleExport>
+@interface MemoryModule : Module <MemoryModuleExport>
 
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *array;
 

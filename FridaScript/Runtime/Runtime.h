@@ -30,6 +30,9 @@
 #import <UIKit/UIKit.h>
 #include <pthread.h>
 
+/// Header for Module Object type
+#import <Runtime/Modules/Module.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 /*
@@ -45,8 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)run:(NSString*)code;
 
 /// Module Handoff functions
-- (void)handoffIOModule:(id)object;
-- (void)handoffMemoryModule:(id)object;
+- (void)handoffModule:(Module*)module;
 - (void)tuirun:(NSString*)code;
 - (void)cleanup;
 

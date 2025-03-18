@@ -22,47 +22,16 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_MATH_H
-#define FS_MODULE_MATH_H
+#ifndef FS_MODULE_H
+#define FS_MODULE_H
 
-#import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
-#import <JavaScriptCore/JavaScriptCore.h>
 
-NS_ASSUME_NONNULL_BEGIN
+@interface Module : NSObject
 
-/*
- @Brief JSExport Protocol for Math Module
- */
-@protocol MathModuleExport <JSExport>
-
-/// Math functions
-- (int)abs:(int)x;
-- (int)sqrt:(int)x;
-- (double)sin:(double)x;
-- (double)cos:(double)x;
-- (double)tan:(double)x;
-- (double)log:(double)x;
-- (double)exp:(double)x;
-- (double)floor:(double)x;
-- (double)ceil:(double)x;
-- (double)round:(double)x;
-- (int)min:(int)x y:(int)y;
-- (int)max:(int)x y:(int)y;
-- (int)rand;
-JSExportAs(pow,     - (double)pow:(double)x y:(double)y                                                 );
+- (void)moduleCleanup;
 
 @end
 
-/*
- @Brief Math Module Interface
- */
-@interface MathModule : Module <MathModuleExport>
+#endif
 
-- (instancetype)init;
-
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif /* FS_MODULE_MATH_H */
