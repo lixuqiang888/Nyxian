@@ -24,69 +24,6 @@
 
 import SwiftUI
 
-struct RuntimeView: UIViewRepresentable {
-    @Binding var closable: Bool
-    var view: TerminalWindow
-    var code: String = ""
-    var runtime: FJ_Runtime
-    
-    init(code: String, closable: Binding<Bool>) {
-        self.code = code
-        self.view = TerminalWindow()
-        self.runtime = FJ_Runtime(self.view)
-        _closable = closable
-    }
-    
-    func makeUIView(context: Context) -> UIView {
-        let view = UIView()
-        
-        let terminalView = self.view
-        terminalView.frame = view.bounds
-        terminalView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(terminalView)
-        
-        DispatchQueue.global(qos: .utility).async {
-            runtime.run(code)
-            
-            DispatchQueue.main.async {
-                withAnimation {
-                    closable = false
-                }
-            }
-        }
-        
-        return view
-    }
-
-    func updateUIView(_ uiView: UIView, context: Context) {}
-}
-
-struct RuntimeRunnerView: View {
-    @Binding var sheet: Bool
-    @State var code: String
-    @State var closable: Bool = true
-    
-    var body: some View {
-        NavigationView {
-            RuntimeView(code: code, closable: $closable)
-                .navigationTitle("Console")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading)
-                    {
-                        Button("Close")
-                        {
-                            sheet = false
-                        }
-                        .accentColor(.primary)
-                        .disabled(closable)
-                    }
-                }
-                .accentColor(.primary)
-        }
-    }
-}
-
 struct ContentView: View {
     @State private var actpath: String = ""
     @State private var action: Int = 0

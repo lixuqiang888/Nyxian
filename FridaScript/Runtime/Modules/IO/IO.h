@@ -39,10 +39,13 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol IOModuleExport <JSExport>
 
 /// Console functions
-- (id)print:(NSString*)buffer;
+/*- (id)print:(NSString*)buffer;
 - (id)clear;
 - (id)readline:(NSString*)prompt;
-- (id)getchar;
+- (id)getchar;*/
+- (id)fflush;
+- (id)printc:(int)data;
+- (int)getchar;
 
 /// File mode macros
 - (BOOL)S_ISDIR:(UInt64)m;
@@ -92,10 +95,8 @@ JSExportAs(setenv,  - (id)setenv:(NSString*)env value:(NSString*)value overwrite
  */
 @interface IOModule : Module <IOModuleExport>
 
-@property (nonatomic,strong) TerminalWindow *term;
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *array;
 
-- (instancetype)init:(TerminalWindow*)term;
 - (void)moduleCleanup;
 
 @end

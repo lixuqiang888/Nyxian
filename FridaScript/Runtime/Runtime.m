@@ -38,8 +38,6 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
  */
 @interface FJ_Runtime ()
 
-@property (nonatomic,strong) TerminalWindow *Serial;
-
 @property (nonatomic,strong) NSMutableArray<Module*> *array;
 @property (nonatomic,strong) EnvRecover *envRecover;
 
@@ -50,16 +48,15 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
  */
 @implementation FJ_Runtime
 
-- (instancetype)init:(UIView*)ptr
+- (instancetype)init
 {
     self = [super init];
     FJ_RUNTIME_SAFETY_ENABLED = true;
-    _Serial = (TerminalWindow*)ptr;
     _Context = [[JSContext alloc] init];
     _envRecover = [[EnvRecover alloc] init];
     [_envRecover createBackup];
     _array = [[NSMutableArray alloc] init];
-    add_include_symbols(self, ptr);
+    add_include_symbols(self);
     chdir([[NSString stringWithFormat:@"%@/Documents", NSHomeDirectory()] UTF8String]);
     return self;
 }
@@ -67,11 +64,8 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
 /// Main Runtime function to execute code
 - (void)run:(NSString*)code
 {
-    __block TerminalWindow *BlockSerial = _Serial;
     _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"\nFridaScript Error: %@", exception];
-        });
+        printf("%s", [[NSString stringWithFormat:@"\nFridaScript Error: %@", exception] UTF8String]);
     };
     [_Context evaluateScript:code];
     
@@ -82,16 +76,12 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
 /// Private cleanup function
 - (void)cleanup
 {
-    __block TerminalWindow *BlockSerial = _Serial;
-    
     for (id item in _array) {
         [item moduleCleanup];
         [_array removeObject:item];
     }
     
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"[EXIT]\n"];
-    });
+    printf("[EXIT]\n");
     
     _Context = nil;
     

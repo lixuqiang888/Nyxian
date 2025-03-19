@@ -39,11 +39,11 @@
 
 extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
-void fj_include(FJ_Runtime *Runtime, TerminalWindow *Term, NSString *LibName)
+void fj_include(FJ_Runtime *Runtime, NSString *LibName)
 {
     if ([LibName isEqualToString:@"io"]) {
         IO_MACRO_MAP();
-        IOModule *ioModule = [[IOModule alloc] init:Term];
+        IOModule *ioModule = [[IOModule alloc] init];
         [Runtime.Context setObject:ioModule forKeyedSubscript:@"io"];
         [Runtime handoffModule:ioModule];
     } else if ([LibName isEqual:@"string"]) {
@@ -69,30 +69,19 @@ void fj_include(FJ_Runtime *Runtime, TerminalWindow *Term, NSString *LibName)
     }
 }
 
-void add_include_symbols(FJ_Runtime *Runtime, TerminalWindow *Term)
+void add_include_symbols(FJ_Runtime *Runtime)
 {
     __block FJ_Runtime *BlockRuntime = Runtime;
-    __block TerminalWindow *BlockTerm = Term;
     if (Runtime) {
         [Runtime.Context setObject:^(NSString *LibName) {
-            fj_include(BlockRuntime, Term, LibName);
+            fj_include(BlockRuntime, LibName);
         } forKeyedSubscript:@"include"];
         
         // ! ATTENTION !
         // very sensitive symbol
         // will need user verification
         [Runtime.Context setObject:^id {
-            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [BlockTerm safetyAlertWithSemaphore:semaphore];
-            });
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-            if(FJ_RUNTIME_SAFETY_ENABLED == NO)
-            {
-                return NULL;
-            } else {
-                return jsDoThrowError([NSString stringWithFormat:@"disable_safety_checks: %@", EW_PERMISSION]);
-            }
+            return NULL;
         } forKeyedSubscript:@"disable_safety_checks"];
     }
 }

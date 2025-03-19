@@ -25,3 +25,7 @@
 #import "Runtime.h"
 
 void setFJSafety(BOOL value);
+
+void stdin_hook_prepare(void);
+void sendchar(int data);
+int getchar(void);

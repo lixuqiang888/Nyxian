@@ -33,7 +33,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// Symbol to append the include symbol it self to the JSContext
-void add_include_symbols(FJ_Runtime *Runtime, UIView *Term);
+void add_include_symbols(FJ_Runtime *Runtime);
 
 NS_ASSUME_NONNULL_END
 

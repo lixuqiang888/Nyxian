@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong,readonly) JSContext *Context;
 
 /// Main Runtime functions you should focus on
-- (instancetype)init:(UIView*)ptr;
+- (instancetype)init;
 - (void)run:(NSString*)code;
 - (void)cleanup;
 

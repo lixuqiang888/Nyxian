@@ -43,11 +43,10 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
  */
 @implementation IOModule
 
-- (instancetype)init:(TerminalWindow*)term
+- (instancetype)init
 {
     self = [super init];
     _array = [[NSMutableArray alloc] init];
-    _term = term;
     return self;
 }
 
@@ -92,7 +91,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 /// Console functions
 - (id)print:(NSString*)buffer
 {
-    usleep(1);
+    /*usleep(1);
     
     if(!_term)
     {
@@ -103,23 +102,25 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
         _term.terminalText.text = [_term.terminalText.text stringByAppendingFormat:@"%@", buffer];
     });
     
+    return NULL;*/
     return NULL;
 }
 
 - (id)clear
 {
-    usleep(1);
+    /*usleep(1);
     
     dispatch_sync(dispatch_get_main_queue(), ^{
         _term.terminalText.text = @"";
     });
     
+    return NULL;*/
     return NULL;
 }
 
 - (id)readline:(NSString*)prompt
 {
-    usleep(1);
+    /*usleep(1);
     __block dispatch_semaphore_t semaphore = [self giveSemaphore];
     __block NSString *captured = @"";
     __block TerminalWindow *BlockTerm = _term;
@@ -149,29 +150,27 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     [self->_term setInput:^(NSString *input) {}];
     [self->_term setDeletion:^(NSString *input) {}];
     
-    return captured;
+    return captured;*/
+    return NULL;
 }
 
-- (id)getchar
+- (id)fflush
 {
-    usleep(1);
-    __block dispatch_semaphore_t semaphore = [self giveSemaphore];
-    __block NSString *captured = @"";
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self->_term setInput:^(NSString *input) {
-            if(![input isEqual:@""])
-            {
-                captured = input;
-                dispatch_semaphore_signal(semaphore);
-            }
-        }];
-    });
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    
-    [self->_term setInput:^(NSString *input) {}];
-    
-    return captured;
+    fflush(stdout);
+    return NULL;
+}
+
+- (id)printc:(int)data
+{
+    const char cdata = data;
+    putchar(cdata);
+    return NULL;
+}
+
+- (int)getchar
+{
+    int data = getchar();
+    return data;
 }
 
 /// File mode macros

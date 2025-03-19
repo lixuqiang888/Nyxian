@@ -255,7 +255,8 @@ struct FileList: View {
            ImageView(imagePath: $selpath, fbool: $fbool)
        }
        .fullScreenCover(isPresented: $sheet) {
-           RuntimeRunnerView(sheet: $sheet, code: code)
+           //RuntimeRunnerView(sheet: $sheet, code: code)
+           TerminalViewUIViewRepresentable(sheet: $sheet, code: code)
        }
    }
 
