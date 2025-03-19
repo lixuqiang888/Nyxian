@@ -38,14 +38,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol IOModuleExport <JSExport>
 
-/// Console functions
-/*- (id)print:(NSString*)buffer;
-- (id)clear;
-- (id)readline:(NSString*)prompt;
-- (id)getchar;*/
+/// Standard functions
 - (id)fflush;
 - (id)printc:(int)data;
 - (int)getchar;
+- (id)getTermSize;
 
 /// File mode macros
 - (BOOL)S_ISDIR:(UInt64)m;

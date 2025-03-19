@@ -23,6 +23,7 @@
  */
 
 #import "Runtime.h"
+#import <Runtime/Hook/tcom.h>
 
 void setFJSafety(BOOL value);
 

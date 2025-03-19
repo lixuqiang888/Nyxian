@@ -27,8 +27,7 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
         self.setTerminalTitle(source: self, title: "FridaScript")
         hookStdout()
         self.isOpaque = false;
-        print(self.getTerminal().cols)
-        print(self.getTerminal().rows)
+        tcom_set_size(Int32(self.getTerminal().rows), Int32(self.getTerminal().cols))
     }
     
     required init?(coder: NSCoder) {
@@ -83,7 +82,7 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     }
     
     func sizeChanged(source: SwiftTerm.TerminalView, newCols: Int, newRows: Int) {
-        self.terminalDelegate?.sizeChanged(source: self, newCols: 40, newRows: 20)
+        tcom_set_size(Int32(newRows), Int32(newCols))
     }
     
     func hostCurrentDirectoryUpdate(source: SwiftTerm.TerminalView, directory: String?) {
@@ -110,11 +109,13 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> some UIView {
         // mama view
         let view: UIView = UIView(frame: UIScreen.main.bounds)
-        view.backgroundColor = .red
+        view.backgroundColor = UIColor.clear
         
         // terminal view
-        let tview: TerminalView = FridaTerminalView(frame: view.bounds) //TerminalView(frame: view.bounds)
+        let tview: FridaTerminalView = FridaTerminalView(frame: view.bounds) //TerminalView(frame: view.bounds)
         view.addSubview(tview)
+        
+        setupKeyboard(tv: tview, view: view)
         
         DispatchQueue.global(qos: .utility).async {
             let runtime: FJ_Runtime = FJ_Runtime()
@@ -131,5 +132,15 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
         
+    }
+    
+    func setupKeyboard(tv: FridaTerminalView, view: UIView)
+    {
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        tv.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        tv.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        
+        tv.keyboardLayoutGuide.topAnchor.constraint(equalTo: tv.bottomAnchor).isActive = true
     }
 }

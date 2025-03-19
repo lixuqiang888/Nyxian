@@ -30,6 +30,8 @@
 #import <Runtime/ReturnObjBuilder.h>
 #import <Runtime/ErrorThrow.h>
 
+#import <Runtime/Hook/tcom.h>
+
 #include <errno.h>
 #include <stdio.h>
 #include <fcntl.h>
@@ -88,72 +90,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 }
 
 
-/// Console functions
-- (id)print:(NSString*)buffer
-{
-    /*usleep(1);
-    
-    if(!_term)
-    {
-        return JS_THROW_ERROR(EW_NULL_POINTER);
-    }
-    
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        _term.terminalText.text = [_term.terminalText.text stringByAppendingFormat:@"%@", buffer];
-    });
-    
-    return NULL;*/
-    return NULL;
-}
-
-- (id)clear
-{
-    /*usleep(1);
-    
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        _term.terminalText.text = @"";
-    });
-    
-    return NULL;*/
-    return NULL;
-}
-
-- (id)readline:(NSString*)prompt
-{
-    /*usleep(1);
-    __block dispatch_semaphore_t semaphore = [self giveSemaphore];
-    __block NSString *captured = @"";
-    __block TerminalWindow *BlockTerm = _term;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        BlockTerm.terminalText.text = [BlockTerm.terminalText.text stringByAppendingFormat:@"%@", prompt];
-        [self->_term setInput:^(NSString *input) {
-            BlockTerm.terminalText.text = [BlockTerm.terminalText.text stringByAppendingFormat:@"%@", input];
-            if([input isEqual:@"\n"])
-            {
-                dispatch_semaphore_signal(semaphore);
-                return;
-            }
-            captured = [captured stringByAppendingFormat:@"%@", input];
-        }];
-        [self->_term setDeletion:^(NSString *input) {
-            if(![captured isEqual:@""])
-            {
-                BlockTerm.terminalText.text = [BlockTerm.terminalText.text substringToIndex:[BlockTerm.terminalText.text length] - 1];
-                captured = [captured substringToIndex:[captured length] - 1];
-            }
-        }];
-    });
-    
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    
-    [self->_term setInput:^(NSString *input) {}];
-    [self->_term setDeletion:^(NSString *input) {}];
-    
-    return captured;*/
-    return NULL;
-}
-
+/// Standard functions
 - (id)fflush
 {
     fflush(stdout);
@@ -171,6 +108,11 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     int data = getchar();
     return data;
+}
+
+- (id)getTermSize
+{
+    return tcom_get_size();
 }
 
 /// File mode macros
