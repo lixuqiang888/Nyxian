@@ -10,6 +10,8 @@ import SwiftTerm
 import SwiftUI
 import UIKit
 
+var content = ""
+
 // use always the same pipe
 let loggingPipe = Pipe()
 let inPipe = Pipe()
@@ -22,7 +24,11 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
         stdin_hook_prepare()
         super.init (frame: frame)
         terminalDelegate = self
+        self.setTerminalTitle(source: self, title: "FridaScript")
         hookStdout()
+        self.isOpaque = false;
+        print(self.getTerminal().cols)
+        print(self.getTerminal().rows)
     }
     
     required init?(coder: NSCoder) {
@@ -38,7 +44,21 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
                 logString = logString.replacingOccurrences(of: "\n", with: "\n\r")
                 if let normalizedData = logString.data(using: .utf8) {
                     let normalizedByteArray = Array(normalizedData)
-                    self.feed(byteArray: normalizedByteArray[...])
+                    let d = normalizedByteArray[...]
+                    let sliced = Array(d) [0...]
+                    let blocksize = 1024
+                    var next = 0
+                    let last = sliced.endIndex
+
+                    while next < last {
+                        let end = min (next+blocksize, last)
+                        let chunk = sliced [next..<end]
+
+                        DispatchQueue.main.sync {
+                            self.feed(byteArray: chunk)
+                        }
+                        next = end
+                    }
                 }
             }
         }
@@ -63,7 +83,7 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     }
     
     func sizeChanged(source: SwiftTerm.TerminalView, newCols: Int, newRows: Int) {
-        
+        self.terminalDelegate?.sizeChanged(source: self, newCols: 40, newRows: 20)
     }
     
     func hostCurrentDirectoryUpdate(source: SwiftTerm.TerminalView, directory: String?) {
@@ -81,8 +101,6 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     func rangeChanged(source: SwiftTerm.TerminalView, startY: Int, endY: Int) {
         
     }
-    
-    
 }
 
 struct TerminalViewUIViewRepresentable: UIViewRepresentable {
