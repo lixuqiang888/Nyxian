@@ -25,6 +25,7 @@
 #ifndef FS_MODULE_STRING_H
 #define FS_MODULE_STRING_H
 
+#import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
@@ -43,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*
  @Brief String Module Interface
  */
-@interface StringModule : NSObject <StringModuleExport>
+@interface StringModule : Module <StringModuleExport>
 
 - (instancetype)init;
 
