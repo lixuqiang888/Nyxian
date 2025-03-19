@@ -32,6 +32,7 @@
 #import <Runtime/Modules/String/String.h>
 #import <Runtime/Modules/Math/Math.h>
 #import <Runtime/Modules/Proc/Proc.h>
+#import <Runtime/Modules/ArbCall/ArbCall.h>     // UNDER TEST!!!
 
 /// UI Headers
 #import <FridaScript-Swift.h>
@@ -55,11 +56,16 @@ void fj_include(FJ_Runtime *Runtime, TerminalWindow *Term, NSString *LibName)
     } else if ([LibName isEqualToString:@"math"]) {
         MathModule *mathModule = [[MathModule alloc] init];
         [Runtime.Context setObject:mathModule forKeyedSubscript:@"math"];
-        [Runtime handoffModule:mathModule];
     } else if ([LibName isEqualToString:@"proc"]) {
         ProcModule *procModule = [[ProcModule alloc] init];
         [Runtime.Context setObject:procModule forKeyedSubscript:@"proc"];
-        [Runtime handoffModule:procModule];
+    } else if ([LibName isEqualToString:@"arbcall"])
+    {
+        if(!FJ_RUNTIME_SAFETY_ENABLED)
+        {
+            ArbCallModule *arbCallModule = [[ArbCallModule alloc] init];
+            [Runtime.Context setObject:arbCallModule forKeyedSubscript:@"arbcall"];
+        }
     }
 }
 
