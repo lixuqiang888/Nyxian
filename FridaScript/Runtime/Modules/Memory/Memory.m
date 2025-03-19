@@ -55,30 +55,68 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 }
 
 /// Runtime Safety
-- (void)addPtr:(UInt64)pointer
+- (void)addPtr:(UInt64)pointer size:(UInt16)size
 {
-    if(FJ_RUNTIME_SAFETY_ENABLED)
+    if (FJ_RUNTIME_SAFETY_ENABLED)
     {
-        [_array addObject:[[NSNumber alloc] initWithUnsignedLongLong:pointer]];
+        MemorySafetyArrayItem_t item;
+        item.pointer = @(pointer);
+        item.size = @(size);
+        NSValue *value = [NSValue valueWithBytes:&item objCType:@encode(MemorySafetyArrayItem_t)];
+        [_array addObject:value];
     }
 }
 
 - (BOOL)isPtrThere:(UInt64)pointer
 {
-    if(FJ_RUNTIME_SAFETY_ENABLED)
+    if (FJ_RUNTIME_SAFETY_ENABLED)
     {
-        return [_array containsObject:[[NSNumber alloc] initWithUnsignedLongLong:pointer]];
+        for (NSValue *value in _array)
+        {
+            MemorySafetyArrayItem_t item;
+            [value getValue:&item];
+            if ([item.pointer unsignedLongLongValue] == pointer) {
+                return YES;
+            }
+        }
     }
-    return true;
+    return NO;
 }
 
 - (void)removePtr:(UInt64)pointer
 {
-    if(FJ_RUNTIME_SAFETY_ENABLED)
+    if (FJ_RUNTIME_SAFETY_ENABLED)
     {
-        [_array removeObject:[[NSNumber alloc] initWithUnsignedLongLong:pointer]];
+        for (NSValue *value in _array)
+        {
+            MemorySafetyArrayItem_t item;
+            [value getValue:&item];
+            if ([item.pointer unsignedLongLongValue] == pointer)
+            {
+                [_array removeObject:value];
+                break;
+            }
+        }
     }
 }
+
+- (UInt16)sizeForPtr:(UInt64)pointer
+{
+    if (FJ_RUNTIME_SAFETY_ENABLED)
+    {
+        for (NSValue *value in _array)
+        {
+            MemorySafetyArrayItem_t item;
+            [value getValue:&item];
+            if ([item.pointer unsignedLongLongValue] == pointer)
+            {
+                return [item.size unsignedShortValue]; // Return the associated size
+            }
+        }
+    }
+    return UINT16_MAX;
+}
+
 
 /// Low level memory handling functions
 - (UInt64)malloc:(size_t)size
@@ -86,7 +124,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     UInt64 pointer;
     void *ptr = malloc(size);
     pointer = (UInt64)ptr;
-    [self addPtr:pointer];
+    [self addPtr:pointer size:size];
     return pointer;
 }
 
@@ -113,6 +151,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
+    UInt16 pointer_size = [self sizeForPtr:pointer];
+    if(pointer_size < 1)
+    {
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+    
     uint8_t *ptr = (uint8_t*)pointer;
     return [[NSNumber alloc] initWithUnsignedShort:*ptr];
 }
@@ -120,6 +164,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 - (id)mread16:(UInt64)pointer
 {
     if(![self isPtrThere:pointer])
+    {
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+    
+    UInt16 pointer_size = [self sizeForPtr:pointer];
+    if(pointer_size < 2)
     {
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
@@ -135,6 +185,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
+    UInt16 pointer_size = [self sizeForPtr:pointer];
+    if(pointer_size < 4)
+    {
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+    
     uint32_t *ptr = (uint32_t*)pointer;
     return [[NSNumber alloc] initWithUnsignedLong:*ptr];
 }
@@ -142,6 +198,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 - (id)mread64:(UInt64)pointer
 {
     if(![self isPtrThere:pointer])
+    {
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+    
+    UInt16 pointer_size = [self sizeForPtr:pointer];
+    if(pointer_size < 8)
     {
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
@@ -154,6 +216,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 - (id)mwrite8:(UInt64)pointer value:(UInt8)value
 {
     if(![self isPtrThere:pointer])
+    {
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+    
+    UInt16 pointer_size = [self sizeForPtr:pointer];
+    if(pointer_size < 1)
     {
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
@@ -171,6 +239,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
+    UInt16 pointer_size = [self sizeForPtr:pointer];
+    if(pointer_size < 2)
+    {
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+    
     uint16_t *ptr = (uint16_t*)pointer;
     *ptr = value;
     
@@ -184,6 +258,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
+    UInt16 pointer_size = [self sizeForPtr:pointer];
+    if(pointer_size < 4)
+    {
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+    
     uint32_t *ptr = (uint32_t*)pointer;
     *ptr = value;
     
@@ -193,6 +273,12 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 - (id)mwrite64:(UInt64)pointer value:(UInt64)value
 {
     if(![self isPtrThere:pointer])
+    {
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+    
+    UInt16 pointer_size = [self sizeForPtr:pointer];
+    if(pointer_size < 8)
     {
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }

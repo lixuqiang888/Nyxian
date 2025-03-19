@@ -55,12 +55,19 @@ JSExportAs(mwrite64,- (id)mwrite64:(UInt64)pointer value:(UInt64)value          
 
 @end
 
+/// Structure to make our lives easier
+typedef struct {
+    NSNumber *pointer;
+    NSNumber *size;
+} MemorySafetyArrayItem_t;
+typedef void (^MemorySafetyArrayItemHandler)(MemorySafetyArrayItem_t item);
+
 /*
  @Brief Memory Module Interface
  */
 @interface MemoryModule : Module <MemoryModuleExport>
 
-@property (nonatomic, strong) NSMutableArray<NSNumber *> *array;
+@property (nonatomic, strong) NSMutableArray<NSValue*> *array;
 
 - (instancetype)init;
 - (void)moduleCleanup;
