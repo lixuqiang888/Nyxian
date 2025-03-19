@@ -22,15 +22,18 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_ARBCALL_TYPE_CALL_H
-#define FS_MODULE_ARBCALL_TYPE_CALL_H
+#ifndef FS_ALERT_H
+#define FS_ALERT_H
 
-#import <Foundation/Foundation.h>
-#import <JavaScriptCore/JavaScriptCore.h>
-#import <Runtime/Modules/ArbCall/ArbCallCore.h>
+#import <UIKit/UIKit.h>
 
-JSValue* buildCALL(call_t *call_struct);
-call_t *restoreCall(JSValue *callObject);
-void updateCALL(JSValue *callObject);
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void (^AlertCompletion)(BOOL consentGranted);
+
+/// Objc equevalent to FCMs showAlert
+void showConsentAlertWithTitle(NSString *title, NSString *message, AlertCompletion completion);
+
+NS_ASSUME_NONNULL_END
 
 #endif

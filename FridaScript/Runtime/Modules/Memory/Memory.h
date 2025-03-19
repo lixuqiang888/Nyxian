@@ -48,11 +48,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)mread64:(UInt64)pointer;
 
 /// Low level memory writing functions
-JSExportAs(mwrite8, - (id)mwrite8:(UInt64)pointer value:(UInt8)value                                    );
-JSExportAs(mwrite16,- (id)mwrite16:(UInt64)pointer value:(UInt16)value                                  );
-JSExportAs(mwrite32,- (id)mwrite32:(UInt64)pointer value:(UInt32)value                                  );
-JSExportAs(mwrite64,- (id)mwrite64:(UInt64)pointer value:(UInt64)value                                  );
+JSExportAs(mwrite8,          - (id)mwrite8:(UInt64)pointer value:(UInt8)value                                                        );
+JSExportAs(mwrite16,         - (id)mwrite16:(UInt64)pointer value:(UInt16)value                                                      );
+JSExportAs(mwrite32,         - (id)mwrite32:(UInt64)pointer value:(UInt32)value                                                      );
+JSExportAs(mwrite64,         - (id)mwrite64:(UInt64)pointer value:(UInt64)value                                                      );
 
+/// Memory buffering functions
+JSExportAs(mread_buf_str,    - (id)mread_buf_str:(UInt64)pointer start:(UInt64)start end:(UInt64)end                                 );
+JSExportAs(mwrite_buf_str,   - (id)mwrite_buf_str:(UInt64)pointer start:(UInt64)start end:(UInt64)end data:(NSString *)data          );
 @end
 
 /// Structure to make our lives easier

@@ -49,7 +49,9 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     if(FJ_RUNTIME_SAFETY_ENABLED)
     {
         for (id item in _array) {
-            free((void*)[item unsignedLongLongValue]);
+            MemorySafetyArrayItem_t mitem;
+            [item getValue:&mitem];
+            free((void*)[mitem.pointer unsignedLongLongValue]);
         }
     }
 }
@@ -80,7 +82,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
             }
         }
     }
-    return NO;
+    return YES;
 }
 
 - (void)removePtr:(UInt64)pointer
@@ -285,6 +287,65 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     
     uint64_t *ptr = (uint64_t*)pointer;
     *ptr = value;
+    
+    return NULL;
+}
+
+/// Memory buffering functions
+- (id)mread_buf_str:(UInt64)pointer start:(UInt64)start end:(UInt64)end
+{
+    if (![self isPtrThere:pointer])
+    {
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+    
+    UInt16 pointer_size = [self sizeForPtr:pointer];
+    
+    if (start < 0 || start >= pointer_size || end > pointer_size || start > end)
+    {
+        return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
+    }
+    
+    size_t buffer_size = end - start;
+    
+    char *rw_buffer = malloc(buffer_size + 1);
+    if (rw_buffer == NULL) {
+        return JS_THROW_ERROR(EW_NULL_POINTER);
+    }
+    
+    memcpy(rw_buffer, (void *)(pointer + start), buffer_size);
+    
+    rw_buffer[buffer_size] = '\0';
+    
+    NSString *nsbuffer = [NSString stringWithUTF8String:rw_buffer];
+    
+    free(rw_buffer);
+    
+    return nsbuffer;
+}
+
+- (id)mwrite_buf_str:(UInt64)pointer start:(UInt64)start end:(UInt64)end data:(NSString *)data
+{
+    if (![self isPtrThere:pointer])
+    {
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+
+    UInt16 pointer_size = [self sizeForPtr:pointer];
+
+    if (start < 0 || start >= pointer_size || end > pointer_size || start > end)
+    {
+        return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
+    }
+    
+    NSUInteger dataLength = [data lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+    
+    if (dataLength > (end - start))
+    {
+        return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
+    }
+    
+    memcpy((void *)(pointer + start), [data UTF8String], dataLength);
     
     return NULL;
 }

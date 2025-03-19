@@ -25,6 +25,9 @@
 /// Runtime Headers
 #import <Runtime/Include.h>
 #import <Runtime/ErrorThrow.h>
+#import <Runtime/Alert.h>
+
+#import <UIKit/UIKit.h>
 
 /// Module Headers
 #import <Runtime/Modules/IO/IO.h>
@@ -81,6 +84,25 @@ void add_include_symbols(FJ_Runtime *Runtime)
         // very sensitive symbol
         // will need user verification
         [Runtime.Context setObject:^id {
+            __block BOOL Consented = NO;
+            
+            dispatch_semaphore_t semaphore;
+            semaphore = dispatch_semaphore_create(0);
+            
+            showConsentAlertWithTitle(@"Runtime Safety", @"Script wants to disable safety checks which would grand access to craft malicious and arbitary not supervisable code.", ^(BOOL consentGranted) {
+                Consented = consentGranted;
+                dispatch_semaphore_signal(semaphore);
+            });
+            
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+            
+            if(Consented == YES)
+            {
+                FJ_RUNTIME_SAFETY_ENABLED = false;
+            } else {
+                return jsDoThrowError(@"Consent failure\n");
+            }
+            
             return NULL;
         } forKeyedSubscript:@"disable_safety_checks"];
     }
