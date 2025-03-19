@@ -78,8 +78,8 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
 {
     for (id item in _array) {
         [item moduleCleanup];
-        [_array removeObject:item];
     }
+    [_array removeAllObjects];
     
     printf("[EXIT]\n");
     
