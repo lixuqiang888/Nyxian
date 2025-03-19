@@ -106,6 +106,17 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
     return NULL;
 }
 
+- (id)clear
+{
+    usleep(1);
+    
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        _term.terminalText.text = @"";
+    });
+    
+    return NULL;
+}
+
 - (id)readline:(NSString*)prompt
 {
     usleep(1);

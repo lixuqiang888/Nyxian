@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Console functions
 - (id)print:(NSString*)buffer;
+- (id)clear;
 - (id)readline:(NSString*)prompt;
 - (id)getchar;
 
