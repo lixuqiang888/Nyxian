@@ -24,17 +24,16 @@
 
 import SwiftUI
 
-var runtime: FJ_Runtime? = nil
-
 struct RuntimeView: UIViewRepresentable {
     @Binding var closable: Bool
     var view: TerminalWindow
     var code: String = ""
+    var runtime: FJ_Runtime
     
     init(code: String, closable: Binding<Bool>) {
         self.code = code
         self.view = TerminalWindow()
-        runtime = FJ_Runtime(self.view)
+        self.runtime = FJ_Runtime(self.view)
         _closable = closable
     }
     
@@ -47,10 +46,9 @@ struct RuntimeView: UIViewRepresentable {
         view.addSubview(terminalView)
         
         DispatchQueue.global(qos: .utility).async {
-            runtime?.run(code)
+            runtime.run(code)
             
             DispatchQueue.main.async {
-                runtime = nil
                 withAnimation {
                     closable = false
                 }
@@ -82,19 +80,6 @@ struct RuntimeRunnerView: View {
                         }
                         .accentColor(.primary)
                         .disabled(closable)
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing)
-                    {
-                        if(closable)
-                        {
-                            Button(action:{
-                                runtime?.kill()
-                            })
-                            {
-                                Text("Kill")
-                                    .foregroundColor(Color.red)
-                            }
-                        }
                     }
                 }
                 .accentColor(.primary)

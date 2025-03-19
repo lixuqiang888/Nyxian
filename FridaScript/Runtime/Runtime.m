@@ -34,15 +34,6 @@
 extern bool FJ_RUNTIME_SAFETY_ENABLED;
 
 /*
- @Brief Structure to make our lifes easier
- */
-typedef struct {
-    JSContext *context;
-    NSString *code;
-    TerminalWindow *term;
-} FridaScript_Runtime_Thread_t;
-
-/*
  @Brief FridaScript runtime extension
  */
 @interface FJ_Runtime ()
@@ -73,48 +64,19 @@ typedef struct {
     return self;
 }
 
-void* runner(void *args)
+/// Main Runtime function to execute code
+- (void)run:(NSString*)code
 {
-    // getting the arguments
-    FridaScript_Runtime_Thread_t *rtargs = (FridaScript_Runtime_Thread_t*)args;
-    JSContext *context = rtargs->context;
-    NSString *code = rtargs->code;
-    
-    __block TerminalWindow *BlockSerial = rtargs->term;
-    context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
+    __block TerminalWindow *BlockSerial = _Serial;
+    _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
         dispatch_sync(dispatch_get_main_queue(), ^{
             BlockSerial.terminalText.text = [BlockSerial.terminalText.text stringByAppendingFormat:@"\nFridaScript Error: %@", exception];
         });
     };
-    [context evaluateScript:code];
-    
-    return NULL;
-}
-
-/// Main Runtime functions you should focus on
-- (void)run:(NSString*)code
-{
-    // building the thread args
-    FridaScript_Runtime_Thread_t *args = malloc(sizeof(FridaScript_Runtime_Thread_t));
-    args->context = _Context;
-    args->term = _Serial;
-    args->code = code;
-    
-    // creating the pthread
-    pthread_create(&_thread, NULL, runner, (void*)args);
-    pthread_join(_thread, NULL);
+    [_Context evaluateScript:code];
     
     // cleaning up
     [self cleanup];
-}
-
-/// relatively new function to terminate the JSContext execution
-- (void)kill
-{
-    pthread_cancel(_thread);
-    for (id item in _array) {
-        dispatch_semaphore_signal([item giveSemaphore]);
-    }
 }
 
 /// Private cleanup function

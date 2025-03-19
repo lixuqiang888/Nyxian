@@ -41,12 +41,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FJ_Runtime : NSObject
 
 @property (nonatomic,strong,readonly) JSContext *Context;
-@property (nonatomic,readonly) pthread_t thread;
 
 /// Main Runtime functions you should focus on
 - (instancetype)init:(UIView*)ptr;
 - (void)run:(NSString*)code;
-- (void)kill;
 - (void)cleanup;
 
 /// Module Handoff functions
