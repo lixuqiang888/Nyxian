@@ -122,6 +122,7 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
             runtime.run(code)
             print("\nPress any key to continue\n");
             getchar()
+            stdin_hook_cleanup()
             DispatchQueue.main.async {
                 sheet = false
             }

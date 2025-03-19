@@ -22,6 +22,11 @@ void stdin_hook_prepare(void)
     pthread_mutex_init(&data_safety_mutex, NULL);
 }
 
+void stdin_hook_cleanup(void)
+{
+    pthread_mutex_destroy(&data_safety_mutex);
+}
+
 ///
 /// Function for Swift Term to call
 ///
