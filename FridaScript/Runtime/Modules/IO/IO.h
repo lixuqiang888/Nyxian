@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)fflush;
 - (id)printc:(int)data;
 - (int)getchar;
+- (id)getbuff;
 - (id)getTermSize;
 
 /// File mode macros

@@ -10,7 +10,6 @@ import SwiftTerm
 import SwiftUI
 import UIKit
 
-
 // use always the same pipe
 let loggingPipe = Pipe()
 let inPipe = Pipe()
@@ -89,7 +88,8 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     }
     
     func send(source: SwiftTerm.TerminalView, data: ArraySlice<UInt8>) {
-        sendchar(Int32(data[0]))
+        var array = Array(data)
+        sendchar(&array, array.count)
     }
     
     func requestOpenLink(source: SwiftTerm.TerminalView, link: String, params: [String : String]) {

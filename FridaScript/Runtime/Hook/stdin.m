@@ -22,61 +22,108 @@
  SOFTWARE.
  */
 
-#import <Foundation/Foundation.h>
+#include "stdin.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <dispatch/dispatch.h>
 
-int stdin_hook_send_data = 0;
+// GLOBALS
+uint8_t *buffer = NULL;
+size_t buffer_len = 0;
+
 dispatch_semaphore_t stdin_hook_semaphore;
 pthread_mutex_t data_safety_mutex;
 
-/// Stdin hook support functions
+/// Stdin hook setup
 void stdin_hook_prepare(void)
 {
     stdin_hook_semaphore = dispatch_semaphore_create(0);
     pthread_mutex_init(&data_safety_mutex, NULL);
 }
 
+/// Cleanup
 void stdin_hook_cleanup(void)
 {
     pthread_mutex_destroy(&data_safety_mutex);
+    if (buffer != NULL) {
+        free(buffer);
+        buffer = NULL;
+        buffer_len = 0;
+    }
 }
 
 ///
-/// Function for Swift Term to call
+/// Function for SwiftTerm to call
 ///
-void sendchar(int data)
+void sendchar(const uint8_t *ro_buffer, size_t len)
 {
-    // mutex because hypothetically this could be called twice
     pthread_mutex_lock(&data_safety_mutex);
     
-    // setting the data provided to us
-    stdin_hook_send_data = data;
+    // Free previous buffer
+    if (buffer != NULL)
+    {
+        free(buffer);
+        buffer = NULL;
+        buffer_len = 0;
+    }
     
-    // fire semaphore
+    // Allocate new buffer
+    buffer = malloc(len);
+    if (buffer != NULL)
+    {
+        memcpy(buffer, ro_buffer, len);
+        buffer_len = len;
+    }
+    
+    // Signal semaphore
     dispatch_semaphore_signal(stdin_hook_semaphore);
     
-    // mutex unlock so another hypothetical call can process further
     pthread_mutex_unlock(&data_safety_mutex);
 }
 
 ///
-/// Hooked getchar
-///
-/// Function to receive the output of SwiftTerm
+/// Hooked getchar - returns first byte
 ///
 int getchar(void)
 {
-    // waiting on the signal from the swift term
     dispatch_semaphore_wait(stdin_hook_semaphore, DISPATCH_TIME_FOREVER);
     
-    // another lock to prevent the terminal to write a char while we are reading it
     pthread_mutex_lock(&data_safety_mutex);
-    int data = stdin_hook_send_data;
+    
+    int data = 0;
+    
+    if (buffer != NULL && buffer_len > 0)
+    {
+        data = buffer[0];
+    }
+    
     pthread_mutex_unlock(&data_safety_mutex);
     
-    // sending input of swift term back to requestor
     return data;
+}
+
+///
+/// Sister function of getchar: returns whole buffer
+///
+id getbuff(void)
+{
+    dispatch_semaphore_wait(stdin_hook_semaphore, DISPATCH_TIME_FOREVER);
+    
+    pthread_mutex_lock(&data_safety_mutex);
+    
+    NSMutableArray *dataArray = [NSMutableArray array];
+    
+    if (buffer != NULL && buffer_len > 0)
+    {
+        for (size_t i = 0; i < buffer_len; i++)
+        {
+            [dataArray addObject:@(buffer[i])];
+        }
+    }
+    
+    pthread_mutex_unlock(&data_safety_mutex);
+    
+    return dataArray;
 }

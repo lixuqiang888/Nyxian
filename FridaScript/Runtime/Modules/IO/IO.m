@@ -29,6 +29,7 @@
 #import <Runtime/Modules/IO/Types/Dirent.h>
 #import <Runtime/ReturnObjBuilder.h>
 #import <Runtime/ErrorThrow.h>
+#import <Runtime/Hook/stdin.h>
 
 #import <Runtime/Hook/tcom.h>
 
@@ -108,6 +109,11 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 {
     int data = getchar();
     return data;
+}
+
+- (id)getbuff
+{
+    return getbuff();
 }
 
 - (id)getTermSize

@@ -24,10 +24,6 @@
 
 #import "Runtime.h"
 #import <Runtime/Hook/tcom.h>
+#import <Runtime/Hook/stdin.h>
 
 void setFJSafety(BOOL value);
-
-void stdin_hook_prepare(void);
-void stdin_hook_cleanup(void);
-void sendchar(int data);
-int getchar(void);
