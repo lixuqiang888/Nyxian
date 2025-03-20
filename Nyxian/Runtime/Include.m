@@ -36,6 +36,7 @@
 #import <Runtime/Modules/Math/Math.h>
 #import <Runtime/Modules/Proc/Proc.h>
 #import <Runtime/Modules/ArbCall/ArbCall.h>     // UNDER TEST!!!
+#import <Runtime/Modules/Timer/Timer.h>
 
 /// UI Headers
 #import <Nyxian-Swift.h>
@@ -69,6 +70,9 @@ void fj_include(FJ_Runtime *Runtime, NSString *LibName)
             ArbCallModule *arbCallModule = [[ArbCallModule alloc] init];
             [Runtime.Context setObject:arbCallModule forKeyedSubscript:@"arbcall"];
         }
+    } else if ([LibName isEqualToString:@"timer"]) {
+        TimerModule *timerModule = [[TimerModule alloc] init];
+        [Runtime.Context setObject:timerModule forKeyedSubscript:@"timer"];
     }
 }
 
