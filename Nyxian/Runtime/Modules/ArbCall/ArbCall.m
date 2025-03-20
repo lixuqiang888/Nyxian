@@ -54,10 +54,9 @@
     call_t *call_struct = restoreCall(callObject);
     
     const char *ro_buffer = [name UTF8String];
-    char *rw_buffer = malloc(256);
-    size_t len = strlen(ro_buffer);
-    memcpy(rw_buffer, ro_buffer, len);
-    rw_buffer[len] = '\0';
+    size_t size_of_ro_buffer = strlen(ro_buffer);
+    char *rw_buffer = malloc(size_of_ro_buffer);
+    memcpy(rw_buffer, ro_buffer, size_of_ro_buffer);
     
     call_struct->name = rw_buffer;
     
