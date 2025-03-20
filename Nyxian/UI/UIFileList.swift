@@ -269,7 +269,7 @@ struct FileList: View {
            if type == 0 {
            var content = ""
                switch gsuffix(from: potextfield) {
-                   case "swift", "c", "m", "mm", "cpp", "h", "hpp", "js":
+                   case "nx":
                        content = authorgen(file: potextfield)
                        break
                    default:
@@ -355,37 +355,6 @@ struct ImageView: View {
            return UIImage(systemName: "photo")!
        }
        return image
-   }
-}
-
-struct SDKList: View {
-   @State private var files: [URL] = []
-   @State var directoryPath: URL
-   @Binding var sdk: String
-   @Binding var isActive: Bool
-   var body: some View {
-       List {
-           Section {
-               ForEach(files, id: \.self) { folder in
-                   Button( action: {
-                       sdk = folder.lastPathComponent
-                       isActive = false
-                   }){
-                       HStack {
-                           Image(systemName: "sdcard.fill")
-                           Text(folder.lastPathComponent)
-                       }
-                   }
-               }
-           }
-       }
-       .onAppear {
-           bindLoadFiles(directoryPath: directoryPath, files: $files)
-       }
-       .accentColor(.primary)
-       .listStyle(InsetGroupedListStyle())
-       .navigationTitle("SDKs")
-       .navigationBarTitleDisplayMode(.inline)
    }
 }
 
@@ -494,43 +463,6 @@ private func bindLoadFiles(directoryPath: URL, files: Binding<[URL]>) -> Void {
            DispatchQueue.main.async {
                print("Error loading files: \(error.localizedDescription)")
            }
-       }
-   }
-}
-
-struct DocumentPicker: UIViewControllerRepresentable {
-   @State var pathURL: URL
-   @Environment(\.presentationMode) private var presentationMode
-
-   func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-       let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.item], asCopy: true)
-       documentPicker.allowsMultipleSelection = true
-       documentPicker.delegate = context.coordinator
-       return documentPicker
-   }
-
-   func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
-
-   func makeCoordinator() -> Coordinator {
-       return Coordinator(self)
-   }
-
-   class Coordinator: NSObject, UIDocumentPickerDelegate {
-       let parent: DocumentPicker
-
-       init(_ parent: DocumentPicker) {
-           self.parent = parent
-       }
-
-       func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-           for item in urls {
-               _ = mv(item.path, "\(parent.pathURL.path)/\(item.lastPathComponent)")
-           }
-           parent.presentationMode.wrappedValue.dismiss()
-       }
-
-       func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-           parent.presentationMode.wrappedValue.dismiss()
        }
    }
 }
