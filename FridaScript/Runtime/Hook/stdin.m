@@ -72,6 +72,11 @@ int getchar(void)
     // waiting on the signal from the swift term
     dispatch_semaphore_wait(stdin_hook_semaphore, DISPATCH_TIME_FOREVER);
     
+    // another lock to prevent the terminal to write a char while we are reading it
+    pthread_mutex_lock(&data_safety_mutex);
+    int data = stdin_hook_send_data;
+    pthread_mutex_unlock(&data_safety_mutex);
+    
     // sending input of swift term back to requestor
-    return stdin_hook_send_data;
+    return data;
 }
