@@ -25,12 +25,12 @@
 #import <Runtime/Alert.h>
 
 /// Objc equevalent to FCMs showAlert
-void presentAlertWithTitle(NSString *title, NSString *message, AlertCompletion completion) {
+void presentAlertWithTitle(NSString *title, NSString *message, NSString *falseButton, NSString *trueButton, AlertCompletion completion) {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
                                                                              message:message
                                                                       preferredStyle:UIAlertControllerStyleAlert];
 
-    UIAlertAction *noAction = [UIAlertAction actionWithTitle:@"No"
+    UIAlertAction *noAction = [UIAlertAction actionWithTitle:falseButton
                                                       style:UIAlertActionStyleCancel
                                                     handler:^(UIAlertAction * _Nonnull action) {
         if (completion) {
@@ -40,7 +40,7 @@ void presentAlertWithTitle(NSString *title, NSString *message, AlertCompletion c
         }
     }];
 
-    UIAlertAction *consentAction = [UIAlertAction actionWithTitle:@"Consent"
+    UIAlertAction *consentAction = [UIAlertAction actionWithTitle:trueButton
                                                            style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * _Nonnull action) {
         if (completion) {
@@ -72,12 +72,12 @@ void presentAlertWithTitle(NSString *title, NSString *message, AlertCompletion c
     }
 }
 
-void showConsentAlertWithTitle(NSString *title, NSString *message, AlertCompletion completion) {
+void showConsentAlertWithTitle(NSString *title, NSString *message, NSString *falseButton, NSString *trueButton, AlertCompletion completion) {
     if ([NSThread isMainThread]) {
-        presentAlertWithTitle(title, message, completion);
+        presentAlertWithTitle(title, message, falseButton, trueButton, completion);
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
-            presentAlertWithTitle(title, message, completion);
+            presentAlertWithTitle(title, message, falseButton, trueButton, completion);
         });
     }
 }

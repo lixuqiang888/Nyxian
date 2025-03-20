@@ -89,7 +89,7 @@ void add_include_symbols(FJ_Runtime *Runtime)
             dispatch_semaphore_t semaphore;
             semaphore = dispatch_semaphore_create(0);
             
-            showConsentAlertWithTitle(@"Runtime Safety", @"Script wants to disable safety checks which would grand access to craft malicious and arbitary not supervisable code.", ^(BOOL consentGranted) {
+            showConsentAlertWithTitle(@"Runtime Safety", @"Script wants to disable safety checks which would grand access to craft malicious and arbitary not supervisable code.", @"Cancel", @"Consent", ^(BOOL consentGranted) {
                 Consented = consentGranted;
                 dispatch_semaphore_signal(semaphore);
             });

@@ -32,7 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^AlertCompletion)(BOOL consentGranted);
 
 /// Objc equevalent to FCMs showAlert
-void showConsentAlertWithTitle(NSString *title, NSString *message, AlertCompletion completion);
+void presentAlertWithTitle(NSString *title, NSString *message, NSString *falseButton, NSString *trueButton, AlertCompletion completion);
+void showConsentAlertWithTitle(NSString *title, NSString *message, NSString *falseButton, NSString *trueButton, AlertCompletion completion);
 
 NS_ASSUME_NONNULL_END
 
