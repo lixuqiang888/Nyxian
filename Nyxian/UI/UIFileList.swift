@@ -114,19 +114,23 @@ struct FileList: View {
                        }
                    }
                    .contextMenu {
-                       Button(action: {
-                           let readcode = {
-                               do {
-                                   return try String(contentsOfFile: item.path)
-                               } catch {
-                                   sheet = false
-                                   return ""
+                       if gsuffix(from: item.lastPathComponent) == "nx" {
+                           Section  {
+                               Button(action: {
+                                   let readcode = {
+                                       do {
+                                           return try String(contentsOfFile: item.path)
+                                       } catch {
+                                           sheet = false
+                                           return ""
+                                       }
+                                   }()
+                                   code = readcode
+                                   sheet = true
+                               }) {
+                                   Label("Run Code", systemImage: "bolt.fill")
                                }
-                           }()
-                           code = readcode
-                           sheet = true
-                       }) {
-                           Label("Run Code", systemImage: "bolt.fill")
+                           }
                        }
                        Section {
                            Button(action: {
@@ -422,40 +426,10 @@ private func gProperty(_ fileURL: URL) -> FileProperty {
 
    let suffix = gsuffix(from: fileURL.path)
    switch(suffix) {
-       case "m":
-           property.symbol = "m"
-           property.color = Color.orange
-           property.size = 8
-       case "js":
-           property.symbol = "js"
-           property.color = Color.orange
-           property.size = 5
-       case "c":
-           property.symbol = "c"
-           property.color = Color.blue
-           property.size = 8
-       case "mm":
-           property.symbol = "mm"
-           property.color = Color.yellow
-           property.size = 5
-       case "cpp":
-           property.symbol = "cpp"
-           property.color = Color.green
-           property.size = 4
-       case "hpp":
-           property.symbol = "hpp"
-           property.color = Color.secondary
-           property.size = 4
-       case "swift":
-           property.color = Color.red
-       case "h":
-           property.symbol = "h"
-           property.color = Color.secondary
-           property.size = 8
-       case "api":
-           property.symbol = "api"
+       case "nx":
+           property.symbol = "nx"
            property.color = Color.purple
-           property.size = 4
+           property.size = 8
        default:
            property.color = Color.primary
    }

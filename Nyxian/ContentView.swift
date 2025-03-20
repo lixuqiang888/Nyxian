@@ -29,7 +29,7 @@ struct ContentView: View {
     @State private var action: Int = 0
     var body: some View {
         NavigationView {
-            FileList(title: "Root", directoryPath: URL(fileURLWithPath: RootPath), actpath: $actpath, action: $action)
+            FileList(title: "Nyxian", directoryPath: URL(fileURLWithPath: RootPath), actpath: $actpath, action: $action)
         }
         .navigationViewStyle(.stack)
         .accentColor(.primary)
