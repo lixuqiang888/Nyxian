@@ -11,13 +11,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AFBE41752D85E4B500315155 /* FridaScript.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FridaScript.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AFBE41752D85E4B500315155 /* Nyxian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nyxian.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		AFBE41772D85E4B500315155 /* FridaScript */ = {
+		AFBE41772D85E4B500315155 /* Nyxian */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = FridaScript;
+			path = Nyxian;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -37,7 +37,7 @@
 		AFBE416C2D85E4B500315155 = {
 			isa = PBXGroup;
 			children = (
-				AFBE41772D85E4B500315155 /* FridaScript */,
+				AFBE41772D85E4B500315155 /* Nyxian */,
 				AFBE41762D85E4B500315155 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -45,7 +45,7 @@
 		AFBE41762D85E4B500315155 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AFBE41752D85E4B500315155 /* FridaScript.app */,
+				AFBE41752D85E4B500315155 /* Nyxian.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -53,9 +53,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		AFBE41742D85E4B500315155 /* FridaScript */ = {
+		AFBE41742D85E4B500315155 /* Nyxian */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AFBE41832D85E4B700315155 /* Build configuration list for PBXNativeTarget "FridaScript" */;
+			buildConfigurationList = AFBE41832D85E4B700315155 /* Build configuration list for PBXNativeTarget "Nyxian" */;
 			buildPhases = (
 				AFBE41712D85E4B500315155 /* Sources */,
 				AFBE41722D85E4B500315155 /* Frameworks */,
@@ -66,14 +66,14 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				AFBE41772D85E4B500315155 /* FridaScript */,
+				AFBE41772D85E4B500315155 /* Nyxian */,
 			);
-			name = FridaScript;
+			name = Nyxian;
 			packageProductDependencies = (
 				AF4836262D8AF4AA00830CED /* SwiftTerm */,
 			);
 			productName = FJS;
-			productReference = AFBE41752D85E4B500315155 /* FridaScript.app */;
+			productReference = AFBE41752D85E4B500315155 /* Nyxian.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -92,7 +92,7 @@
 					};
 				};
 			};
-			buildConfigurationList = AFBE41702D85E4B500315155 /* Build configuration list for PBXProject "FridaScript" */;
+			buildConfigurationList = AFBE41702D85E4B500315155 /* Build configuration list for PBXProject "Nyxian" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -109,7 +109,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AFBE41742D85E4B500315155 /* FridaScript */,
+				AFBE41742D85E4B500315155 /* Nyxian */,
 			);
 		};
 /* End PBXProject section */
@@ -271,7 +271,7 @@
 				DEVELOPMENT_TEAM = L4A6CKH3TV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = FridaScript;
+				HEADER_SEARCH_PATHS = Nyxian;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -283,10 +283,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.FridaScript;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.nyxian;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = FridaScript/bridge.h;
+				SWIFT_OBJC_BRIDGING_HEADER = Nyxian/bridge.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -306,7 +306,7 @@
 				DEVELOPMENT_TEAM = L4A6CKH3TV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = FridaScript;
+				HEADER_SEARCH_PATHS = Nyxian;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -318,10 +318,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.FridaScript;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.nyxian;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = FridaScript/bridge.h;
+				SWIFT_OBJC_BRIDGING_HEADER = Nyxian/bridge.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -330,7 +330,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		AFBE41702D85E4B500315155 /* Build configuration list for PBXProject "FridaScript" */ = {
+		AFBE41702D85E4B500315155 /* Build configuration list for PBXProject "Nyxian" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AFBE41812D85E4B700315155 /* Debug */,
@@ -339,7 +339,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AFBE41832D85E4B700315155 /* Build configuration list for PBXNativeTarget "FridaScript" */ = {
+		AFBE41832D85E4B700315155 /* Build configuration list for PBXNativeTarget "Nyxian" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AFBE41842D85E4B700315155 /* Debug */,

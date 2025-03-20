@@ -38,7 +38,7 @@
 #import <Runtime/Modules/ArbCall/ArbCall.h>     // UNDER TEST!!!
 
 /// UI Headers
-#import <FridaScript-Swift.h>
+#import <Nyxian-Swift.h>
 
 extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 

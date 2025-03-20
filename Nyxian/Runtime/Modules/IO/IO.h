@@ -28,7 +28,7 @@
 #import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
-#import <FridaScript-Swift.h>
+#import <Nyxian-Swift.h>
 #import <Runtime/Modules/IO/Macro.h>
 
 NS_ASSUME_NONNULL_BEGIN

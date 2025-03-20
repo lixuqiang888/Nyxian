@@ -26,7 +26,7 @@
 #import <Runtime/Runtime.h>
 #import <Runtime/Include.h>
 #import <Runtime/EnvRecover.h>
-#import <FridaScript-Swift.h>
+#import <Nyxian-Swift.h>
 
 /// Header for threading
 #include <pthread.h>
