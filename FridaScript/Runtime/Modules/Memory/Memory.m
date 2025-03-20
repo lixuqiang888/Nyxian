@@ -81,6 +81,7 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
                 return YES;
             }
         }
+        return NO;
     }
     return YES;
 }
