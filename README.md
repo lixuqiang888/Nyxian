@@ -4,7 +4,7 @@ This project is an attempt to create a new JIT-less script language based on the
 ## Modules
 Modules are like libraries in FridaScript, you can use the `include("<module name>");` function to load modules into ur FridaScript code. They expose a lot of apples low level functions and make them usable in a safe way. We call the safety `Runtime Safety` it prevents the app from being crashed by low level operations, by tracking and disallowing their malicious use. If you still wish to do malicious things you can call `disable_safety_checks();` which will show up a user alert the user has to consent to. Also the modules currently available are...
 
-- [`io`](FridaScript/Runtime/Modules/IO/IO.md)
+- [`io`](Nyxian/Runtime/Modules/IO/IO.md)
 - `memory`
 - `string`
 - `math`
