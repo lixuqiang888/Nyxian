@@ -10,7 +10,6 @@ import SwiftTerm
 import SwiftUI
 import UIKit
 
-var content = ""
 
 // use always the same pipe
 let loggingPipe = Pipe()
