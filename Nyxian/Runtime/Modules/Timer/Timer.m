@@ -42,7 +42,7 @@
     dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC));
     
     // We scheduling now when the execution should be dispatched
-    dispatch_after(delay, dispatch_get_main_queue(), ^{
+    dispatch_after(delay, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // Now it't time to signal the semaphore that is waiting
         dispatch_semaphore_signal(semaphore);
     });
