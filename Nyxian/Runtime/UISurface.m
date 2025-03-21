@@ -22,16 +22,20 @@
  SOFTWARE.
  */
 
-/// Importing the UISurface header
+/// Importing necessary headers
 #import <Runtime/UISurface.h>
+#include <pthread.h>
 
 /// The holder for the UISurface root
 UIView *uisurface_root;
 
-/// Other necessary stuff
+/// The holder for the message you wanna pass
+NSString *uisurface_msg = nil;
+
+/// Stuff necessary to keep it safe
+BOOL uisurface_initialized = NO;
 dispatch_semaphore_t uisurface_semaphore;
-NSString *uisurface_msg;
-dispatch_queue_t uisurface_msgQueue;
+pthread_mutex_t uisurface_mutex;
 
 ///
 /// Functions to handoff a UIView as target to the UISurface
@@ -45,8 +49,14 @@ void handoff_slave(UIView *view)
     uisurface_root = view;
     
     // Now we have to allocate the semaphore/msgQueue to work correctly
-    uisurface_semaphore = dispatch_semaphore_create(0);
-    uisurface_msgQueue = dispatch_queue_create("msgQueue", DISPATCH_QUEUE_SERIAL);
+    if(!uisurface_initialized)
+    {
+        uisurface_semaphore = dispatch_semaphore_create(0);
+        pthread_mutex_init(&uisurface_mutex, NULL);
+    }
+    
+    // Now as its initialized set it to true
+    uisurface_initialized = YES;
 }
 
 UIView* handoff_master(void)
@@ -67,10 +77,13 @@ NSString* UISurface_Wait_On_Msg(void)
     __block NSString *result;
     
     // We use the other thread to ensure that no one is writing on the same thread, allthough we could also use mutex, probably will even do
-    dispatch_sync(uisurface_msgQueue, ^{
-        result = uisurface_msg;
-        uisurface_msg = nil;
-    });
+    pthread_mutex_lock(&uisurface_mutex);
+    
+    // Now we read what the slave side provided
+    result = [uisurface_msg copy];
+    uisurface_msg = nil;
+    
+    pthread_mutex_unlock(&uisurface_mutex);
     
     // As we received the message we can just return it to the master side as requested
     return result;
@@ -79,9 +92,12 @@ NSString* UISurface_Wait_On_Msg(void)
 void UISurface_Send_Msg(NSString *umsg)
 {
     // The slave side pleases the master and copies over the message it wants to overbring
-    dispatch_sync(uisurface_msgQueue, ^{
-        uisurface_msg = [umsg copy];
-    });
+    pthread_mutex_lock(&uisurface_mutex);
+    
+    // Now we write what the slave side wants to overbring to the master side
+    uisurface_msg = [umsg copy];
+    
+    pthread_mutex_unlock(&uisurface_mutex);
     
     // Now we signal the master side that we copied over what was requested
     dispatch_semaphore_signal(uisurface_semaphore);
