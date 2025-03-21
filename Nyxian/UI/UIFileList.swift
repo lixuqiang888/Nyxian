@@ -407,11 +407,9 @@ private func gProperty(_ fileURL: URL) -> FileProperty {
 }
 
 private func bindLoadFiles(directoryPath: URL, files: Binding<[URL]>) -> Void {
-   let fileManager = FileManager.default
-
    DispatchQueue.global(qos: .background).async {
        do {
-           let items = try fileManager.contentsOfDirectory(at: directoryPath, includingPropertiesForKeys: nil)
+           let items = try FileManager.default.contentsOfDirectory(at: directoryPath, includingPropertiesForKeys: nil)
 
            var fileGroups: [String: [URL]] = [:]
 
@@ -428,7 +426,7 @@ private func bindLoadFiles(directoryPath: URL, files: Binding<[URL]>) -> Void {
            DispatchQueue.main.async {
                withAnimation {
                    files.wrappedValue.removeAll { file in
-                       !fileManager.fileExists(atPath: file.path)
+                       !FileManager.default.fileExists(atPath: file.path)
                    }
                }
            }
