@@ -24,8 +24,8 @@
 
 /// Nyxian Runtime headers
 #import <Runtime/Modules/UI/UI.h>
-#import <Runtime/Alert.h>
-#import <Runtime/UISurface.h>
+#import <Runtime/Modules/UI/Alert.h>
+#import <Runtime/UISUrface/UISurface.h>
 #import <Runtime/ReturnObjBuilder.h>
 
 /// View items that have JSExport mods :trollface:

@@ -22,7 +22,7 @@
  SOFTWARE.
  */
 
-#import <Runtime/Alert.h>
+#import <Runtime/Modules/UI/Alert.h>
 
 /// Objc equevalent to FCMs showAlert
 void presentAlertWithTitle(NSString *title, NSString *message, NSString *falseButton, NSString *trueButton, AlertCompletion completion) {

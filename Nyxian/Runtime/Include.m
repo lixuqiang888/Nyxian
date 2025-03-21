@@ -25,7 +25,7 @@
 /// Runtime Headers
 #import <Runtime/Include.h>
 #import <Runtime/ErrorThrow.h>
-#import <Runtime/Alert.h>
+#import <Runtime/Modules/UI/Alert.h>
 
 #import <UIKit/UIKit.h>
 

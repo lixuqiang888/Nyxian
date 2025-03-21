@@ -23,7 +23,7 @@
  */
 
 #import <Runtime/Modules/UI/NyxianButton.h>
-#import <Runtime/UISurface.h>
+#import <Runtime/UISurface/UISurface.h>
 
 @interface NyxianButton ()
 

@@ -25,6 +25,6 @@
 #import "Runtime.h"
 #import <Runtime/Hook/tcom.h>
 #import <Runtime/Hook/stdin.h>
-#import <Runtime/UISurface.h>
+#import <Runtime/UISurface/UISurface.h>
 
 void setFJSafety(BOOL value);

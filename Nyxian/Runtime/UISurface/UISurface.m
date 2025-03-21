@@ -23,7 +23,7 @@
  */
 
 /// Importing necessary headers
-#import <Runtime/UISurface.h>
+#import <Runtime/UISurface/UISurface.h>
 #include <pthread.h>
 
 /// The holder for the UISurface root
