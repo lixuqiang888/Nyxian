@@ -35,10 +35,15 @@ JSExportAs(setFrame,
 - (void)setFrame:(double)x y:(double)y w:(double)w h:(double)h
            );
 - (void)setCornerRadius:(double)cornerRadius;
+JSExportAs(setBlur,
+           - (void)setBlur:(BOOL)value kind:(int)kind
+           );
 
 @end
 
 @interface NyxianView : UIView <NyxianViewExport>
+
+@property (nonatomic, strong) UIVisualEffectView *blurView;
 
 - (void)setBackgroundColor:(int)r g:(int)g b:(int)b a:(double)a;
 - (void)setFrame:(double)x y:(double)y w:(double)w h:(double)h;

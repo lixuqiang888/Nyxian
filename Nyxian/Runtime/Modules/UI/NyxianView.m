@@ -48,4 +48,57 @@
     });
 }
 
+- (void)setBlur:(BOOL)value kind:(int)kind
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        UIBlurEffect *blurEffect = nil;
+        
+        switch(kind)
+        {
+            case 0:
+                blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+                break;
+            case 1:
+                blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+                break;
+            case 2:
+                blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
+                break;
+            case 3:
+                blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleProminent];
+                break;
+            case 4:
+                blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+                break;
+            case 5:
+                blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
+                break;
+            case 6:
+                blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterialDark];
+                break;
+            case 7:
+                blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterialLight];
+                break;
+            case 8:
+                blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterial];
+                break;
+            default:
+                blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        }
+        
+        if (value) {
+            if (!self.blurView) {
+                UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+                self.blurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+                self.blurView.frame = self.bounds;
+                [self addSubview:self.blurView];
+                [self sendSubviewToBack:self.blurView];
+            }
+        } else {
+            [self.blurView removeFromSuperview];
+            self.blurView = nil;
+        }
+    });
+}
+
 @end
