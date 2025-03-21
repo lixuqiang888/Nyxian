@@ -82,9 +82,12 @@ const buffer = "Hello, World!\n";
 let ptr = memory.malloc(buffer.length);
 
 // writing the buffer to the pointer
-mwrite_buf_str(ptr, 0, buffer.length, buffer);
+memory.mwrite_buf_str(ptr, 0, buffer.length, buffer);
 
 // reading the buffer back from the pointer
-let newbuffer = mread_buf_str(ptr, 0, buffer.length);
+let newbuffer = memory.mread_buf_str(ptr, 0, buffer.length);
+
+// free the pointer
+memory.free(ptr);
 ```
 
