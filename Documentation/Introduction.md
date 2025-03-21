@@ -17,6 +17,7 @@
 - Works **without Just-In-Time compilation**
 - Offers access to simple things like **I/O**, **Heap Memory** and **String Manipulation**
 - Has inbuild security messures to ensure safety to someone executing someone elses script.
+- Features **Arbitary symbol calling**
 
 ***
 
