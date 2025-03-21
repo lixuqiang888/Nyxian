@@ -47,6 +47,7 @@ void UISurface_Handoff_Slave(UIView *view)
 {
     // First we set the slaves view to the UISurface Root
     uisurface_root = view;
+    uisurface_msg = NULL;
     
     // Now we have to allocate the semaphore/msgQueue to work correctly
     if(!uisurface_initialized)
@@ -73,10 +74,9 @@ NSString* UISurface_Wait_On_Msg(void)
     // The master side waits on the slave side to send a message using UISurface_Send_Msg
     dispatch_semaphore_wait(uisurface_semaphore, DISPATCH_TIME_FOREVER);
     
-    // We need a NSString block because we work with other threads but synchronized
-    __block NSString *result;
+    NSString *result;
     
-    // We use the other thread to ensure that no one is writing on the same thread, allthough we could also use mutex, probably will even do
+    // We use the mutex to block any operation on uisurface_msg
     pthread_mutex_lock(&uisurface_mutex);
     
     // Now we read what the slave side provided
@@ -101,4 +101,38 @@ void UISurface_Send_Msg(NSString *umsg)
     
     // Now we signal the master side that we copied over what was requested
     dispatch_semaphore_signal(uisurface_semaphore);
+}
+
+
+///
+/// Functions for onocasion message gathering
+///
+BOOL UISurface_Did_Got_Messaged(void)
+{
+    BOOL got_messaged = NO;
+    
+    pthread_mutex_lock(&uisurface_mutex);
+    
+    if(uisurface_msg != nil)
+    {
+        got_messaged = YES;
+    }
+    
+    pthread_mutex_unlock(&uisurface_mutex);
+    
+    return got_messaged;
+}
+
+NSString* UISurface_Get_Message(void)
+{
+    __block NSString *result;
+    
+    pthread_mutex_lock(&uisurface_mutex);
+    
+    result = [uisurface_msg copy];
+    uisurface_msg = nil;
+    
+    pthread_mutex_unlock(&uisurface_mutex);
+    
+    return result;
 }

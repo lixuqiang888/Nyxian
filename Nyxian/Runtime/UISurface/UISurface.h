@@ -45,6 +45,12 @@ UIView* UISurface_Handoff_Master(void);
 NSString* UISurface_Wait_On_Msg(void);
 void UISurface_Send_Msg(NSString *umsg);
 
+///
+/// Functions for onocasion message gathering
+///
+BOOL UISurface_Did_Got_Messaged(void);
+NSString* UISurface_Get_Message(void);
+
 NS_ASSUME_NONNULL_END
 
 #endif
