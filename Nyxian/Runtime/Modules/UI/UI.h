@@ -35,6 +35,8 @@
 /// UI functions to gather information
 - (id)uiReport;
 - (NSString*)waitOnMsg;
+- (BOOL)gotMsg;
+- (NSString*)getMsg;
 
 /// UI functions to create UI elements
 - (id)spawnBox;
@@ -46,11 +48,15 @@ JSExportAs(spawnAlert, - (BOOL)spawnAlert:(NSString*)title message:(NSString*)me
 - (void)goToTheTop:(id)element;
 - (void)destroy:(id)element;
 
+/// haptic feedback
+- (void)hapticFeedback;
+
 @end
 
 @interface UIModule: Module <UIModuleExport>
 
 @property (nonatomic,strong) UIView *view;
+@property (nonatomic,strong) UIImpactFeedbackGenerator *feedbackGenerator;
 
 - (instancetype)init;
 

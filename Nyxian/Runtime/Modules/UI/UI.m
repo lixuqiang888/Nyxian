@@ -39,6 +39,8 @@
 {
     self = [super init];
     _view = UISurface_Handoff_Master();
+    _feedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
+    [_feedbackGenerator prepare];
     return self;
 }
 
@@ -113,6 +115,19 @@
     });
 }
 
+- (void)goToTheBottom:(id)element
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [_view sendSubviewToBack:element];
+    });
+}
+
+- (void)hapticFeedback
+{
+    [_feedbackGenerator prepare];
+    [_feedbackGenerator impactOccurred];
+}
+
 - (void)destroy:(id)element
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
@@ -123,6 +138,16 @@
 - (NSString*)waitOnMsg
 {
     return UISurface_Wait_On_Msg();
+}
+
+- (BOOL)gotMsg
+{
+    return UISurface_Did_Got_Messaged();
+}
+
+- (NSString*)getMsg
+{
+    return UISurface_Get_Message();
 }
 
 @end
