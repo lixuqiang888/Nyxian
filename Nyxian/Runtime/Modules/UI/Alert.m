@@ -54,11 +54,36 @@ void presentAlertWithTitle(NSString *title, NSString *message, NSString *falseBu
     [alertController addAction:consentAction];
 
     UIWindow *keyWindow = nil;
-    if (@available(iOS 13.0, *)) {
-        UIWindowScene *windowScene = (UIWindowScene *)[UIApplication sharedApplication].connectedScenes.anyObject;
-        keyWindow = windowScene.keyWindow;
-    } else {
-        keyWindow = [UIApplication sharedApplication].keyWindow;
+    if (@available(iOS 15.0, *)) {
+        for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+            if (scene.activationState == UISceneActivationStateForegroundActive && [scene isKindOfClass:[UIWindowScene class]]) {
+                UIWindowScene *windowScene = (UIWindowScene *)scene;
+                for (UIWindow *window in windowScene.windows) {
+                    if (window.isKeyWindow) {
+                        keyWindow = window;
+                        break;
+                    }
+                }
+                if (keyWindow) {
+                    break;
+                }
+            }
+        }
+    } else if (@available(iOS 13.0, *)) {
+        for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+            if (scene.activationState == UISceneActivationStateForegroundActive && [scene isKindOfClass:[UIWindowScene class]]) {
+                UIWindowScene *windowScene = (UIWindowScene *)scene;
+                for (UIWindow *window in windowScene.windows) {
+                    if (window.isKeyWindow) {
+                        keyWindow = window;
+                        break;
+                    }
+                }
+                if (keyWindow) {
+                    break;
+                }
+            }
+        }
     }
 
     UIViewController *rootViewController = keyWindow.rootViewController;
