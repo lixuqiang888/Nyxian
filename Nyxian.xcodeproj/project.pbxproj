@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AF14830E2D8DE2700006B509 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = AF14830D2D8DE2700006B509 /* FluidGradient */; };
 		AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = AF4836262D8AF4AA00830CED /* SwiftTerm */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */,
+				AF14830E2D8DE2700006B509 /* FluidGradient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +73,7 @@
 			name = Nyxian;
 			packageProductDependencies = (
 				AF4836262D8AF4AA00830CED /* SwiftTerm */,
+				AF14830D2D8DE2700006B509 /* FluidGradient */,
 			);
 			productName = FJS;
 			productReference = AFBE41752D85E4B500315155 /* Nyxian.app */;
@@ -103,6 +106,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				AF4836252D8AF4AA00830CED /* XCRemoteSwiftPackageReference "SwiftTerm" */,
+				AF14830C2D8DE2700006B509 /* XCRemoteSwiftPackageReference "FluidGradient" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AFBE41762D85E4B500315155 /* Products */;
@@ -349,6 +353,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		AF14830C2D8DE2700006B509 /* XCRemoteSwiftPackageReference "FluidGradient" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Cindori/FluidGradient";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		AF4836252D8AF4AA00830CED /* XCRemoteSwiftPackageReference "SwiftTerm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/migueldeicaza/SwiftTerm.git";
@@ -360,6 +372,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		AF14830D2D8DE2700006B509 /* FluidGradient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF14830C2D8DE2700006B509 /* XCRemoteSwiftPackageReference "FluidGradient" */;
+			productName = FluidGradient;
+		};
 		AF4836262D8AF4AA00830CED /* SwiftTerm */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AF4836252D8AF4AA00830CED /* XCRemoteSwiftPackageReference "SwiftTerm" */;

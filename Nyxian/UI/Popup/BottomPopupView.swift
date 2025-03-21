@@ -23,6 +23,7 @@
  */
 
 import SwiftUI
+import FluidGradient
 
 struct BottomPopupView<Content: View>: View {
     let content: Content
