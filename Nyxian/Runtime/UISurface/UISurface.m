@@ -81,7 +81,7 @@ NSString* UISurface_Wait_On_Msg(void)
     
     // Now we read what the slave side provided
     result = [uisurface_msg copy];
-    uisurface_msg = nil;
+    uisurface_msg = NULL;
     
     pthread_mutex_unlock(&uisurface_mutex);
     
@@ -109,30 +109,43 @@ void UISurface_Send_Msg(NSString *umsg)
 ///
 BOOL UISurface_Did_Got_Messaged(void)
 {
+    // Boolean result placeholder
     BOOL got_messaged = NO;
     
+    // Locking mutex so uisurface_msg can be accessed safely
     pthread_mutex_lock(&uisurface_mutex);
     
-    if(uisurface_msg != nil)
+    // Checking if uisurface_msg is nil to know if a message was passed
+    if(uisurface_msg != NULL)
     {
+        // We got message so we set it to YES
         got_messaged = YES;
     }
     
+    // Unlocking mutex so another operation can safely access uisurface_msg
     pthread_mutex_unlock(&uisurface_mutex);
     
+    // Returning the boolean placeholder
     return got_messaged;
 }
 
 NSString* UISurface_Get_Message(void)
 {
-    __block NSString *result;
+    // NSString result placeholder
+    NSString *result;
     
+    // Locking mutex so uisurface_msg can be accessed safely
     pthread_mutex_lock(&uisurface_mutex);
     
+    // Copying uisurface_msg to the result NSString pointer in order to safely hand over the message
     result = [uisurface_msg copy];
-    uisurface_msg = nil;
     
+    // Setting uisurface_msg back to NULL so another operation does not assume that a message was already passed
+    uisurface_msg = NULL;
+    
+    // Unlocking mutex so another operation can safely access uisurface_msg
     pthread_mutex_unlock(&uisurface_mutex);
     
+    // Returning the result
     return result;
 }
