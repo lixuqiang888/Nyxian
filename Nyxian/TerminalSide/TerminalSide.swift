@@ -116,7 +116,7 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         
         setupKeyboard(tv: tview, view: view)
         
-        handoff_slave(view)
+        UISurface_Handoff_Slave(view)
         
         DispatchQueue.global(qos: .utility).async {
             let runtime: NYXIAN_Runtime = NYXIAN_Runtime()

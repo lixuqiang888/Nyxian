@@ -36,8 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// UIView to add view to, extends the flexibility of the
 /// NyxianRuntime
 ///
-void handoff_slave(UIView *view);
-UIView* handoff_master(void);
+void UISurface_Handoff_Slave(UIView *view);
+UIView* UISurface_Handoff_Master(void);
 
 ///
 /// Functions for Buttons to communicate with the execution and the other way around

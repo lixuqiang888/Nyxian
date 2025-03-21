@@ -43,7 +43,7 @@ pthread_mutex_t uisurface_mutex;
 /// UIView to add view to, extends the flexibility of the
 /// NyxianRuntime
 ///
-void handoff_slave(UIView *view)
+void UISurface_Handoff_Slave(UIView *view)
 {
     // First we set the slaves view to the UISurface Root
     uisurface_root = view;
@@ -59,7 +59,7 @@ void handoff_slave(UIView *view)
     uisurface_initialized = YES;
 }
 
-UIView* handoff_master(void)
+UIView* UISurface_Handoff_Master(void)
 {
     // We complete the full handoff and the master side receives the slaves UIView
     return uisurface_root;

@@ -38,7 +38,7 @@
 - (instancetype)init
 {
     self = [super init];
-    _view = handoff_master();
+    _view = UISurface_Handoff_Master();
     return self;
 }
 
