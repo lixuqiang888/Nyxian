@@ -822,34 +822,10 @@ class ClosureButton: UIButton {
 func grule(_ isaythis: String) -> [HighlightRule] {
     let userInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
 
-    var color1: UIColor = UIColor.clear     // Keywords
-    //var color2: UIColor = UIColor.clear   // Structure or Class Name
-    //var color4: UIColor = UIColor.clear   // Numbers
-    var color5: UIColor = UIColor.clear     // Comments
-    var color6: UIColor = UIColor.clear     // Strings
-    //var color7: UIColor = UIColor.clear   // Functions
-    var color8: UIColor = UIColor.clear     // Function/Variable names
-    //var color10: UIColor = UIColor.clear  // Preprocessor Statements
-
-    if userInterfaceStyle == .light {
-        color1 = neoRGB(155, 35, 147)
-        //color2 = neoRGB(28, 70, 74)
-        //color4 = neoRGB(28, 0, 207)
-        color5 = neoRGB(93, 108, 121)
-        color6 = neoRGB(196, 26, 22)
-        //color7 = neoRGB(57, 0, 160)
-        color8 = neoRGB(15, 104, 160)
-        //color10 = neoRGB(100, 56, 32)
-    } else {
-        color1 = neoRGB(252, 95, 163)
-        //color2 = neoRGB(93, 216, 255)
-        //color4 = neoRGB(208, 191, 105)
-        color5 = neoRGB(108, 121, 134)
-        color6 = neoRGB(252, 106, 93)
-        //color7 = neoRGB(208, 168, 255)
-        color8 = neoRGB(65, 161, 192)
-        //color10 = neoRGB(253, 143, 63)
-    }
+    let color1: UIColor = (userInterfaceStyle == .light) ? neoRGB(155, 35, 147) : neoRGB(252, 95, 163)          // Keywords
+    let color5: UIColor = (userInterfaceStyle == .light) ? neoRGB(93, 108, 121) : neoRGB(108, 121, 134)         // Comments
+    let color6: UIColor = (userInterfaceStyle == .light) ? neoRGB(196, 26, 22)  : neoRGB(252, 106, 93)          // Strings
+    let color8: UIColor = (userInterfaceStyle == .light) ? neoRGB(15, 104, 160) : neoRGB(65, 161, 192)          // Function/Variable names
 
     switch(isaythis) {
         case "nx":
@@ -868,21 +844,6 @@ func grule(_ isaythis: String) -> [HighlightRule] {
 
 func neoRGB(_ red: CGFloat,_ green: CGFloat,_ blue: CGFloat ) -> UIColor {
     return UIColor(red: red/255.0, green: green/255.0, blue: blue/255.0, alpha: 1.0)
-}
-
-extension UserDefaults {
-    func setColor(_ color: UIColor, forKey key: String) {
-        if let colorData = try? NSKeyedArchiver.archivedData(withRootObject: color, requiringSecureCoding: false) {
-            self.set(colorData, forKey: key)
-        }
-    }
-    func color(forKey key: String) -> UIColor {
-        if let colorData = self.data(forKey: key),
-           let color = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(colorData) as? UIColor {
-            return color
-        }
-        return UIColor.clear
-    }
 }
 
 func gsuffix(from fileName: String) -> String {
