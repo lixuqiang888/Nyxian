@@ -24,7 +24,7 @@
 
 #import <Runtime/Modules/ArbCall/ArbCall.h>
 #import <Runtime/Modules/ArbCall/ArbCallCore.h>
-#import <Runtime/Modules/ArbCall/CALL.h>
+#import <Runtime/Modules/ArbCall/Types/Call.h>
 
 @implementation ArbCallModule
 
@@ -34,7 +34,10 @@
     return self;
 }
 
-/// Functions for the allocation and destruction
+///
+/// These functions are crucial as they help Nyxian Runtime at building
+/// the arbitary call
+///
 - (id)allocCall
 {
     call_t *call_struct = malloc(sizeof(call_t));
@@ -76,8 +79,14 @@
     return NULL;
 }
 
-/// Args setter functions
-/// 8 bits
+///
+/// Argument setter functions
+///
+/// Their purpose is to set the arguments of the call structure which allows
+/// NyxianRuntime to use ArbCalling very flexible
+///
+
+/// 8 bit functions to set a 8 bit value in a arg
 - (id)args_set_signedshort:(JSValue*)callObject pos:(UInt8)pos param:(signed short)param
 {
     call_t *call_struct = restoreCall(callObject);
@@ -100,7 +109,7 @@
     return NULL;
 }
 
-/// 16 bits
+/// 16 bit functions to set a 16 bit value in a arg
 - (id)args_set_signed:(JSValue*)callObject pos:(UInt8)pos param:(signed)param
 {
     call_t *call_struct = restoreCall(callObject);
@@ -123,7 +132,7 @@
     return NULL;
 }
 
-/// 32bit
+/// 32 bit functions to set a 32 bit value in a arg
 - (id)args_set_signedlong:(JSValue*)callObject pos:(UInt8)pos param:(signed long)param
 {
     call_t *call_struct = restoreCall(callObject);
@@ -146,7 +155,7 @@
     return NULL;
 }
 
-/// 64bit
+/// 64 bit functions to set a 64 bit value in a arg
 - (id)args_set_signedlonglong:(JSValue*)callObject pos:(UInt8)pos param:(signed long long)param
 {
     call_t *call_struct = restoreCall(callObject);
@@ -169,8 +178,10 @@
     return NULL;
 }
 
-/// Ptr set
-/// 64bit ptr
+///
+/// This function is special as it allows you to use together using the Memory module to use pointers and
+/// string buffers.
+///
 - (id)args_set_ptr:(JSValue*)callObject pos:(UInt8)pos param:(uint64_t)param
 {
     call_t *call_struct = restoreCall(callObject);
@@ -182,13 +193,19 @@
     return NULL;
 }
 
-/// Call
+///
+/// This function calls the function behind the call structure
+///
 - (UInt64)call:(JSValue*)callObject
 {
     call_t *call_struct = restoreCall(callObject);
     return call(*call_struct);
 }
 
+///
+/// This function finds a symbol and assigns it to the call structure using
+/// dlsym
+///
 - (void)findFunc:(JSValue*)callObject
 {
     call_t *call_struct = restoreCall(callObject);

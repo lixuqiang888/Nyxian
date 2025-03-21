@@ -22,7 +22,7 @@
  SOFTWARE.
  */
 
-#import <Runtime/Modules/ArbCall/CALL.h>
+#import <Runtime/Modules/ArbCall/Types/Call.h>
 #import <Runtime/Modules/IO/Helper/UniOrigHolder.h>
 
 JSValue* buildCALL(call_t *call_struct)

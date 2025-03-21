@@ -22,51 +22,80 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_ARBCALL_H
-#define FS_MODULE_ARBCALL_H
+#ifndef NYXIAN_MODULE_ARBCALL_H
+#define NYXIAN_MODULE_ARBCALL_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <Runtime/Modules/Module.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+/*
+ @Brief JSExport Protocol for ArbCall Module
+ */
 @protocol ArbCallModuleExport <JSExport>
 
+///
+/// These functions are crucial as they help Nyxian Runtime at building
+/// the arbitary call
+///
 - (id)allocCall;
 - (id)deallocCall:(JSValue*)callObject;
 JSExportAs(allocFuncName,                        - (id)allocFuncName:(JSValue*)callObject name:(NSString*)name                                      );
 JSExportAs(deallocFuncName,                      - (id)deallocFuncName:(JSValue*)callObject name:(NSString*)name                                    );
 
-/// Args setter functions
-/// 8 bits
+///
+/// Argument setter functions
+///
+/// Their purpose is to set the arguments of the call structure which allows
+/// NyxianRuntime to use ArbCalling very flexible
+///
+
+/// 8 bit functions to set a 8 bit value in a arg
 JSExportAs(args_set_signedshort,                 - (id)args_set_signedshort:(JSValue*)callObject pos:(UInt8)pos param:(signed short)param           );
 JSExportAs(args_set_unsignedshort,               - (id)args_set_unsignedshort:(JSValue*)callObject pos:(UInt8)pos param:(unsigned short)param       );
 
-/// 16 bits
+/// 16 bit functions to set a 16 bit value in a arg
 JSExportAs(args_set_signed,                     - (id)args_set_signed:(JSValue*)callObject pos:(UInt8)pos param:(signed)param                       );
 JSExportAs(args_set_unsigned,                   - (id)args_set_unsigned:(JSValue*)callObject pos:(UInt8)pos param:(unsigned)param                   );
 
-/// 32bit
+/// 32 bit functions to set a 32 bit value in a arg
 JSExportAs(args_set_signedlong,                 - (id)args_set_signedlong:(JSValue*)callObject pos:(UInt8)pos param:(signed long)param              );
 JSExportAs(args_set_unsignedlong,               - (id)args_set_unsignedlong:(JSValue*)callObject pos:(UInt8)pos param:(unsigned long)param          );
 
-/// 64bit
+/// 64 bit functions to set a 64 bit value in a arg
 JSExportAs(args_set_signedlonglong,             - (id)args_set_signedlonglong:(JSValue*)callObject pos:(UInt8)pos param:(signed long long)param     );
 JSExportAs(args_set_unsignedlonglong,           - (id)args_set_unsignedlonglong:(JSValue*)callObject pos:(UInt8)pos param:(unsigned long long)param );
 
-/// Ptr set
-/// 64bit ptr
+///
+/// This function is special as it allows you to use together using the Memory module to use pointers and
+/// string buffers.
+///
 JSExportAs(args_set_ptr,                        - (id)args_set_ptr:(JSValue*)callObject pos:(UInt8)pos param:(uint64_t)param                        );
 
-/// call
+///
+/// This function calls the function behind the call structure
+///
 - (UInt64)call:(JSValue*)callObject;
+
+///
+/// This function finds a symbol and assigns it to the call structure using
+/// dlsym
+///
 - (void)findFunc:(JSValue*)callObject;
 
 @end
 
+/*
+ @Brief ArbCall Module Interface
+ */
 @interface ArbCallModule : Module <ArbCallModuleExport>
 
-
+- (instancetype)init;
 
 @end
 
-#endif
+NS_ASSUME_NONNULL_END
+
+#endif /* NYXIAN_MODULE_ARBCALL_H */
