@@ -623,127 +623,7 @@ class CustomTextView: UITextView {
         return newHighlightLayer
     }
 
-    func addAnimatedPath(color: UIColor, rect: CGRect, entirePath: Bool? = nil, radius: CGFloat? = 0.0) -> CAShapeLayer? {
-        let newHighlightLayer = CAShapeLayer()
-        newHighlightLayer.fillColor = color.cgColor
-        layer.insertSublayer(newHighlightLayer, at: 1)
-
-        let path = UIBezierPath()
-        var newRect: CGRect = rect
-
-        if let entirePath = entirePath {
-            if entirePath {
-                newRect.size.width = UIScreen.main.bounds.size.width
-                newRect.origin.x = 0
-            }
-        } else {
-            newRect.size.width = UIScreen.main.bounds.size.width
-            newRect.origin.x = 0
-        }
-
-        path.append(UIBezierPath(roundedRect: newRect, cornerRadius: radius ?? 0.0))
-
-        newHighlightLayer.path = path.cgPath
-        newHighlightLayer.opacity = 0.1
-        highlightTMPLayer.append(newHighlightLayer)
-
-        let animation = CABasicAnimation(keyPath: "opacity")
-        animation.duration = 0.25
-        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
-        animation.fillMode = CAMediaTimingFillMode.forwards
-        animation.isRemovedOnCompletion = false
-        animation.fromValue = 0.0
-        animation.toValue = 1.0
-        newHighlightLayer.add(animation, forKey: nil)
-
-        return newHighlightLayer
-    }
-
-    func highlightLine(at lineNumber: Int, with color: UIColor, with text: String, with symbol: String) {
-        guard let range = rangeOfLine(lineNumber: lineNumber) else { return }
-        guard let rect = visualRangeRect(in: self, for: range) else { return }
-
-        _ = addAnimatedPath(color: color.withAlphaComponent(0.3), rect: rect)
-
-        let lineRect: CGRect = rect
-
-        var button: UIButton = UIButton()
-        button = ClosureButton(title: "") {
-            let uiView: UIView = UIView()
-            uiView.backgroundColor = UIColor.systemGray6
-            uiView.frame = CGRect(x: (UIScreen.main.bounds.width - (UIScreen.main.bounds.width / 2.25)) - (self.font?.pointSize ?? 0.0), y: lineRect.midY - ((self.font?.pointSize ?? 0.0) / 2), width: (UIScreen.main.bounds.width / 2.25) + (self.font?.pointSize ?? 0.0), height: 100)
-            uiView.layer.cornerRadius = 15
-            uiView.layer.borderWidth = 1
-            uiView.layer.borderColor = color.cgColor
-            uiView.clipsToBounds = true
-            let dissmissButton: UIButton = ClosureButton(title: "") {
-                UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseIn, animations: {
-                    uiView.alpha = 0.0
-                }, completion: { finished in
-                    if finished {
-                        uiView.removeFromSuperview()
-                    }
-                })
-            }
-            dissmissButton.frame = CGRect(x: uiView.bounds.width - 30 , y: 10, width: 15, height: 15)
-            let symbolConfig = UIImage.SymbolConfiguration(pointSize: 15, weight: .regular)
-            let image = UIImage(systemName: "xmark.circle", withConfiguration: symbolConfig)
-            dissmissButton.setImage(image, for: .normal)
-            dissmissButton.tintColor = UIColor.label
-            let issueLabel: UILabel = PaddedLabel()
-            issueLabel.frame = CGRect(x: 10, y: dissmissButton.frame.maxY + 10, width: uiView.bounds.width - 20, height: (uiView.bounds.height - dissmissButton.bounds.height) - 30)
-            issueLabel.backgroundColor = UIColor.systemBackground
-            issueLabel.layer.cornerRadius = 10
-            issueLabel.layer.borderWidth = 1
-            issueLabel.layer.borderColor = color.withAlphaComponent(0.5).cgColor
-            issueLabel.clipsToBounds = true
-            issueLabel.numberOfLines = 0
-            issueLabel.font = self.font?.withSize(CGFloat((self.font?.pointSize ?? 0.0) / 1.5))
-            issueLabel.text = text
-            uiView.addSubview(dissmissButton)
-            uiView.addSubview(issueLabel)
-            uiView.alpha = 0.0
-            self.addSubview(uiView)
-            UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseIn, animations: {
-                uiView.alpha = 1.0
-            }, completion: nil)
-        }
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular)
-        let image = UIImage(systemName: symbol, withConfiguration: symbolConfig)
-        button.setImage(image, for: .normal)
-        button.tintColor = color
-        button.backgroundColor = .clear
-        button.frame = CGRect(x: (UIScreen.main.bounds.width - 5) - (font?.pointSize ?? 0.0), y: lineRect.midY - ((font?.pointSize ?? 0.0) / 2), width: font?.pointSize ?? 0.0, height: font?.pointSize ?? 0.0)
-        self.addSubview(button)
-        bringSubviewToFront(button)
-        buttonTMPLayer.append(button)
-    }
-
     var onLayoutCompletion: (() -> Void)?
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        onLayoutCompletion?()
-        onLayoutCompletion = nil
-    }
-
-    func setLayoutCompletionHandler(_ handler: @escaping () -> Void) {
-        self.onLayoutCompletion = handler
-    }
-}
-
-class PaddedLabel: UILabel {
-    var textInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
-
-    override func drawText(in rect: CGRect) {
-        super.drawText(in: rect.inset(by: textInsets))
-    }
-
-    override var intrinsicContentSize: CGSize {
-        let size = super.intrinsicContentSize
-        return CGSize(width: size.width + textInsets.left + textInsets.right,
-                      height: size.height + textInsets.top + textInsets.bottom)
-    }
 }
 
 struct TextFormattingRule {
@@ -822,19 +702,76 @@ class ClosureButton: UIButton {
 func grule(_ isaythis: String) -> [HighlightRule] {
     let userInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
 
-    let color1: UIColor = (userInterfaceStyle == .light) ? neoRGB(155, 35, 147) : neoRGB(252, 95, 163)          // Keywords
-    let color5: UIColor = (userInterfaceStyle == .light) ? neoRGB(93, 108, 121) : neoRGB(108, 121, 134)         // Comments
-    let color6: UIColor = (userInterfaceStyle == .light) ? neoRGB(196, 26, 22)  : neoRGB(252, 106, 93)          // Strings
-    let color8: UIColor = (userInterfaceStyle == .light) ? neoRGB(15, 104, 160) : neoRGB(65, 161, 192)          // Function/Variable names
+    // Define colors based on mode
+    let colorKeyword: UIColor
+    let colorComment: UIColor
+    let colorString: UIColor
+    let colorNumber: UIColor
+    let colorRegex: UIColor
+    let colorFunction: UIColor
+    let colorOperator: UIColor
+    let colorProperty: UIColor
+
+    if userInterfaceStyle == .light {
+        // Light Mode Colors (VSCode Light+ inspired)
+        colorKeyword = neoRGB(0, 0, 192)         // Deep blue
+        colorComment = neoRGB(0, 128, 0)         // Green
+        colorString = neoRGB(163, 21, 21)        // Red
+        colorNumber = neoRGB(128, 0, 128)        // Purple
+        colorRegex = neoRGB(255, 140, 0)         // Orange
+        colorFunction = neoRGB(43, 145, 175)     // Teal-blue
+        colorOperator = neoRGB(0, 0, 0)          // Black
+        colorProperty = neoRGB(0, 0, 128)        // Navy blue
+    } else {
+        // Dark Mode Colors (VSCode Dark+ inspired)
+        colorKeyword = neoRGB(86, 156, 214)      // Blue
+        colorComment = neoRGB(106, 153, 85)      // Green
+        colorString = neoRGB(206, 145, 120)      // Orange
+        colorNumber = neoRGB(181, 206, 168)      // Soft green
+        colorRegex = neoRGB(255, 198, 109)       // Yellow-orange
+        colorFunction = neoRGB(220, 220, 170)    // Pale yellow
+        colorOperator = neoRGB(212, 212, 212)    // Light gray
+        colorProperty = neoRGB(156, 220, 254)    // Cyan
+    }
 
     switch(isaythis) {
         case "nx":
             return [
-                HighlightRule(pattern: try! NSRegularExpression(pattern: "(//.*|\\/\\*[\\s\\S]*?\\*\\/)", options: []), formattingRules: [ TextFormattingRule(key: .foregroundColor, value: color5)
-                ]), HighlightRule(pattern: try! NSRegularExpression(pattern: "(?<!\\/\\/)(<(.*?)>)", options: []), formattingRules: [ TextFormattingRule(key: .foregroundColor, value: color6)
-                ]), HighlightRule(pattern: try! NSRegularExpression(pattern: "(?<!\\/\\/)(\"(.*?)\")", options: []), formattingRules: [ TextFormattingRule(key: .foregroundColor, value: color6)
-                ]), HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b(function|if|else|for|while|do|switch|case|default|break|continue|return|var|let|const|class|constructor|this|super|new|extends|static|null|undefined|true|false|try|catch|finally|throw|debugger|import|export|in|instanceof|await|async|yield|enum|implements|interface|let|package|private|protected|public|static)\\b", options: []), formattingRules: [ TextFormattingRule(key: .foregroundColor, value: color1)
-                ]), HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b\\w+(?=(\\())", options: []), formattingRules: [ TextFormattingRule(key: .foregroundColor, value: color8)
+                // Comments
+                HighlightRule(pattern: try! NSRegularExpression(pattern: "(//.*|/\\*[\\s\\S]*?\\*/)", options: []), formattingRules: [
+                    TextFormattingRule(key: .foregroundColor, value: colorComment)
+                ]),
+                // Strings & Template Literals
+                HighlightRule(pattern: try! NSRegularExpression(pattern: "(?<!//)(\".*?\"|'.*?'|`.*?`)", options: []), formattingRules: [
+                    TextFormattingRule(key: .foregroundColor, value: colorString)
+                ]),
+                // Keywords
+                HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b(function|if|else|for|while|do|switch|case|default|break|continue|return|var|let|const|class|constructor|this|super|new|extends|static|null|undefined|true|false|try|catch|finally|throw|debugger|import|export|in|instanceof|await|async|yield|enum|implements|interface|let|package|private|protected|public|static|typeof|delete|void)\\b", options: []), formattingRules: [
+                    TextFormattingRule(key: .foregroundColor, value: colorKeyword)
+                ]),
+                // Function/Method Names
+                HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b\\w+(?=\\()", options: []), formattingRules: [
+                    TextFormattingRule(key: .foregroundColor, value: colorFunction)
+                ]),
+                // Numbers
+                HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b(0[xX][0-9a-fA-F]+|0[bB][01]+|\\d+\\.?\\d*|\\.\\d+)\\b", options: []), formattingRules: [
+                    TextFormattingRule(key: .foregroundColor, value: colorNumber)
+                ]),
+                // Regular Expressions
+                HighlightRule(pattern: try! NSRegularExpression(pattern: "(?<!\\w)(\\/[^\\/\\n]+\\/[gimsuy]*)", options: []), formattingRules: [
+                    TextFormattingRule(key: .foregroundColor, value: colorRegex)
+                ]),
+                // Operators
+                HighlightRule(pattern: try! NSRegularExpression(pattern: "([+\\-*/%=&|^!<>]=?|\\?\\?|\\?|:|~)", options: []), formattingRules: [
+                    TextFormattingRule(key: .foregroundColor, value: colorOperator)
+                ]),
+                // Property Names (dot notation)
+                HighlightRule(pattern: try! NSRegularExpression(pattern: "(?<=\\.)\\b\\w+\\b", options: []), formattingRules: [
+                    TextFormattingRule(key: .foregroundColor, value: colorProperty)
+                ]),
+                // Arrow functions
+                HighlightRule(pattern: try! NSRegularExpression(pattern: "=>", options: []), formattingRules: [
+                    TextFormattingRule(key: .foregroundColor, value: colorOperator)
                 ])
             ]
         default:
