@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_ERRORTHROW_H
-#define FS_ERRORTHROW_H
+#ifndef NYXIAN_ERRORTHROW_H
+#define NYXIAN_ERRORTHROW_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

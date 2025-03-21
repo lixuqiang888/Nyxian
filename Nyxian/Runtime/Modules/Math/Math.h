@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_MATH_H
-#define FS_MODULE_MATH_H
+#ifndef NYXIAN_MODULE_MATH_H
+#define NYXIAN_MODULE_MATH_H
 
 #import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
@@ -65,4 +65,4 @@ JSExportAs(pow,     - (double)pow:(double)x y:(double)y                         
 
 NS_ASSUME_NONNULL_END
 
-#endif /* FS_MODULE_MATH_H */
+#endif /* NYXIAN_MODULE_MATH_H */

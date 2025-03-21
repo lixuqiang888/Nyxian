@@ -36,14 +36,15 @@
 #import <Runtime/Modules/Math/Math.h>
 #import <Runtime/Modules/Proc/Proc.h>
 #import <Runtime/Modules/ArbCall/ArbCall.h>     // UNDER TEST!!!
+#import <Runtime/Modules/UI/UI.h>
 #import <Runtime/Modules/Timer/Timer.h>
 
 /// UI Headers
 #import <Nyxian-Swift.h>
 
-extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
+extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
-void fj_include(FJ_Runtime *Runtime, NSString *LibName)
+void NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
 {
     if ([LibName isEqualToString:@"io"]) {
         IO_MACRO_MAP();
@@ -65,23 +66,26 @@ void fj_include(FJ_Runtime *Runtime, NSString *LibName)
         [Runtime.Context setObject:procModule forKeyedSubscript:@"proc"];
     } else if ([LibName isEqualToString:@"arbcall"])
     {
-        if(!FJ_RUNTIME_SAFETY_ENABLED)
+        if(!NYXIAN_RUNTIME_SAFETY_ENABLED)
         {
             ArbCallModule *arbCallModule = [[ArbCallModule alloc] init];
             [Runtime.Context setObject:arbCallModule forKeyedSubscript:@"arbcall"];
         }
+    } else if ([LibName isEqualToString:@"ui"]) {
+        UIModule *uiModule = [[UIModule alloc] init];
+        [Runtime.Context setObject:uiModule forKeyedSubscript:@"ui"];
     } else if ([LibName isEqualToString:@"timer"]) {
         TimerModule *timerModule = [[TimerModule alloc] init];
         [Runtime.Context setObject:timerModule forKeyedSubscript:@"timer"];
     }
 }
 
-void add_include_symbols(FJ_Runtime *Runtime)
+void add_include_symbols(NYXIAN_Runtime *Runtime)
 {
-    __block FJ_Runtime *BlockRuntime = Runtime;
+    __block NYXIAN_Runtime *BlockRuntime = Runtime;
     if (Runtime) {
         [Runtime.Context setObject:^(NSString *LibName) {
-            fj_include(BlockRuntime, LibName);
+            NYXIAN_include(BlockRuntime, LibName);
         } forKeyedSubscript:@"include"];
         
         // ! ATTENTION !
@@ -102,7 +106,7 @@ void add_include_symbols(FJ_Runtime *Runtime)
             
             if(Consented == YES)
             {
-                FJ_RUNTIME_SAFETY_ENABLED = false;
+                NYXIAN_RUNTIME_SAFETY_ENABLED = false;
             } else {
                 return jsDoThrowError(@"Consent failure\n");
             }

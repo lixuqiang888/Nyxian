@@ -40,42 +40,71 @@
 ///
 - (id)allocCall
 {
+    // We allocate the call structure
     call_t *call_struct = malloc(sizeof(call_t));
+    
+    // We predefine the name pointer of the call structure as NULL
     call_struct->name = NULL;
+    
+    // Now we return the call structure to the Nyxian Runtime
     return buildCALL(call_struct);
 }
 
 - (id)deallocCall:(JSValue*)callObject
 {
+    // We get the call structure
     call_t *call_struct = restoreCall(callObject);
+    
+    // We free the call structure
     free(call_struct);
+    
+    // We return nothing
     return NULL;
 }
 
 - (id)allocFuncName:(JSValue*)callObject name:(NSString*)name
 {
+    // We get the call structure
     call_t *call_struct = restoreCall(callObject);
     
+    // We get the ro_buffer from the NSString as NSString char buffers are always
+    // read only and ARC might clean it if we dont create our own writable buffer
     const char *ro_buffer = [name UTF8String];
+    
+    // We get the size of the read-only buffer
     size_t size_of_ro_buffer = strlen(ro_buffer);
+    
+    // We allocate out read-write buffer
     char *rw_buffer = malloc(size_of_ro_buffer);
+    
+    // We copy the unsafe read-only buffer to the read-write buffer
     memcpy(rw_buffer, ro_buffer, size_of_ro_buffer);
     
+    // We now add the pointer of the read-write buffer to the name of the function in the call structure
     call_struct->name = rw_buffer;
     
+    // We update the call structure...
     updateCALL(callObject);
     
+    //...and return nothing
     return NULL;
 }
 
 - (id)deallocFuncName:(JSValue*)callObject name:(NSString*)name
 {
+    // We get the call structure
     call_t *call_struct = restoreCall(callObject);
+    
+    // We free the read-write buffer previously passed in case its allocated
     free((char*)call_struct->name);
+    
+    // We define the function name in the call structure again as NULL
     call_struct->name = NULL;
     
+    // We update the call structure
     updateCALL(callObject);
     
+    // We return NULL
     return NULL;
 }
 
@@ -90,9 +119,7 @@
 - (id)args_set_signedshort:(JSValue*)callObject pos:(UInt8)pos param:(signed short)param
 {
     call_t *call_struct = restoreCall(callObject);
-    
     call_set_short(call_struct, pos, param);
-    
     updateCALL(callObject);
     
     return NULL;
@@ -101,9 +128,7 @@
 - (id)args_set_unsignedshort:(JSValue*)callObject pos:(UInt8)pos param:(unsigned short)param
 {
     call_t *call_struct = restoreCall(callObject);
-    
     call_set_unsignedshort(call_struct, pos, param);
-    
     updateCALL(callObject);
     
     return NULL;
@@ -113,9 +138,7 @@
 - (id)args_set_signed:(JSValue*)callObject pos:(UInt8)pos param:(signed)param
 {
     call_t *call_struct = restoreCall(callObject);
-    
     call_set_signed(call_struct, pos, param);
-    
     updateCALL(callObject);
     
     return NULL;
@@ -124,9 +147,7 @@
 - (id)args_set_unsigned:(JSValue*)callObject pos:(UInt8)pos param:(unsigned)param
 {
     call_t *call_struct = restoreCall(callObject);
-    
     call_set_unsigned(call_struct, pos, param);
-    
     updateCALL(callObject);
     
     return NULL;
@@ -136,9 +157,7 @@
 - (id)args_set_signedlong:(JSValue*)callObject pos:(UInt8)pos param:(signed long)param
 {
     call_t *call_struct = restoreCall(callObject);
-    
     call_set_signedlong(call_struct, pos, param);
-    
     updateCALL(callObject);
     
     return NULL;
@@ -147,9 +166,7 @@
 - (id)args_set_unsignedlong:(JSValue*)callObject pos:(UInt8)pos param:(unsigned long)param
 {
     call_t *call_struct = restoreCall(callObject);
-    
     call_set_unsignedlong(call_struct, pos, param);
-    
     updateCALL(callObject);
     
     return NULL;
@@ -159,9 +176,7 @@
 - (id)args_set_signedlonglong:(JSValue*)callObject pos:(UInt8)pos param:(signed long long)param
 {
     call_t *call_struct = restoreCall(callObject);
-    
     call_set_signedlonglong(call_struct, pos, param);
-    
     updateCALL(callObject);
     
     return NULL;
@@ -170,9 +185,7 @@
 - (id)args_set_unsignedlonglong:(JSValue*)callObject pos:(UInt8)pos param:(unsigned long long)param
 {
     call_t *call_struct = restoreCall(callObject);
-    
     call_set_unsignedlonglong(call_struct, pos, param);
-    
     updateCALL(callObject);
     
     return NULL;
@@ -185,9 +198,7 @@
 - (id)args_set_ptr:(JSValue*)callObject pos:(UInt8)pos param:(uint64_t)param
 {
     call_t *call_struct = restoreCall(callObject);
-    
     call_set_ptr(call_struct, pos, (void*)param);
-    
     updateCALL(callObject);
     
     return NULL;
@@ -199,6 +210,7 @@
 - (UInt64)call:(JSValue*)callObject
 {
     call_t *call_struct = restoreCall(callObject);
+    
     return call(*call_struct);
 }
 
@@ -210,7 +222,6 @@
 {
     call_t *call_struct = restoreCall(callObject);
     call_find_func(call_struct);
-    
     updateCALL(callObject);
 }
 

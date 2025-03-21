@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_ALERT_H
-#define FS_ALERT_H
+#ifndef NYXIAN_ALERT_H
+#define NYXIAN_ALERT_H
 
 #import <UIKit/UIKit.h>
 

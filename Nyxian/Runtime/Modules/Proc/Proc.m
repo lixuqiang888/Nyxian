@@ -27,7 +27,7 @@
 
 #include <unistd.h>
 
-extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
+extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 /*
  @Brief Proc Module Implementation
@@ -78,19 +78,19 @@ extern BOOL FJ_RUNTIME_SAFETY_ENABLED;
 
 - (id)setuid:(UInt32)uid
 {
-    if(!FJ_RUNTIME_SAFETY_ENABLED) { return @(setuid(uid)); }
+    if(!NYXIAN_RUNTIME_SAFETY_ENABLED) { return @(setuid(uid)); }
     return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
 }
 
 - (id)setgid:(UInt32)gid
 {
-    if(!FJ_RUNTIME_SAFETY_ENABLED) { return @(setgid(gid)); }
+    if(!NYXIAN_RUNTIME_SAFETY_ENABLED) { return @(setgid(gid)); }
     return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
 }
 
 - (id)setpgid:(UInt32)pid pgid:(UInt32)pgid
 {
-    if(!FJ_RUNTIME_SAFETY_ENABLED) { return @(setpgid(pid, pgid)); }
+    if(!NYXIAN_RUNTIME_SAFETY_ENABLED) { return @(setpgid(pid, pgid)); }
     return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
 }
 

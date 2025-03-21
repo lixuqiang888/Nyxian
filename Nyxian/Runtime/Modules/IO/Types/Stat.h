@@ -22,12 +22,12 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_IO_TYPE_STAT_H
-#define FS_MODULE_IO_TYPE_STAT_H
+#ifndef NYXIAN_MODULE_IO_TYPE_STAT_H
+#define NYXIAN_MODULE_IO_TYPE_STAT_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
 JSValue* buildStat(struct stat statStruct);
 
-#endif
+#endif /* NYXIAN_MODULE_IO_TYPE_STAT_H */

@@ -22,9 +22,30 @@
  SOFTWARE.
  */
 
-#import "Runtime.h"
-#import <Runtime/Hook/tcom.h>
-#import <Runtime/Hook/stdin.h>
-#import <Runtime/UISurface.h>
+#import <Runtime/Modules/UI/NyxianView.h>
 
-void setFJSafety(BOOL value);
+@implementation NyxianView
+
+- (void)setBackgroundColor:(int)r g:(int)g b:(int)b a:(double)a
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [super setBackgroundColor:[UIColor colorWithRed:(r / 255.0) green:(g / 255.0) blue:(b / 255.0) alpha:a]];
+    });
+}
+
+- (void)setFrame:(double)x y:(double)y w:(double)w h:(double)h
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [super setFrame:CGRectMake(x, y, w, h)];
+    });
+}
+
+- (void)setCornerRadius:(double)cornerRadius
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        self.layer.cornerRadius = cornerRadius;
+        self.clipsToBounds = YES;
+    });
+}
+
+@end

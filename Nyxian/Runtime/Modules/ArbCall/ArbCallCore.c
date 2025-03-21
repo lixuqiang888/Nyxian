@@ -29,10 +29,14 @@
 ///
 uint64_t call(call_t call)
 {
+    // Checking if the function pointer is valid
     if(call.func_ptr == NULL)
     {
+        // Its not so we return -1
         return -1;
     }
+    
+    // Its valid so we return the result of the call
     return (uint64_t)call.func_ptr(call.args[0], call.args[1], call.args[2], call.args[3], call.args[4], call.args[5], call.args[6], call.args[7], call.args[8], call.args[9]);
 }
 
@@ -42,6 +46,8 @@ uint64_t call(call_t call)
 ///
 void call_find_func(call_t *call)
 {
+    // We find the function pointer address by asking the dynamic loader nicely
+    // and write its result onto the call structures function pointer holder
     call->func_ptr = dlsym(RTLD_DEFAULT, call->name);
 }
 

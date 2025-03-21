@@ -852,7 +852,7 @@ func grule(_ isaythis: String) -> [HighlightRule] {
     }
 
     switch(isaythis) {
-        case "fs":
+        case "nx":
             return [
                 HighlightRule(pattern: try! NSRegularExpression(pattern: "(//.*|\\/\\*[\\s\\S]*?\\*\\/)", options: []), formattingRules: [ TextFormattingRule(key: .foregroundColor, value: color5)
                 ]), HighlightRule(pattern: try! NSRegularExpression(pattern: "(?<!\\/\\/)(<(.*?)>)", options: []), formattingRules: [ TextFormattingRule(key: .foregroundColor, value: color6)

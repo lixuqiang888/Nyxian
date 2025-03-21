@@ -24,9 +24,9 @@
 
 #import <Foundation/Foundation.h>
 
-BOOL FJ_RUNTIME_SAFETY_ENABLED;
+BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 void setFJSafety(BOOL value)
 {
-    FJ_RUNTIME_SAFETY_ENABLED = value;
+    NYXIAN_RUNTIME_SAFETY_ENABLED = value;
 }

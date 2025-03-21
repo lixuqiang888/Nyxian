@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_IO_TYPE_DIR_H
-#define FS_MODULE_IO_TYPE_DIR_H
+#ifndef NYXIAN_MODULE_IO_TYPE_DIR_H
+#define NYXIAN_MODULE_IO_TYPE_DIR_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
@@ -34,4 +34,4 @@ JSValue* buildDIR(DIR *directory);
 DIR* buildBackDIR(JSValue *dirObject);
 void updateDIR(DIR *directory, JSValue *dirObject);
 
-#endif
+#endif /* NYXIAN_MODULE_IO_TYPE_DIR_H */

@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_MEMORY_H
-#define FS_MODULE_MEMORY_H
+#ifndef NYXIAN_MODULE_MEMORY_H
+#define NYXIAN_MODULE_MEMORY_H
 
 #import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
@@ -79,4 +79,4 @@ typedef void (^MemorySafetyArrayItemHandler)(MemorySafetyArrayItem_t item);
 
 NS_ASSUME_NONNULL_END
 
-#endif /* FS_MODULE_MEMORY_H */
+#endif /* NYXIAN_MODULE_MEMORY_H */

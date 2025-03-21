@@ -41,6 +41,6 @@ id tcom_get_size(void)
 {
     return ReturnObjectBuilder(@{
         @"rows": @(tcom_rows),
-        @"coloumns": @(tcom_coloumns),
+        @"columns": @(tcom_coloumns),
     });
 }

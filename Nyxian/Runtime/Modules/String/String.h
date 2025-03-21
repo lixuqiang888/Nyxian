@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_STRING_H
-#define FS_MODULE_STRING_H
+#ifndef NYXIAN_MODULE_STRING_H
+#define NYXIAN_MODULE_STRING_H
 
 #import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
@@ -52,4 +52,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
-#endif /* FS_MODULE_STRING_H */
+#endif /* NYXIAN_MODULE_STRING_H */

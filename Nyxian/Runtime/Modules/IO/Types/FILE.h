@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_IO_TYPE_FILE_H
-#define FS_MODULE_IO_TYPE_FILE_H
+#ifndef NYXIAN_MODULE_IO_TYPE_FILE_H
+#define NYXIAN_MODULE_IO_TYPE_FILE_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
@@ -34,4 +34,4 @@ JSValue* buildFILE(FILE *file);
 void updateFILE(FILE *file, JSValue *fileObject);
 FILE* restoreFILE(JSValue *fileObject);
 
-#endif
+#endif /* NYXIAN_MODULE_IO_TYPE_FILE_H */

@@ -31,12 +31,12 @@
 /// Header for threading
 #include <pthread.h>
 
-extern bool FJ_RUNTIME_SAFETY_ENABLED;
+extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 /*
- @Brief FridaScript runtime extension
+ @Brief Nyxian runtime extension
  */
-@interface FJ_Runtime ()
+@interface NYXIAN_Runtime ()
 
 @property (nonatomic,strong) NSMutableArray<Module*> *array;
 @property (nonatomic,strong) EnvRecover *envRecover;
@@ -44,14 +44,14 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
 @end
 
 /*
- @Brief FridaScript runtime implementation
+ @Brief Nyxian runtime implementation
  */
-@implementation FJ_Runtime
+@implementation NYXIAN_Runtime
 
 - (instancetype)init
 {
     self = [super init];
-    FJ_RUNTIME_SAFETY_ENABLED = true;
+    NYXIAN_RUNTIME_SAFETY_ENABLED = true;
     _Context = [[JSContext alloc] init];
     _envRecover = [[EnvRecover alloc] init];
     [_envRecover createBackup];
@@ -65,7 +65,7 @@ extern bool FJ_RUNTIME_SAFETY_ENABLED;
 - (void)run:(NSString*)code
 {
     _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
-        printf("%s", [[NSString stringWithFormat:@"\nFridaScript Error: %@", exception] UTF8String]);
+        printf("%s", [[NSString stringWithFormat:@"\nNyxian Error: %@", exception] UTF8String]);
     };
     [_Context evaluateScript:code];
     

@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_ENVRECOVER_H
-#define FS_ENVRECOVER_H
+#ifndef NYXIAN_ENVRECOVER_H
+#define NYXIAN_ENVRECOVER_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

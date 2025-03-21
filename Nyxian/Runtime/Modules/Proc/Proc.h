@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_PROC_H
-#define FS_MODULE_PROC_H
+#ifndef NYXIAN_MODULE_PROC_H
+#define NYXIAN_MODULE_PROC_H
 
 #import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
@@ -61,4 +61,4 @@ JSExportAs(setpgid, - (id)setpgid:(UInt32)pid pgid:(UInt32)pgid                 
 
 NS_ASSUME_NONNULL_END
 
-#endif /* FS_MODULE_PROC_H */
+#endif /* NYXIAN_MODULE_PROC_H */

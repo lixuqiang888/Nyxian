@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_RUNTIME_H
-#define FS_RUNTIME_H
+#ifndef NYXIAN_RUNTIME_H
+#define NYXIAN_RUNTIME_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
@@ -36,9 +36,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /*
- @Brief Interface of the FridaScript runtime
+ @Brief Interface of the Nyxian runtime
  */
-@interface FJ_Runtime : NSObject
+@interface NYXIAN_Runtime : NSObject
 
 @property (nonatomic,strong,readonly) JSContext *Context;
 

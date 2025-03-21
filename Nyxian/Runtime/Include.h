@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_INCLUDE_H
-#define FS_INCLUDE_H
+#ifndef NYXIAN_INCLUDE_H
+#define NYXIAN_INCLUDE_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
@@ -33,7 +33,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// Symbol to append the include symbol it self to the JSContext
-void add_include_symbols(FJ_Runtime *Runtime);
+void add_include_symbols(NYXIAN_Runtime *Runtime);
 
 NS_ASSUME_NONNULL_END
 

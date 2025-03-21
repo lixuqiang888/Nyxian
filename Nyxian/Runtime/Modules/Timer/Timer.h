@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_TIMER_H
-#define FS_MODULE_TIMER_H
+#ifndef NYXIAN_MODULE_TIMER_H
+#define NYXIAN_MODULE_TIMER_H
 
 #import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
@@ -46,4 +46,4 @@
 
 @end
 
-#endif
+#endif /* NYXIAN_MODULE_TIMER_H */

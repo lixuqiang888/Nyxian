@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_RETURNOBJBUILD_H
-#define FS_RETURNOBJBUILD_H
+#ifndef NYXIAN_RETURNOBJBUILD_H
+#define NYXIAN_RETURNOBJBUILD_H
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>

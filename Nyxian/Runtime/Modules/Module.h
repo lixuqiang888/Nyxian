@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_H
-#define FS_MODULE_H
+#ifndef NYXIAN_MODULE_H
+#define NYXIAN_MODULE_H
 
 #import <Foundation/Foundation.h>
 

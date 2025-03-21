@@ -22,9 +22,25 @@
  SOFTWARE.
  */
 
-#import "Runtime.h"
-#import <Runtime/Hook/tcom.h>
-#import <Runtime/Hook/stdin.h>
-#import <Runtime/UISurface.h>
+#import <Foundation/Foundation.h>
+#import <JavaScriptCore/JavaScriptCore.h>
+#import <UIKit/UIKit.h>
 
-void setFJSafety(BOOL value);
+@protocol NyxianViewExport <JSExport>
+
+JSExportAs(setBackgroundColor,
+- (void)setBackgroundColor:(int)r g:(int)g b:(int)b a:(double)a
+           );
+JSExportAs(setFrame,
+- (void)setFrame:(double)x y:(double)y w:(double)w h:(double)h
+           );
+- (void)setCornerRadius:(double)cornerRadius;
+
+@end
+
+@interface NyxianView : UIView <NyxianViewExport>
+
+- (void)setBackgroundColor:(int)r g:(int)g b:(int)b a:(double)a;
+- (void)setFrame:(double)x y:(double)y w:(double)w h:(double)h;
+
+@end

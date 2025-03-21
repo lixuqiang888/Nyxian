@@ -22,8 +22,8 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_IO_H
-#define FS_MODULE_IO_H
+#ifndef NYXIAN_MODULE_IO_H
+#define NYXIAN_MODULE_IO_H
 
 #import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
@@ -38,14 +38,21 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol IOModuleExport <JSExport>
 
-/// Standard functions
-- (id)fflush;
-- (id)printc:(int)data;
+///
+/// These functions are the basic standard for Nyxian Runtime.
+/// They are for the purpose to communicate with with the stdin
+/// hook
+///
+- (void)fflush;
+- (void)putchar:(char)data;
 - (int)getchar;
 - (id)getbuff;
 - (id)getTermSize;
 
-/// File mode macros
+///
+/// These are basically macro redirections so Nyxian Runtime can
+/// use these basic macros.
+///
 - (BOOL)S_ISDIR:(UInt64)m;
 - (BOOL)S_ISREG:(UInt64)m;
 - (BOOL)S_ISLNK:(UInt64)m;
@@ -54,7 +61,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)S_ISFIFO:(UInt64)m;
 - (BOOL)S_ISSOCK:(UInt64)m;
 
-/// File descriptor functions
+///
+/// Functions for basic file descriptor I/O
+///
 - (id)close:(int)fd;
 - (id)stat:(int)fd;
 - (id)remove:(NSString*)path;
@@ -69,18 +78,25 @@ JSExportAs(mkdir,   - (id)mkdir:(NSString*)path perms:(UInt16)perms             
 JSExportAs(chown,   - (id)chown:(NSString*)path uid:(int)uid gid:(int)gid                               );
 JSExportAs(chmod,   - (id)chmod:(NSString*)path flags:(UInt16)flags                                     );
 
-/// File pointer functions
+///
+/// This is still work in progress, these symbols are to interact with
+/// file pointers.
+///
 - (id)fclose:(JSValue*)fileObject;
 JSExportAs(fopen,   - (id)fopen:(NSString*)path mode:(NSString*)mode                                    );
 JSExportAs(freopen, - (id)freopen:(NSString*)path mode:(NSString*)mode fileObject:(JSValue*)fileObject  );
 
-/// Directory pointer functions
+///
+/// Functions for basic directory I/O
+///
 - (id)opendir:(NSString*)path;
 - (id)closedir:(JSValue*)DIR_obj;
 - (id)readdir:(JSValue*)DIR_obj;
 - (id)rewinddir:(JSValue*)DIR_obj;
 
-/// Environment variable functions
+///
+/// Functions to deal with environment variables
+///
 - (id)getenv:(NSString*)env;
 - (id)unsetenv:(NSString*)env;
 - (id)getcwd:(UInt16)size;
@@ -95,10 +111,11 @@ JSExportAs(setenv,  - (id)setenv:(NSString*)env value:(NSString*)value overwrite
 
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *array;
 
+- (instancetype)init;
 - (void)moduleCleanup;
 
 @end
 
 NS_ASSUME_NONNULL_END
 
-#endif /* FS_MODULE_IO_H */
+#endif /* NYXIAN_MODULE_IO_H */

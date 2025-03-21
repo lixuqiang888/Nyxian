@@ -22,11 +22,11 @@
  SOFTWARE.
  */
 
-#ifndef FS_MODULE_MACROHELPER_H
-#define FS_MODULE_MACROHELPER_H
+#ifndef NYXIAN_MODULE_MACROHELPER_H
+#define NYXIAN_MODULE_MACROHELPER_H
 
 /// Macro helper to easily add macros to the JSContext on module includation
 #define DECLARE_CONTEXT_MAPPING(name) \
     Runtime.Context[[NSString stringWithFormat:@"%s", #name]] = @(name);
 
-#endif /* FS_MODULE_MACROHELPER_H */
+#endif /* NYXIAN_MODULE_MACROHELPER_H */

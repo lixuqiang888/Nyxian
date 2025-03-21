@@ -1,6 +1,6 @@
 //
 //  POC.swift
-//  FridaScript
+//  Nyxian
 //
 //  Created by fridakitten on 19.03.25.
 //
@@ -22,7 +22,7 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
         stdin_hook_prepare()
         super.init (frame: frame)
         terminalDelegate = self
-        self.setTerminalTitle(source: self, title: "FridaScript")
+        self.setTerminalTitle(source: self, title: "Nyxian")
         hookStdout()
         self.isOpaque = false;
         tcom_set_size(Int32(self.getTerminal().rows), Int32(self.getTerminal().cols))
@@ -116,8 +116,10 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         
         setupKeyboard(tv: tview, view: view)
         
+        handoff_slave(view)
+        
         DispatchQueue.global(qos: .utility).async {
-            let runtime: FJ_Runtime = FJ_Runtime()
+            let runtime: NYXIAN_Runtime = NYXIAN_Runtime()
             runtime.run(code)
             print("\nPress any key to continue\n");
             getchar()
