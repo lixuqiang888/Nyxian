@@ -1,6 +1,6 @@
 # UIElements
 
-**UIElements ** are part of the [**UI module**](../UI.md) make sure to have read that before reading those.
+**UIElements** are part of the [**UI module**](../UI.md) make sure to have read that before reading those.
 
 - [Box](UIElements/Box.md): the box is intended to be used as a background
 - [Label](UIElements/Label.md): the label is intended to be used as a text holder
