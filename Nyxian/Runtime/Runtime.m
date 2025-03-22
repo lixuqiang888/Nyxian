@@ -53,8 +53,6 @@ extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
     self = [super init];
     NYXIAN_RUNTIME_SAFETY_ENABLED = true;
     _Context = [[JSContext alloc] init];
-    _Context[@"Math"] = NULL;
-    _Context[@"Date"] = NULL;
     _envRecover = [[EnvRecover alloc] init];
     [_envRecover createBackup];
     _array = [[NSMutableArray alloc] init];

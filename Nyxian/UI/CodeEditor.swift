@@ -711,6 +711,8 @@ func grule(_ isaythis: String) -> [HighlightRule] {
     let colorFunction: UIColor
     let colorOperator: UIColor
     let colorProperty: UIColor
+    let colorPunctuation: UIColor
+    let colorDirective: UIColor
 
     if userInterfaceStyle == .light {
         // Light Mode Colors (VSCode Light+ inspired)
@@ -722,6 +724,8 @@ func grule(_ isaythis: String) -> [HighlightRule] {
         colorFunction = neoRGB(43, 145, 175)     // Teal-blue
         colorOperator = neoRGB(0, 0, 0)          // Black
         colorProperty = neoRGB(0, 0, 128)        // Navy blue
+        colorPunctuation = neoRGB(0, 0, 0)
+        colorDirective = neoRGB(0, 0, 128)
     } else {
         // Dark Mode Colors (VSCode Dark+ inspired)
         colorKeyword = neoRGB(86, 156, 214)      // Blue
@@ -732,6 +736,8 @@ func grule(_ isaythis: String) -> [HighlightRule] {
         colorFunction = neoRGB(220, 220, 170)    // Pale yellow
         colorOperator = neoRGB(212, 212, 212)    // Light gray
         colorProperty = neoRGB(156, 220, 254)    // Cyan
+        colorPunctuation = neoRGB(212, 212, 212)
+        colorDirective = neoRGB(255, 165, 0)
     }
 
     switch(isaythis) {
@@ -774,6 +780,45 @@ func grule(_ isaythis: String) -> [HighlightRule] {
                     TextFormattingRule(key: .foregroundColor, value: colorOperator)
                 ])
             ]
+    case "c":
+        return [
+            // Comments
+            HighlightRule(pattern: try! NSRegularExpression(pattern: "(//.*|/\\*[\\s\\S]*?\\*/)", options: []), formattingRules: [
+                TextFormattingRule(key: .foregroundColor, value: colorComment)
+            ]),
+            // Strings
+            HighlightRule(pattern: try! NSRegularExpression(pattern: "\".*?\"", options: []), formattingRules: [
+                TextFormattingRule(key: .foregroundColor, value: colorString)
+            ]),
+            // Character Constants
+            HighlightRule(pattern: try! NSRegularExpression(pattern: "'(?:\\\\'|\\\\\\\"|\\\\[0-7]{1,3}|\\\\x[0-9a-fA-F]+|[^'\\\\])'", options: []), formattingRules: [
+                TextFormattingRule(key: .foregroundColor, value: colorString)
+            ]),
+            // Keywords
+            HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b(auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|inline|int|long|register|restrict|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while)\\b", options: []), formattingRules: [
+                TextFormattingRule(key: .foregroundColor, value: colorKeyword)
+            ]),
+            // Function Names
+            HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b\\w+(?=\\()", options: []), formattingRules: [
+                TextFormattingRule(key: .foregroundColor, value: colorFunction)
+            ]),
+            // Numbers
+            HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b(0[xX][0-9a-fA-F]+|0[bB][01]+|\\d+\\.?\\d*|\\.\\d+)([eE][+-]?\\d+)?[fFlL]?[uU]?[lL]?[lL]?\\b", options: []), formattingRules: [
+                TextFormattingRule(key: .foregroundColor, value: colorNumber)
+            ]),
+            // Operators
+            HighlightRule(pattern: try! NSRegularExpression(pattern: "([+\\-*/%=&|^!<>]=?|\\+\\+|--|&&|\\|\\||\\?|:|~|<<|>>|->|\\.{3})", options: []), formattingRules: [
+                TextFormattingRule(key: .foregroundColor, value: colorOperator)
+            ]),
+            // Punctuation
+            HighlightRule(pattern: try! NSRegularExpression(pattern: "[{}[\\\\];(),.]", options: []), formattingRules: [
+                TextFormattingRule(key: .foregroundColor, value: colorPunctuation)
+            ]),
+            // Include Directives
+            HighlightRule(pattern: try! NSRegularExpression(pattern: "#include"), formattingRules: [
+                TextFormattingRule(key: .foregroundColor, value: colorDirective)
+            ])
+        ]
         default:
             return []
     }
