@@ -1,8 +1,31 @@
-# UI
+# UI Module
 
 ### Introduction
 
 **Nyxian features a UI bridge**. It can be used with **UIKit**. The bridge supports **the spawning of [UIElements](UI/UIElements.md) and the destruction of those** as well, as well as **communication with [Buttons](UI/UIElements/Button.md) and simulare elements** using something I wrote called **UISurface**.
+
+
+
+###### Function Index
+
+- Information
+  - `uiReport`
+- [UISurface](UI/UISurface-md)
+  - `waitOnMsg`
+  - `gotMsg`
+  - `getMsg`
+- Spawning
+  - `spawnAlert`
+  - `spawnBox`
+  - `spawnLabel`
+  - `spawnButton`
+  - `spawnDisplay`
+- Management
+  - `goTop`
+  - `goBottom`
+  - `destroy`
+- Misc
+  - `hapticFeedback`
 
 
 

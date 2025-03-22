@@ -1,4 +1,47 @@
-# I/O
+# IO Module
+
+### Introduction
+
+**I/O** is very important in programming. Its needed to read and write to files and file descriptors.
+
+
+
+###### Function Index
+
+- **Console:**
+  - `fflush`
+  - `putchar`
+  - `getchar`
+  - `getbuff`
+  - `getTermSize`
+- **Files:**
+  - `open`
+  - `close`
+  - `read`
+  - `write`
+  - `seek`
+  - `access`
+  - `chown`
+  - `chmod`
+  - `stat`
+  - `remove`
+  - `fopen`
+  - `fclose`
+  - `freopen`
+- **Directories:**
+  - `opendir`
+  - `closedir`
+  - `readdir`
+  - `rewinddir`
+- **Environment:**
+  - `setenv`
+  - `getenv`
+  - `unsetenv`
+  - `getcwd`
+
+
+
+***
 
 ### Console
 

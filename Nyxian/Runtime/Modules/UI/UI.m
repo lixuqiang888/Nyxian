@@ -127,14 +127,14 @@
     return view;
 }
 
-- (void)goToTheTop:(id)element
+- (void)goTop:(id)element
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [_view bringSubviewToFront:element];
     });
 }
 
-- (void)goToTheBottom:(id)element
+- (void)goBottom:(id)element
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [_view sendSubviewToBack:element];

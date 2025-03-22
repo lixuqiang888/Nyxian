@@ -1,8 +1,34 @@
-# Memory
+# Memory Module
 
 ### Introduction
 
 As memory is not low level in usual JavaScript I wrote a implementation for Heapmemory. This is mostly done for things like [ArbCall](ArbCall.md). So you have to read it in order to use ArbCall correctly.
+
+
+
+###### Function Index
+
+- **Allocation**
+  - `malloc`
+  - `free`
+
+- **Reading**
+  - `mread8`
+  - `mread16`
+  - `mread32`
+  - `mread64`
+- **Writing**
+  - `mwrite8`
+  - `mwrite16`
+  - `mwrite32`
+  - `mwrite64`
+
+- **Buffering**
+  - `mread_buf_str`
+  - `mwrite_buf_str`
+
+
+
 
 ***
 

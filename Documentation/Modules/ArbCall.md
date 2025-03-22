@@ -4,14 +4,19 @@
 
 ArbCall is like the name suggests a **Nyxian** library to call arbitary functions. This is based on a construction concept. You construct ur functions. It works with the help of the nice dynamic loader and some nice c tricks.
 
-###### Function List
 
-- **Important functions**:
+
+###### Function Index
+
+- **Important**:
+  
   - `allocCall`: allocates a call object
   - `deallocCall`: releases a call object
   - `allocFuncName`: allocates a call objects function name
   - `deallocFuncName`: releases a call objects function name
-- **Argument setting functions**:
+  
+- **Argument Setter**:
+  
   - **8 Bit**:
     - `args_set_int8`: assigns a signed 8 bit value to one argument
     - `args_set_uint8`: assigns a unsigned 8 bit value to one argument
@@ -26,6 +31,8 @@ ArbCall is like the name suggests a **Nyxian** library to call arbitary function
     - `args_set_uint64`: assigns a signed 64 bit value to one argument
   - **Pointer**:
     - `args_set_ptr`: assigns a 64bit pointer to one argument
+  
+  
 
 ***
 
