@@ -34,10 +34,6 @@
 #import <Runtime/Modules/UI/NyxianButton.h>
 #import <Runtime/Modules/UI/Display.h>
 
-#define SCREEN_WIDTH 828
-#define SCREEN_HEIGHT 1792
-#define COLOR_COUNT 256
-
 @implementation UIModule
 
 - (instancetype)init
@@ -113,14 +109,14 @@
     return view;
 }
 
-- (id)spawnDisplay
+- (id)spawnDisplay:(int)width heigth:(int)heigth
 {
     __block NyxianDisplay *view;
     
     dispatch_sync(dispatch_get_main_queue(), ^{
         CGRect screenSize = [[UIScreen mainScreen] bounds];
         //CGRect screenFrame = CGRectMake(0, 0, 255, 255);
-        view = [[NyxianDisplay alloc] initWithFrame:screenSize screenWidth:SCREEN_WIDTH screenHeight:SCREEN_HEIGHT];
+        view = [[NyxianDisplay alloc] initWithFrame:screenSize screenWidth:width screenHeight:heigth];
         [_view addSubview:view];
     });
     

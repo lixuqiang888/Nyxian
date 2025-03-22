@@ -42,7 +42,9 @@
 - (id)spawnBox;
 - (id)spawnLabel;
 - (id)spawnButton;
-- (id)spawnDisplay;
+JSExportAs(spawnDisplay,
+           - (id)spawnDisplay:(int)width heigth:(int)heigth
+           );
 JSExportAs(spawnAlert, - (BOOL)spawnAlert:(NSString*)title message:(NSString*)message cancelButton:(NSString*)cancelButton consentingButton:(NSString*)consentingButton);
 
 /// UI functions to manage UI elements
