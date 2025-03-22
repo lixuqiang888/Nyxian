@@ -92,7 +92,7 @@ function printf(msg) {
   let ptr = memory.malloc(msg.length);
   
   // writing to the memory buffer
-  memory.mwrite_buf_str(ptr, 0, buffer.length, buffer);
+  memory.mwrite_buf_str(ptr, 0, msg.length, msg);
   
   // ArbCall part (calling printf):
   // allocate function object
