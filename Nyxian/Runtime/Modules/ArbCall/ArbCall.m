@@ -116,76 +116,76 @@
 ///
 
 /// 8 bit functions to set a 8 bit value in a arg
-- (id)args_set_signedshort:(JSValue*)callObject pos:(UInt8)pos param:(signed short)param
+- (id)args_set_int8:(JSValue*)callObject pos:(UInt8)pos param:(int8_t)param
 {
     call_t *call_struct = restoreCall(callObject);
-    call_set_short(call_struct, pos, param);
+    call_set_int8(call_struct, pos, param);
     updateCALL(callObject);
     
     return NULL;
 }
 
-- (id)args_set_unsignedshort:(JSValue*)callObject pos:(UInt8)pos param:(unsigned short)param
+- (id)args_set_uint8:(JSValue*)callObject pos:(UInt8)pos param:(uint8_t)param
 {
     call_t *call_struct = restoreCall(callObject);
-    call_set_unsignedshort(call_struct, pos, param);
+    call_set_uint8(call_struct, pos, param);
     updateCALL(callObject);
     
     return NULL;
 }
 
 /// 16 bit functions to set a 16 bit value in a arg
-- (id)args_set_signed:(JSValue*)callObject pos:(UInt8)pos param:(signed)param
+- (id)args_set_int16:(JSValue*)callObject pos:(UInt8)pos param:(int16_t)param
 {
     call_t *call_struct = restoreCall(callObject);
-    call_set_signed(call_struct, pos, param);
+    call_set_int16(call_struct, pos, param);
     updateCALL(callObject);
     
     return NULL;
 }
 
-- (id)args_set_unsigned:(JSValue*)callObject pos:(UInt8)pos param:(unsigned)param
+- (id)args_set_uint16:(JSValue*)callObject pos:(UInt8)pos param:(uint16_t)param
 {
     call_t *call_struct = restoreCall(callObject);
-    call_set_unsigned(call_struct, pos, param);
+    call_set_uint16(call_struct, pos, param);
     updateCALL(callObject);
     
     return NULL;
 }
 
 /// 32 bit functions to set a 32 bit value in a arg
-- (id)args_set_signedlong:(JSValue*)callObject pos:(UInt8)pos param:(signed long)param
+- (id)args_set_int32:(JSValue*)callObject pos:(UInt8)pos param:(int32_t)param
 {
     call_t *call_struct = restoreCall(callObject);
-    call_set_signedlong(call_struct, pos, param);
+    call_set_int32(call_struct, pos, param);
     updateCALL(callObject);
     
     return NULL;
 }
 
-- (id)args_set_unsignedlong:(JSValue*)callObject pos:(UInt8)pos param:(unsigned long)param
+- (id)args_set_uint32:(JSValue*)callObject pos:(UInt8)pos param:(uint32_t)param
 {
     call_t *call_struct = restoreCall(callObject);
-    call_set_unsignedlong(call_struct, pos, param);
+    call_set_uint32(call_struct, pos, param);
     updateCALL(callObject);
     
     return NULL;
 }
 
 /// 64 bit functions to set a 64 bit value in a arg
-- (id)args_set_signedlonglong:(JSValue*)callObject pos:(UInt8)pos param:(signed long long)param
+- (id)args_set_int64:(JSValue*)callObject pos:(UInt8)pos param:(int64_t)param
 {
     call_t *call_struct = restoreCall(callObject);
-    call_set_signedlonglong(call_struct, pos, param);
+    call_set_int64(call_struct, pos, param);
     updateCALL(callObject);
     
     return NULL;
 }
 
-- (id)args_set_unsignedlonglong:(JSValue*)callObject pos:(UInt8)pos param:(unsigned long long)param
+- (id)args_set_uint64:(JSValue*)callObject pos:(UInt8)pos param:(uint64_t)param
 {
     call_t *call_struct = restoreCall(callObject);
-    call_set_unsignedlonglong(call_struct, pos, param);
+    call_set_uint64(call_struct, pos, param);
     updateCALL(callObject);
     
     return NULL;

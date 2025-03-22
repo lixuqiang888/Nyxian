@@ -1,7 +1,5 @@
 # Memory
 
-***
-
 ### Introduction
 
 As memory is not low level in usual JavaScript I wrote a implementation for Heapmemory. This is mostly done for things like [ArbCall](ArbCall.md). So you have to read it in order to use ArbCall correctly.

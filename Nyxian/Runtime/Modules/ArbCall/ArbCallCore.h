@@ -60,20 +60,20 @@ void call_find_func(call_t *call);
 ///
 
 /// 8 bit functions to set a 8 bit value in a arg
-void call_set_short(call_t *call_struct, uint8_t pos, short value);
-void call_set_unsignedshort(call_t *call_struct, uint8_t pos, unsigned short value);
+void call_set_int8(call_t *call_struct, uint8_t pos, int8_t value);
+void call_set_uint8(call_t *call_struct, uint8_t pos, uint8_t value);
 
 /// 16 bit functions to set a 16 bit value in a arg
-void call_set_signed(call_t *call_struct, uint8_t pos, signed value);
-void call_set_unsigned(call_t *call_struct, uint8_t pos, unsigned value);
+void call_set_int16(call_t *call_struct, uint8_t pos, int16_t value);
+void call_set_uint16(call_t *call_struct, uint8_t pos, uint16_t value);
 
 /// 32 bit functions to set a 32 bit value in a arg
-void call_set_signedlong(call_t *call_struct, uint8_t pos, signed long value);
-void call_set_unsignedlong(call_t *call_struct, uint8_t pos, unsigned long value);
+void call_set_int32(call_t *call_struct, uint8_t pos, int32_t value);
+void call_set_uint32(call_t *call_struct, uint8_t pos, uint32_t value);
 
 /// 64 bit functions to set a 64 bit value in a arg
-void call_set_signedlonglong(call_t *call_struct, uint8_t pos, signed long long value);
-void call_set_unsignedlonglong(call_t *call_struct, uint8_t pos, unsigned long long value);
+void call_set_int64(call_t *call_struct, uint8_t pos, int64_t value);
+void call_set_uint64(call_t *call_struct, uint8_t pos, uint64_t value);
 
 ///
 /// This function is special as it allows you to use together using the Memory module to use pointers and

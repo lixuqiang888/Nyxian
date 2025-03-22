@@ -1,7 +1,5 @@
 # Introduction
 
----
-
 ### Overview
 
 **Nyxian** is an attempt to create a new JIT-less script language based on the JavaScriptCore Framework by apple. Im working on that to make coding on just your phone easier and just because I am bored. JavaScriptCore also offers a extremely easy way to expose ObjectiveC Objects and interact with them inside ur script.

@@ -1,7 +1,5 @@
 # Core Concepts and Syntax
 
-***
-
 ### Syntax Overview
 
 **Nyxian** uses a combination of statements, expressions, and functions to create a program. Code is typically written in plain text files with the `.nx` extension. Key elements of **Nyxian** syntax include:

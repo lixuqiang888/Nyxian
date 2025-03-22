@@ -23,6 +23,7 @@
  */
 
 #import <Runtime/Modules/Timer/Timer.h>
+#import <mach/mach_time.h>
 
 @implementation TimerModule
 

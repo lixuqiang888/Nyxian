@@ -1,12 +1,10 @@
 # ArbCall
 
-***
-
 ### Introduction
 
 ArbCall is like the name suggests a **Nyxian** library to call arbitary functions. This is based on a construction concept. You construct ur functions. It works with the help of the nice dynamic loader and some nice c tricks.
 
-### Function List:
+###### Function List
 
 - **Important functions**:
   - `allocCall`: allocates a call object
@@ -15,17 +13,17 @@ ArbCall is like the name suggests a **Nyxian** library to call arbitary function
   - `deallocFuncName`: releases a call objects function name
 - **Argument setting functions**:
   - **8 Bit**:
-    - `args_set_signedshort`: assigns a signed 8 bit value to one argument
-    - `args_set_unsignedshort`: assigns a unsigned 8 bit value to one argument
+    - `args_set_int8`: assigns a signed 8 bit value to one argument
+    - `args_set_uint8`: assigns a unsigned 8 bit value to one argument
   - **16 Bit**:
-    - `args_set_signed`: assigns a signed 16 bit value to one argument
-    - `args_set_unsigned`: assigns a signed 16 bit value to one argument
+    - `args_set_int16`: assigns a signed 16 bit value to one argument
+    - `args_set_uint16`: assigns a signed 16 bit value to one argument
   - **32 Bit**:
-    - `args_set_signedlong`: assigns a signed 32 bit value to one argument
-    - `args_set_unsignedlong`: assigns a signed 32 bit value to one argument
+    - `args_set_int32`: assigns a signed 32 bit value to one argument
+    - `args_set_uint32`: assigns a signed 32 bit value to one argument
   - **64 Bit**:
-    - `args_set_signedlonglong`: assigns a signed 64 bit value to one argument
-    - `args_set_unsignedlonglong`: assigns a signed 64 bit value to one argument
+    - `args_set_int64`: assigns a signed 64 bit value to one argument
+    - `args_set_uint64`: assigns a signed 64 bit value to one argument
   - **Pointer**:
     - `args_set_ptr`: assigns a 64bit pointer to one argument
 

@@ -1,7 +1,5 @@
 # I/O
 
-***
-
 ### Console
 
 **Nyxian** is JavaScript based but doesnt have functionalities like JavaScripts `console`. It uses its modules and one of it is called `io`. **Nyxian** is designed to work in a CLI or in a Terminal Emulator. As **Nyxian** is a low level version of JavaScript you gonna jave to declare easier functions of the base functions ur self as you can see in following example
