@@ -1,0 +1,238 @@
+//
+// RandomTouch.nx
+//
+// Created by Anonym on 21.03.25
+//
+ 
+// including libraries
+include("io");
+include("ui");
+include("timer");
+
+// variable placeholders
+// screen dimensions
+let screen_heigth = null;
+let screen_width = null;
+let prevpos = {
+	heigth: 0,
+	width: 0
+};
+let moves = 0;
+let trait_count = 0;
+
+// ui elements
+let button = null;
+let exitbutton = null;
+
+// helper I/O functions
+function print(msg) {
+    let len = msg.length;
+    let i = 0;
+    while (i < len) {
+        let codePoint = msg.codePointAt(i);
+        if (codePoint <= 0x7F) {
+            io.putchar(codePoint);
+        } else if (codePoint <= 0x7FF) {
+            io.putchar(0xC0 | (codePoint >> 6));
+            io.putchar(0x80 | (codePoint & 0x3F));
+        } else if (codePoint <= 0xFFFF) {
+            io.putchar(0xE0 | (codePoint >> 12));
+            io.putchar(0x80 | ((codePoint >> 6) & 0x3F));
+            io.putchar(0x80 | (codePoint & 0x3F));
+        } else {
+            io.putchar(0xF0 | (codePoint >> 18));
+            io.putchar(0x80 | ((codePoint >> 12) & 0x3F));
+            io.putchar(0x80 | ((codePoint >> 6) & 0x3F));
+            io.putchar(0x80 | (codePoint & 0x3F));
+        }
+        if (codePoint > 0xFFFF) {
+            i += 2;
+        } else {
+            i += 1;
+        }
+    }
+    io.fflush();
+}
+
+// helper UI functions
+function getRandom(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function genScreen(width, heigth)
+{
+	let dimensions = {
+		heigth: heigth,
+		width: width
+	};
+}
+
+function getRandomScreen()
+{
+	let dimensions = {
+		heigth: getRandom(0, screen_width - 10),
+		width: getRandom(0, screen_heigth - 10)
+	};
+	return dimensions;
+}
+
+function getRandomColor()
+{
+	let color = {
+		red: getRandom(0, 255),
+		green: getRandom(0, 255),
+		blue: getRandom(0, 255)
+	};
+	return color;
+}
+
+// actual function space
+function UI_Find_Dimensions()
+{
+	let uirep = ui.uiReport();
+	screen_heigth = uirep.heigth;
+	screen_width = uirep.width;
+}
+
+function UI_Alloc_Button()
+{
+	button = ui.spawnBox();
+	button.setFrame(0, 0, 20, 20);
+	button.setBackgroundColor(255, 255, 255, 1.0);
+
+	exitbutton = ui.spawnButton();
+	exitbutton.setFrame(screen_width - 120, 0, 120, 40);
+	exitbutton.setBackgroundColor(255, 0, 0, 1.0);
+	exitbutton.setText("Exit");
+	exitbutton.setMsg("Exit");
+
+	ui.goTop(button);
+}
+
+function UI_Dealloc_Button()
+{
+	ui.destroy(button);
+}
+
+function UI_Shift_Color(color) {
+    // Shift each color channel slightly (-10 to +10)
+    //let shiftAmount = () => Math.floor(Math.random() * 21) - 10; // Random between -10 and 10
+	let shiftAmount = () => -Math.floor(Math.random() * 2); // Returns 0 or -1
+
+    color.red = clamp(color.red + shiftAmount(), 0, 255);
+    color.green = clamp(color.green + shiftAmount(), 0, 255);
+    color.blue = clamp(color.blue + shiftAmount(), 0, 255);
+
+    // Check if the color is too close to white, force it down
+    if (color.red > 240 && color.green > 240 && color.blue > 240) {
+        color.red -= Math.floor(Math.random() * 30);
+        color.green -= Math.floor(Math.random() * 30);
+        color.blue -= Math.floor(Math.random() * 30);
+    }
+
+    return color;
+}
+
+// Helper function to keep values within valid RGB range
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+
+function UI_Random_Move_Button()
+{
+	let uiarray = [];
+
+    let pos = getRandomScreen();
+
+	let x = prevpos.heigth;
+	let y = prevpos.width;
+	let xd = pos.heigth;
+	let yd = pos.width;
+
+	print("\x1b[2K\x1b[0G\x1b[1A\x1b[2K\x1b[0Gmoving box from (" + x + "," + y + ") to (" + xd + "," + yd + ")\nmoves completed: " + moves);
+
+	let color = getRandomColor();
+	let colorshift = 0.0;
+
+    while (x != xd || y != yd)
+    {
+		if(ui.gotMsg())
+		{
+			uiarray.forEach(view => {
+				ui.destroy(view);
+			});
+			return;
+		}
+
+        button.setFrame(x, y, 40, 40);
+
+		// increment
+		//trait_count++;
+		//colorshift += 0.25;
+		color = UI_Shift_Color(color);
+
+		//if(trait_count == 2)
+		//{
+			//trait_count = 0;
+			// trait
+			let trait = ui.spawnBox();
+			ui.goTop(button);
+			trait.setFrame(x, y, 40, 40);
+			trait.setBackgroundColor(color.red - colorshift, color.green - colorshift, color.blue - colorshift, 1.0);
+
+			// appending to the array
+			uiarray.push(trait);
+		//}
+        
+        	if (x < xd) {
+           		x++;
+        	} else if (x > xd) {
+           		x--;
+        	}
+
+        	if (y < yd) {
+           		y++;
+        	} else if (y > yd) {
+           y--;
+        }
+
+		ui.goTop(exitbutton);
+    	//timer.wait(0.0000005);
+    }
+
+    prevpos = pos;
+
+	uiarray.forEach(view => {
+		ui.destroy(view);
+	});
+
+	moves++;
+}
+
+// init
+function uiloop()
+{
+	print("RandomTouch.nx\nby SeanIsTethered\n\nBenchmark\n\n\n");
+
+	UI_Find_Dimensions();
+	UI_Alloc_Button();
+
+	while(true)
+	{
+		// check on message
+		if(ui.gotMsg())
+		{
+			ui.destroy(button);
+			ui.destroy(exitbutton);
+			return;
+		}
+		//cool feedback
+		ui.hapticFeedback();
+		// move
+		UI_Random_Move_Button();
+	}
+
+	UI_Dealloc_Button();
+}
+
+uiloop();
