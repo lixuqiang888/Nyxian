@@ -136,12 +136,13 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         
         UISurface_Handoff_Slave(view)
         
-        view.isUserInteractionEnabled = true
-        
         DispatchQueue.global(qos: .utility).async {
             let runtime: NYXIAN_Runtime = NYXIAN_Runtime()
             runtime.run(path)
             print("\nPress any key to continue\n");
+            DispatchQueue.main.async {
+                tview.isUserInteractionEnabled = true
+            }
             getchar()
             stdin_hook_cleanup()
             DispatchQueue.main.async {
