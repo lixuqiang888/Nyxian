@@ -34,6 +34,7 @@ JSExportAs(unstoreGraph,
 
 @property (nonatomic,readonly) int screenWidth;
 @property (nonatomic,readonly) int screenHeight;
+@property (nonatomic, assign) NSInteger uniqueID;
 
 - (instancetype)initWithFrame:(CGRect)frame screenWidth:(int)width screenHeight:(int)height;
 - (void)setPixelAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex;

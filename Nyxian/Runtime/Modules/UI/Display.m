@@ -126,10 +126,8 @@
 }
 
 - (NSNumber *)save2DArray:(NSArray<NSArray *> *)array {
-    __block NSInteger uniqueID = 0;
-
     dispatch_sync(dispatch_get_main_queue(), ^{
-        uniqueID++;
+        _uniqueID++;
         NSMutableArray *flatArray = [NSMutableArray arrayWithCapacity:array.count];
         for (NSArray *coordinate in array) {
             NSInteger x = [coordinate[0] integerValue];
@@ -139,10 +137,10 @@
             [flatArray addObject:@(packedData)];
         }
         
-        savedArrays[@(uniqueID)] = flatArray;
+        savedArrays[@(_uniqueID)] = flatArray;
     });
 
-    return @(uniqueID);
+    return @(_uniqueID);
 }
 
 - (void)drawSavedArrayWithIdentifier:(NSNumber *)identifier atX:(NSInteger)xOffset atY:(NSInteger)yOffset {
