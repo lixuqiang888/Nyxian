@@ -62,6 +62,10 @@ JSExportAs(spawnAlert, - (BOOL)spawnAlert:(NSString*)title message:(NSString*)me
 - (void)hideKeyboard;
 - (void)showKeyboard;
 
+/// same for here
+- (void)cli_readonly;
+- (void)cli_readwrite;
+
 @end
 
 @interface UIModule: Module <UIModuleExport>

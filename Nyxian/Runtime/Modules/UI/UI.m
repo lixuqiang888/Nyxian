@@ -179,12 +179,24 @@
     });
 }
 
-- (void)showKeyboard
+- (void)cli_readonly
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
         for (UIView *subview in _view.subviews) {
             if ([subview isKindOfClass:[FridaTerminalView class]]) {
-                [subview becomeFirstResponder];
+                subview.userInteractionEnabled = NO;
+                return;
+            }
+        }
+    });
+}
+
+- (void)cli_readwrite
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        for (UIView *subview in _view.subviews) {
+            if ([subview isKindOfClass:[FridaTerminalView class]]) {
+                subview.userInteractionEnabled = YES;
                 return;
             }
         }
