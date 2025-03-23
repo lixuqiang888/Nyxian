@@ -1,0 +1,954 @@
+//
+// display.nx
+//
+// Created by SeanIsTethered on 22.03.25
+//
+ 
+include("ui");
+include("timer");
+
+let uirep = ui.uiReport();
+
+let width = 80;
+let heigth = 80;
+
+let display = ui.spawnDisplay(width, heigth);
+
+function fillBox(startX, startY, width, height, colorIndex) {
+    // Fill the interior of the box with the given color
+    for (let x = startX + 1; x < startX + width; x++) {
+        for (let y = startY + 1; y < startY + height; y++) {
+            display.setPixel(x, y, colorIndex);
+        }
+    }
+}
+
+fillBox(-1, -1, width, heigth, 7);
+
+function parseCharGrid(inputString, colorIndex) {
+    const result = [];
+    const rows = inputString.split('\n'); // No .trim()
+
+    for (let y = 0; y < rows.length; y++) {
+        const row = rows[y];
+        for (let x = 0; x < row.length; x++) {
+            if (row[x] === '#') {
+                result.push([x, y, colorIndex]);
+            }
+        }
+    }
+
+    return result;
+}
+
+// character index
+const Color = 0;
+
+const Char_NA = [
+	[3, 0, 7],
+]
+const Char_PT = [
+	[0, 6, Color],
+]
+const Char_A = parseCharGrid(`
+ ##
+#  #
+####
+#  #
+#  #
+`, Color);
+const Char_B = parseCharGrid(`
+###
+#  #
+###
+#  #
+###
+`, Color);
+const Char_C = parseCharGrid(`
+ ##
+#
+#
+#
+ ##
+`, Color);
+const Char_D = parseCharGrid(`
+###
+#  #
+#  #
+#  #
+###
+`, Color);
+const Char_E = parseCharGrid(`
+###
+#
+##
+#
+###
+`, Color);
+const Char_F = parseCharGrid(`
+###
+#
+###
+#
+#
+`, Color);
+const Char_G = parseCharGrid(`
+ ###
+#
+# ##
+#  #
+ ###
+`, Color);
+const Char_H = parseCharGrid(`
+#  #
+#  #
+####
+#  #
+#  #
+`, Color);
+const Char_I = parseCharGrid(`
+###
+ #
+ #
+ #
+###
+`, Color);
+const Char_J = parseCharGrid(`
+ ###
+   #
+   #
+#  #
+ ##
+`, Color);
+const Char_K = parseCharGrid(`
+#  #
+# #
+##
+# #
+#  #
+`, Color);
+const Char_L = parseCharGrid(`
+#
+#
+#
+#
+###
+`, Color);
+const Char_M = parseCharGrid(`
+#   #
+## ##
+# # #
+#   #
+#   #
+`, Color);
+const Char_N = parseCharGrid(`
+#  #
+## #
+# ##
+#  #
+#  #
+`, Color);
+const Char_O = parseCharGrid(`
+ ##
+#  #
+#  #
+#  #
+ ##
+`, Color);
+const Char_P = parseCharGrid(`
+###
+#  #
+###
+#
+#
+`, Color);
+const Char_Q = parseCharGrid(`
+ ##
+#  #
+#  #
+#  #
+ ##
+   #
+`, Color);
+const Char_R = parseCharGrid(`
+###
+#  #
+#  #
+###
+#  #
+`, Color);
+const Char_S = parseCharGrid(`
+ ###
+#
+ ##
+   #
+###
+`, Color);
+const Char_T = parseCharGrid(`
+###
+ #
+ #
+ #
+ #
+`, Color);
+const Char_U = parseCharGrid(`
+#  #
+#  #
+#  #
+#  #
+ ##
+`, Color);
+const Char_V = parseCharGrid(`
+#  #
+#  #
+# #
+# #
+ #
+`, Color);
+const Char_W = parseCharGrid(`
+#   #
+#   #
+# # #
+# # #
+ # #
+`, Color);
+const Char_X = parseCharGrid(`
+#  #
+#  #
+ ##
+#  #
+#  #
+`, Color);
+const Char_Y = parseCharGrid(`
+#  #
+#  #
+ ###
+   #
+ ##
+`, Color);
+const Char_Z = parseCharGrid(`
+###
+  #
+ #
+#
+###
+`, Color);
+const Char_a = parseCharGrid(`
+
+ ###
+#  #
+#  #
+ ###
+`, Color);
+const Char_b = parseCharGrid(`
+#
+###
+#  #
+#  #
+###
+`, Color);
+const Char_c = parseCharGrid(`
+
+ ##
+#
+#
+ ##
+`, Color);
+const Char_d = parseCharGrid(`
+   #
+ ###
+#  #
+#  #
+ ###
+`, Color);
+const Char_e = parseCharGrid(`
+
+ ##
+# ##
+##
+ ##
+`, Color);
+const Char_f = parseCharGrid(`
+ ##
+ #
+###
+ #
+ #
+`, Color);
+const Char_g = parseCharGrid(`
+
+ ###
+#  #
+#  #
+ ###
+   #
+ ##
+`, Color);
+const Char_h = parseCharGrid(`
+#
+###
+#  #
+#  #
+#  #
+`, Color);
+const Char_i = parseCharGrid(`
+#
+
+#
+#
+#
+`, Color);
+const Char_j = parseCharGrid(`
+ #
+
+ #
+ #
+ #
+ #
+#
+`, Color);
+const Char_k = parseCharGrid(`
+#
+#  #
+# #
+###
+#  #
+`, Color);
+const Char_l = parseCharGrid(`
+#
+#
+#
+#
+#
+`, Color);
+const Char_m = parseCharGrid(`
+
+####
+# # #
+# # #
+# # #
+`, Color);
+const Char_n = parseCharGrid(`
+
+###
+#  #
+#  #
+#  #
+`, Color);
+const Char_o= parseCharGrid(`
+
+ ##
+#  #
+#  #
+ ##
+`, Color);
+const Char_p = parseCharGrid(`
+
+###
+#  #
+#  #
+###
+#
+#
+`, Color);
+const Char_q = parseCharGrid(`
+
+ ###
+#  #
+#  #
+ ###
+   #
+   #
+`, Color);
+const Char_r = parseCharGrid(`
+
+# #
+##
+#
+#
+`, Color);
+const Char_s = parseCharGrid(`
+
+ ###
+##
+  ##
+###
+`, Color);
+const Char_t = parseCharGrid(`
+ #
+###
+ #
+ #
+ ##
+`, Color);
+const Char_u = parseCharGrid(`
+
+#  #
+#  #
+#  #
+ ###
+`, Color);
+const Char_v = parseCharGrid(`
+
+#  #
+#  #
+# #
+ #
+`, Color);
+const Char_w = parseCharGrid(`
+
+#   #
+# # #
+# # #
+ # #
+`, Color);
+const Char_x = parseCharGrid(`
+
+# #
+ #
+ #
+# #
+`, Color);
+const Char_y = parseCharGrid(`
+
+#  #
+#  #
+#  #
+ ###
+   #
+###
+`, Color);
+const Char_z = parseCharGrid(`
+
+####
+  #
+ #
+####
+`, Color);
+const Char_0 = parseCharGrid(`
+ ##
+#  #
+#  #
+#  #
+ ##
+`, Color);
+const Char_1 = parseCharGrid(`
+ #
+##
+ #
+ #
+ #
+`, Color);
+const Char_2 = parseCharGrid(`
+ ##
+#  #
+  #
+ #
+####
+`, Color);
+const Char_3 = parseCharGrid(`
+###
+   #
+ ###
+   #
+###
+`, Color);
+const Char_4 = parseCharGrid(`
+  #
+ ##
+# #
+####
+  #
+`, Color);
+const Char_5 = parseCharGrid(`
+####
+#
+###
+   #
+###
+`, Color);
+const Char_6 = parseCharGrid(`
+ ##
+#
+###
+#  #
+ ##
+`, Color);
+const Char_7 = parseCharGrid(`
+####
+   #
+  #
+ #
+ #
+`, Color);
+const Char_8 = parseCharGrid(`
+ ##
+#  #
+ ##
+#  #
+ ##
+`, Color);
+const Char_9 = parseCharGrid(`
+ ##
+#  #
+ ###
+   #
+ ##
+`, Color);
+const Char_cash = parseCharGrid(`
+ #
+ ###
+##
+  ##
+###
+  #
+`, Color);
+const Char_euro = parseCharGrid(`
+  ##
+ #
+###
+ #
+  ##
+`, Color);
+const Char_pound = parseCharGrid(`
+  ##
+ #
+ ##
+ #
+####
+`, Color);
+const Char_yen = parseCharGrid(`
+# #
+# #
+ #
+###
+ #
+`, Color);
+const Char_plus = parseCharGrid(`
+
+ #
+###
+ #
+
+`, Color);
+const Char_minus = parseCharGrid(`
+
+
+###
+
+
+`, Color);
+const Char_star = parseCharGrid(`
+# #
+ #
+# #
+`, Color);
+const Char_slash = parseCharGrid(`
+  #
+  #
+ #
+#
+#
+`, Color);
+const Char_divide = parseCharGrid(`
+  #
+
+#####
+
+  #
+`, Color);
+const Char_equals = parseCharGrid(`
+
+####
+
+####
+
+`, Color);
+const Char_percent = parseCharGrid(`
+# #
+  #
+ #
+#
+# #
+`, Color);
+const Char_quote = parseCharGrid(`
+# #
+# #
+`, Color);
+const Char_quote2 = parseCharGrid(`
+#
+#
+`, Color);
+const Char_hash = parseCharGrid(`
+  # #
+ # #
+#####
+ # #
+# #
+`, Color);
+const Char_ed = parseCharGrid(`
+  ####
+ #    #
+#  ## #
+# # # #
+#  ###
+ #
+  ####
+`, Color);
+const Char_and = parseCharGrid(`
+ ##
+#
+ ## #
+#  #
+ ## #
+`, Color);
+const Char_underline = parseCharGrid(`
+
+
+
+
+#####
+`, Color);
+const Char_brace_open = parseCharGrid(`
+ #
+#
+#
+#
+#
+ #
+`, Color);
+const Char_brace_close = parseCharGrid(`
+#
+ #
+ #
+ #
+ #
+#
+`, Color);
+const Char_commar = parseCharGrid(`
+
+
+
+
+ #
+#
+`, Color);
+
+// character pos
+let col = 1;
+let row = 0;
+
+// helper
+function maxY(grid) {
+	let maxY = -Infinity;
+
+	for (let i = 0; i < grid.length; i++) {
+		let y = grid[i][1];
+		if (y > maxY) {
+			maxY = y;
+		}
+	}
+
+	return maxY;
+}
+
+function maxX(grid) {
+	let maxX = -Infinity;
+
+	for (let i = 0; i < grid.length; i++) {
+		let x = grid[i][0];
+		if (x > maxX) {
+			maxX = x;
+		}
+	}
+
+	return maxX + 1;
+}
+
+// print
+function draw(graph)
+{
+	let offsetA = maxX(graph);
+	let offsetB = col + offsetA;
+	if(offsetB > (width - 10))
+	{
+		row++;
+		col = 1;
+	}
+	const ret = display.storeGraph(graph);
+	display.drawGraph(ret, col, row * 8);
+	display.redraw();
+	display.unstoreGraph(ret);
+	col += offsetA + 1;
+}
+
+function print(msg)
+{
+	let len = msg.length;
+	for(let i = 0; i < len; i++)
+	{
+		switch(msg[i])
+		{
+			case "A":
+				draw(Char_A);
+				break;
+			case "B":
+				draw(Char_B);
+				break;
+			case "C":
+				draw(Char_C);
+				break;
+			case "D":
+				draw(Char_D);
+				break;
+			case "E":
+				draw(Char_E);
+				break;
+			case "F":
+				draw(Char_F);
+				break;
+			case "G":
+				draw(Char_G);
+				break;
+			case "H":
+				draw(Char_H);
+				break;
+			case "I":
+				draw(Char_I);
+				break;
+			case "J":
+				draw(Char_J);
+				break;
+			case "K":
+				draw(Char_K);
+				break;
+			case "L":
+				draw(Char_L);
+				break;
+			case "M":
+				draw(Char_M);
+				break;
+			case "N":
+				draw(Char_N);
+				break;
+			case "O":
+				draw(Char_O);
+				break;
+			case "P":
+				draw(Char_P);
+				break;
+			case "Q":
+				draw(Char_Q);
+				break;
+			case "R":
+				draw(Char_R);
+				break;
+			case "S":
+				draw(Char_S);
+				break;
+			case "T":
+				draw(Char_T);
+				break;
+			case "U":
+				draw(Char_U);
+				break;
+			case "V":
+				draw(Char_V);
+				break;
+			case "W":
+				draw(Char_W);
+				break;
+			case "X":
+				draw(Char_X);
+				break;
+			case "Y":
+				draw(Char_Y);
+				break;
+			case "Z":
+				draw(Char_Z);
+				break;
+			case "a":
+				draw(Char_a);
+				break;
+			case "b":
+				draw(Char_b);
+				break;
+			case "c":
+				draw(Char_c);
+				break;
+			case "d":
+				draw(Char_d);
+				break;
+			case "e":
+				draw(Char_e);
+				break;
+			case "f":
+				draw(Char_f);
+				break;
+			case "g":
+				draw(Char_g);
+				break;
+			case "h":
+				draw(Char_h);
+				break;
+			case "i":
+				draw(Char_i);
+				break;
+			case "j":
+				draw(Char_j);
+				break;
+			case "k":
+				draw(Char_k);
+				break;
+			case "l":
+				draw(Char_l);
+				break;
+			case "m":
+				draw(Char_m);
+				break;
+			case "n":
+				draw(Char_n);
+				break;
+			case "o":
+				draw(Char_o);
+				break;
+			case "p":
+				draw(Char_p);
+				break;
+			case "q":
+				draw(Char_q);
+				break;
+			case "r":
+				draw(Char_r);
+				break;
+			case "s":
+				draw(Char_s);
+				break;
+			case "t":
+				draw(Char_t);
+				break;
+			case "u":
+				draw(Char_u);
+				break;
+			case "v":
+				draw(Char_v);
+				break;
+			case "w":
+				draw(Char_w);
+				break;
+			case "x":
+				draw(Char_x);
+				break;
+			case "y":
+				draw(Char_y);
+				break;
+			case "z":
+				draw(Char_z);
+				break;
+			case "0":
+				draw(Char_0);
+				break;
+			case "1":
+				draw(Char_1);
+				break;
+			case "2":
+				draw(Char_2);
+				break;
+			case "3":
+				draw(Char_3);
+				break;
+			case "4":
+				draw(Char_4);
+				break;
+			case "5":
+				draw(Char_5);
+				break;
+			case "6":
+				draw(Char_6);
+				break;
+			case "7":
+				draw(Char_7);
+				break;
+			case "8":
+				draw(Char_8);
+				break;
+			case "9":
+				draw(Char_9);
+				break;
+			case "$":
+				draw(Char_cash);
+				break;
+			case "€":
+				draw(Char_euro);
+				break;
+			case "£":
+				draw(Char_pound);
+				break;
+			case "¥":
+				draw(Char_yen);
+				break;
+			case "+":
+				draw(Char_plus);
+				break;
+			case "-":
+				draw(Char_minus);
+				break;
+			case ".":
+				draw(Char_dot);
+				break;
+			case "*":
+				draw(Char_star);
+				break;
+			case "/":
+				draw(Char_slash);
+				break;
+			case "=":
+				draw(Char_equals);
+				break;
+			case "%":
+				draw(Char_percent);
+				break;
+			case "\"":
+				draw(Char_quote);
+				break;
+			case "'":
+				draw(Char_quote2);
+				break;
+			case "#":
+				draw(Char_hash);
+				break;
+			case "@":
+				draw(Char_ed);
+				break;
+			case "&":
+				draw(Char_and);
+				break;
+			case "_":
+				draw(Char_underline);
+				break;
+			case "(":
+				draw(Char_brace_open);
+				break;
+			case ")":
+				draw(Char_brace_close);
+				break;
+			case ",":
+				draw(Char_commar);
+				break;
+			case "\n":
+				row++;
+				col = 1;
+				break;
+			default:
+				draw(Char_NA);
+				break;
+		}
+	}
+}
+
+//print("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$€£¥+-");
+print("I am\nSeanIsTethered\nMadeline\ncan lick my ass\n");
+
+timer.wait(5);
+
+ui.destroy(display);
