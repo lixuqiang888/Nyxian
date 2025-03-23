@@ -61,10 +61,10 @@ JSValue* jsDoThrowError(NSString *msg);
 /// Macro to automize symbol printint
 #if __has_feature(objc_arc) && !defined(__cplusplus)
     #define JS_THROW_ERROR(msg) \
-        jsDoThrowError([NSString stringWithFormat:@"%@ %@", NSStringFromSelector(_cmd), msg])
+        jsDoThrowError([NSString stringWithFormat:@"%@ %@\n", NSStringFromSelector(_cmd), msg])
 #else
     #define JS_THROW_ERROR(msg) \
-        jsDoThrowError([NSString stringWithFormat:@"'%s': %@", __func__, msg])
+        jsDoThrowError([NSString stringWithFormat:@"'%s': %@\n", __func__, msg])
 #endif
 
 NS_ASSUME_NONNULL_END
