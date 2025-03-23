@@ -65,7 +65,7 @@ extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
 - (void)run:(NSString*)code
 {
     _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
-        printf("%s", [[NSString stringWithFormat:@"\nNyxian Error: %@", exception] UTF8String]);
+        printf("%s", [[NSString stringWithFormat:@"\nNyxian %@", exception] UTF8String]);
     };
     [_Context evaluateScript:code];
     
