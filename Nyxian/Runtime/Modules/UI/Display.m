@@ -89,11 +89,11 @@
 }
 
 - (void)setPixelAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex {
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    //dispatch_sync(dispatch_get_main_queue(), ^{
         if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight && colorIndex < COLOR_COUNT) {
             pixelData[x][y] = colorIndex;
         }
-    });
+    //});
 }
 
 - (UIColor *)colorAtPixelX:(NSInteger)x y:(NSInteger)y {
@@ -120,102 +120,89 @@
     return -1;
 }
 
-- (void)clear {
-    memset(pixelData, -1, sizeof(pixelData));
-    [self setNeedsDisplay];
-}
-
 - (NSNumber *)save2DArray:(NSArray<NSArray *> *)array {
     __block NSNumber *identifier = nil;
-
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        BOOL isValid = YES;
+    
+    BOOL isValid = YES;
+    
+    if (![array isKindOfClass:[NSArray class]]) {
+        isValid = NO;
+    } else {
+        for (id inner in array) {
+            if (![inner isKindOfClass:[NSArray class]]) {
+                isValid = NO;
+                break;
+            }
+            
+            NSArray *innerArray = (NSArray *)inner;
+            if (innerArray.count != 3) {
+                isValid = NO;
+                break;
+            }
+            
+            for (id element in innerArray) {
+                if (![element isKindOfClass:[NSNumber class]]) {
+                    isValid = NO;
+                    break;
+                }
+            }
+            
+            if (!isValid) break;
+        }
+    }
+    
+    if (isValid) {
+        _uniqueID++;
+        identifier = @(_uniqueID);
+        NSMutableArray *flatArray = [NSMutableArray arrayWithCapacity:array.count];
         
-        if (![array isKindOfClass:[NSArray class]]) {
-            isValid = NO;
-        } else {
-            for (id inner in array) {
-                if (![inner isKindOfClass:[NSArray class]]) {
-                    isValid = NO;
-                    break;
-                }
-                
-                NSArray *innerArray = (NSArray *)inner;
-                if (innerArray.count != 3) {
-                    isValid = NO;
-                    break;
-                }
-
-                for (id element in innerArray) {
-                    if (![element isKindOfClass:[NSNumber class]]) {
-                        isValid = NO;
-                        break;
-                    }
-                }
-                
-                if (!isValid) break;
-            }
+        for (NSArray *coordinate in array) {
+            NSInteger x = [coordinate[0] integerValue];
+            NSInteger y = [coordinate[1] integerValue];
+            NSInteger colorIndex = [coordinate[2] integerValue];
+            int packedData = (x << 16) | (y << 8) | colorIndex;
+            [flatArray addObject:@(packedData)];
         }
-
-        if (isValid) {
-            _uniqueID++;
-            identifier = @(_uniqueID);
-            NSMutableArray *flatArray = [NSMutableArray arrayWithCapacity:array.count];
-            
-            for (NSArray *coordinate in array) {
-                NSInteger x = [coordinate[0] integerValue];
-                NSInteger y = [coordinate[1] integerValue];
-                NSInteger colorIndex = [coordinate[2] integerValue];
-                int packedData = (x << 16) | (y << 8) | colorIndex;
-                [flatArray addObject:@(packedData)];
-            }
-            
-            savedArrays[identifier] = flatArray;
-        } else {
-            NSLog(@"Invalid input: Expected 2D array of NSNumber elements with 3 items each.");
-        }
-    });
-
+        
+        savedArrays[identifier] = flatArray;
+    } else {
+        NSLog(@"Invalid input: Expected 2D array of NSNumber elements with 3 items each.");
+    }
+    
     return identifier;
 }
 
 
 - (void)drawSavedArrayWithIdentifier:(NSNumber *)identifier atX:(NSInteger)xOffset atY:(NSInteger)yOffset {
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        NSArray *array = savedArrays[identifier];
-        
-        if (array) {
-            for (NSNumber *packedData in array) {
-                int data = [packedData intValue];
-                
-                NSInteger x = (data >> 16) & 0xFF;
-                NSInteger y = (data >> 8) & 0xFF;
-                NSInteger colorIndex = data & 0xFF;
-                
-                x += xOffset;
-                y += yOffset;
-                
-                if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight && colorIndex < COLOR_COUNT) {
-                    pixelData[x][y] = colorIndex;
-                }
+    NSArray *array = savedArrays[identifier];
+    
+    if (array) {
+        for (NSNumber *packedData in array) {
+            int data = [packedData intValue];
+            
+            NSInteger x = (data >> 16) & 0xFF;
+            NSInteger y = (data >> 8) & 0xFF;
+            NSInteger colorIndex = data & 0xFF;
+            
+            x += xOffset;
+            y += yOffset;
+            
+            if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight && colorIndex < COLOR_COUNT) {
+                pixelData[x][y] = colorIndex;
             }
         }
-    });
+    }
 }
 
 - (void)deleteSavedArrayWithIdentifier:(NSNumber *)identifier {
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        [savedArrays removeObjectForKey:identifier];
-    });
+    [savedArrays removeObjectForKey:identifier];
 }
 
 - (void)undraw {
+    memset(pixelData, -1, sizeof(pixelData));
     dispatch_sync(dispatch_get_main_queue(), ^{
-        memset(pixelData, -1, sizeof(pixelData));
         [self setNeedsDisplay];
     });
 }
-
-
 
 @end

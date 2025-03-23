@@ -40,6 +40,5 @@ JSExportAs(unstoreGraph,
 - (void)setPixelAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex;
 - (UIColor *)colorAtPixelX:(NSInteger)x y:(NSInteger)y;
 - (NSInteger)colorIndexAtPixelX:(NSInteger)x y:(NSInteger)y;
-- (void)clear;
 
 @end
