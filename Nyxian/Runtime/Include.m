@@ -77,7 +77,7 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         return NULL;
     } else if ([LibName isEqualToString:@"arbcall"])
     {
-        if(!NYXIAN_RUNTIME_SAFETY_ENABLED)
+        if(NYXIAN_RUNTIME_SAFETY_ENABLED)
         {
             return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_RUNTIME_SAFETY]);
         }
