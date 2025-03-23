@@ -126,22 +126,59 @@
 }
 
 - (NSNumber *)save2DArray:(NSArray<NSArray *> *)array {
+    __block NSNumber *identifier = nil;
+
     dispatch_sync(dispatch_get_main_queue(), ^{
-        _uniqueID++;
-        NSMutableArray *flatArray = [NSMutableArray arrayWithCapacity:array.count];
-        for (NSArray *coordinate in array) {
-            NSInteger x = [coordinate[0] integerValue];
-            NSInteger y = [coordinate[1] integerValue];
-            NSInteger colorIndex = [coordinate[2] integerValue];
-            int packedData = (x << 16) | (y << 8) | colorIndex;
-            [flatArray addObject:@(packedData)];
-        }
+        BOOL isValid = YES;
         
-        savedArrays[@(_uniqueID)] = flatArray;
+        if (![array isKindOfClass:[NSArray class]]) {
+            isValid = NO;
+        } else {
+            for (id inner in array) {
+                if (![inner isKindOfClass:[NSArray class]]) {
+                    isValid = NO;
+                    break;
+                }
+                
+                NSArray *innerArray = (NSArray *)inner;
+                if (innerArray.count != 3) {
+                    isValid = NO;
+                    break;
+                }
+
+                for (id element in innerArray) {
+                    if (![element isKindOfClass:[NSNumber class]]) {
+                        isValid = NO;
+                        break;
+                    }
+                }
+                
+                if (!isValid) break;
+            }
+        }
+
+        if (isValid) {
+            _uniqueID++;
+            identifier = @(_uniqueID);
+            NSMutableArray *flatArray = [NSMutableArray arrayWithCapacity:array.count];
+            
+            for (NSArray *coordinate in array) {
+                NSInteger x = [coordinate[0] integerValue];
+                NSInteger y = [coordinate[1] integerValue];
+                NSInteger colorIndex = [coordinate[2] integerValue];
+                int packedData = (x << 16) | (y << 8) | colorIndex;
+                [flatArray addObject:@(packedData)];
+            }
+            
+            savedArrays[identifier] = flatArray;
+        } else {
+            NSLog(@"Invalid input: Expected 2D array of NSNumber elements with 3 items each.");
+        }
     });
 
-    return @(_uniqueID);
+    return identifier;
 }
+
 
 - (void)drawSavedArrayWithIdentifier:(NSNumber *)identifier atX:(NSInteger)xOffset atY:(NSInteger)yOffset {
     dispatch_sync(dispatch_get_main_queue(), ^{
