@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Main Runtime functions you should focus on
 - (instancetype)init;
-- (void)run:(NSString*)code;
+- (void)run:(NSString*)path;
 - (void)cleanup;
 
 /// Module Handoff functions

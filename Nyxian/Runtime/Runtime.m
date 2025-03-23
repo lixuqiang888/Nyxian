@@ -28,9 +28,6 @@
 #import <Runtime/EnvRecover.h>
 #import <Nyxian-Swift.h>
 
-/// Header for threading
-#include <pthread.h>
-
 extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 /*
@@ -57,13 +54,17 @@ extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
     [_envRecover createBackup];
     _array = [[NSMutableArray alloc] init];
     add_include_symbols(self);
-    chdir([[NSString stringWithFormat:@"%@/Documents", NSHomeDirectory()] UTF8String]);
     return self;
 }
 
 /// Main Runtime function to execute code
-- (void)run:(NSString*)code
+- (void)run:(NSString*)path
 {
+    NSString *code = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
+    
+    NSURL *url = [[NSURL fileURLWithPath:path] URLByDeletingLastPathComponent];
+    chdir([[url path] UTF8String]);
+    
     _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
         printf("%s", [[NSString stringWithFormat:@"\nNyxian %@", exception] UTF8String]);
     };
