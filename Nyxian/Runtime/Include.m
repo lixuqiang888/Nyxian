@@ -44,12 +44,12 @@
 
 extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
-void NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
+id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
 {
     // Checking if module with that name is already imported
     if([Runtime isModuleImported:LibName])
     {
-        return;
+        return NULL;
     }
     
     if ([LibName isEqualToString:@"io"]) {
@@ -57,45 +57,65 @@ void NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         IOModule *ioModule = [[IOModule alloc] init];
         [Runtime.Context setObject:ioModule forKeyedSubscript:@"io"];
         [Runtime handoffModule:ioModule];
+        return NULL;
     } else if ([LibName isEqual:@"string"]) {
         StringModule *stringModule = [[StringModule alloc] init];
         [Runtime.Context setObject:stringModule forKeyedSubscript:@"string"];
+        return NULL;
     } else if ([LibName isEqualToString:@"memory"]) {
         MemoryModule *memoryModule = [[MemoryModule alloc] init];
         [Runtime.Context setObject:memoryModule forKeyedSubscript:@"memory"];
         [Runtime handoffModule:memoryModule];
+        return NULL;
     } else if ([LibName isEqualToString:@"math"]) {
         MathModule *mathModule = [[MathModule alloc] init];
         [Runtime.Context setObject:mathModule forKeyedSubscript:@"math"];
+        return NULL;
     } else if ([LibName isEqualToString:@"proc"]) {
         ProcModule *procModule = [[ProcModule alloc] init];
         [Runtime.Context setObject:procModule forKeyedSubscript:@"proc"];
+        return NULL;
     } else if ([LibName isEqualToString:@"arbcall"])
     {
         if(!NYXIAN_RUNTIME_SAFETY_ENABLED)
         {
-            ArbCallModule *arbCallModule = [[ArbCallModule alloc] init];
-            [Runtime.Context setObject:arbCallModule forKeyedSubscript:@"arbcall"];
+            return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_RUNTIME_SAFETY]);
         }
+        ArbCallModule *arbCallModule = [[ArbCallModule alloc] init];
+        [Runtime.Context setObject:arbCallModule forKeyedSubscript:@"arbcall"];
     } else if ([LibName isEqualToString:@"ui"]) {
         UIModule *uiModule = [[UIModule alloc] init];
         [Runtime.Context setObject:uiModule forKeyedSubscript:@"ui"];
+        return NULL;
     } else if ([LibName isEqualToString:@"timer"]) {
         TimerModule *timerModule = [[TimerModule alloc] init];
         [Runtime.Context setObject:timerModule forKeyedSubscript:@"timer"];
+        return NULL;
     } else {
         NSString *code = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@.nx", LibName] encoding:NSUTF8StringEncoding error:NULL];
+        if (!code) {
+            return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_FILE_NOT_FOUND]);
+        }
+        
         [Runtime.Context evaluateScript:[NSString stringWithFormat:@"var %@ = (function() {\n%@}\n)();", LibName, code]];
-        JSValue *module = [Runtime.Context objectForKeyedSubscript:LibName];
+        
+        JSValue *exception = Runtime.Context.exception;
+        if (exception && !exception.isUndefined && !exception.isNull) {
+            jsDoThrowError([NSString stringWithFormat:@"include: %@\n", [exception toString]]);
+            Runtime.Context.exception = nil;
+        }
+        
+        return NULL;
     }
+    return NULL;
 }
 
 void add_include_symbols(NYXIAN_Runtime *Runtime)
 {
     __block NYXIAN_Runtime *BlockRuntime = Runtime;
     if (Runtime) {
-        [Runtime.Context setObject:^(NSString *LibName) {
-            NYXIAN_include(BlockRuntime, LibName);
+        [Runtime.Context setObject:^id(NSString *LibName) {
+            return NYXIAN_include(BlockRuntime, LibName);
         } forKeyedSubscript:@"include"];
         
         // ! ATTENTION !
