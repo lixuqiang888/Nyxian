@@ -39,6 +39,8 @@
 #import <Runtime/Modules/UI/UI.h>
 #import <Runtime/Modules/Timer/Timer.h>
 
+#import <Runtime/ObjCSurface/objcsurface.h>
+
 /// UI Headers
 #import <Nyxian-Swift.h>
 
@@ -131,6 +133,7 @@ void add_include_symbols(NYXIAN_Runtime *Runtime)
         // ! ATTENTION !
         // very sensitive symbol
         // will need user verification
+        __block NYXIAN_Runtime *runtime = Runtime;
         [Runtime.Context setObject:^id {
             __block BOOL Consented = NO;
             
@@ -147,6 +150,13 @@ void add_include_symbols(NYXIAN_Runtime *Runtime)
             if(Consented == YES)
             {
                 NYXIAN_RUNTIME_SAFETY_ENABLED = false;
+                [runtime.Context setObject:^id(NSString *name) {
+                    return ObjCSurface_Get_Class(name);
+                } forKeyedSubscript:@"objc_get_class"];
+                
+                [runtime.Context setObject:^id(id class, NSString *name) {
+                    return ObjCSurface_Send_Msg(class, name);
+                } forKeyedSubscript:@"objc_send_msg"];
             } else {
                 return jsDoThrowError(@"Consent failure\n");
             }
