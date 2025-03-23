@@ -57,6 +57,7 @@ JSValue* jsDoThrowError(NSString *msg);
 #define EW_UNSUPPORTED_OPERATION @"Operation not supported"
 #define EW_DISK_FULL       @"Disk is full"
 #define EW_UNKNOWN_ERROR   @"An unknown error occurred"
+#define EW_MODULE_INCLUDE  @"Failed to include module"
 
 /// Macro to automize symbol printint
 #if __has_feature(objc_arc) && !defined(__cplusplus)
