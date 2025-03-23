@@ -1,0 +1,46 @@
+//
+// mtrace.nx
+//
+// Created by Anonym on 22.03.25
+//
+ 
+disable_safety_checks();
+
+include("memory");
+include("io");
+include("timer");
+include("arbcall");
+
+function print(msg)
+{
+	let len = msg.length;
+	for(let i = 0; i < len; i++)
+	{
+		io.putchar(msg.codePointAt(i));
+	}
+}
+
+function malloc_size(ptr)
+{
+	let call = arbcall.allocCall();
+	arbcall.allocFuncName(call, "malloc_size");
+	arbcall.args_set_ptr(call, 0, ptr);
+	arbcall.findFunc(call);
+	let size = arbcall.call(call);
+	arbcall.deallocFuncName(call);
+	arbcall.deallocCall(call);
+	return size;
+}
+
+let ptr = memory.malloc(1);
+while(true)
+{
+	let size = malloc_size(ptr);
+	if(size != 0)
+	{
+		let data = memory.mread8(ptr);
+		print("address: 0x" + ptr.toString(16) + " value: " + data + " | block size: " + malloc_size(ptr) + "\n");
+	}
+	ptr--;
+	//timer.wait(0.000005);
+}
