@@ -92,7 +92,13 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         [Runtime.Context setObject:timerModule forKeyedSubscript:@"timer"];
         return NULL;
     } else {
-        NSString *code = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@.nx", LibName] encoding:NSUTF8StringEncoding error:NULL];
+        NSString *path = [NSString stringWithFormat:@"%@.nx", LibName];
+        NSURL *url = [[NSURL fileURLWithPath:path] URLByDeletingLastPathComponent];
+        NSString *code = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
+        NSString *currentPath = [[NSFileManager defaultManager] currentDirectoryPath];
+        
+        chdir([[url path] UTF8String]);
+        
         if (!code) {
             return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_FILE_NOT_FOUND]);
         }
@@ -104,6 +110,8 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
             jsDoThrowError([NSString stringWithFormat:@"include: %@\n", [exception toString]]);
             Runtime.Context.exception = nil;
         }
+        
+        chdir([currentPath UTF8String]);
         
         return NULL;
     }
