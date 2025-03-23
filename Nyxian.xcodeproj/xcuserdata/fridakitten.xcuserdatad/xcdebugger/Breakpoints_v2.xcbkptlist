@@ -50,36 +50,6 @@
             endingLineNumber = "184"
             landmarkName = "-drawSavedArrayWithIdentifier:atX:atY:"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "EA0A7061-8612-4C48-B91C-10A7A8B4C4EE - f16c3c45d6a24aed"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[NyxianDisplay drawSavedArrayWithIdentifier:atX:atY:]"
-                  moduleName = "Nyxian.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/UI/Display.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "187"
-                  endingLineNumber = "187">
-               </Location>
-               <Location
-                  uuid = "EA0A7061-8612-4C48-B91C-10A7A8B4C4EE - 5fd80e70928f5983"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__54-[NyxianDisplay drawSavedArrayWithIdentifier:atX:atY:]_block_invoke"
-                  moduleName = "Nyxian.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/UI/Display.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "188"
-                  endingLineNumber = "188">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -192,36 +162,6 @@
             endingLineNumber = "207"
             landmarkName = "-deleteSavedArrayWithIdentifier:"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "43F40068-0C6F-485B-B07C-972B9510A108 - 77a6dd336735c0f4"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[NyxianDisplay deleteSavedArrayWithIdentifier:]"
-                  moduleName = "Nyxian.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/UI/Display.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "210"
-                  endingLineNumber = "210">
-               </Location>
-               <Location
-                  uuid = "43F40068-0C6F-485B-B07C-972B9510A108 - c2220ca3e9bbf3a5"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__48-[NyxianDisplay deleteSavedArrayWithIdentifier:]_block_invoke"
-                  moduleName = "Nyxian.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/UI/Display.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "211"
-                  endingLineNumber = "211">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

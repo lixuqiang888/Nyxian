@@ -92,7 +92,7 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         [Runtime.Context setObject:timerModule forKeyedSubscript:@"timer"];
         return NULL;
     } else {
-        NSString *path = [NSString stringWithFormat:@"%@.nx", LibName];
+        NSString *path = [NSString stringWithFormat:@"%@.nxm", LibName];
         NSURL *url = [[NSURL fileURLWithPath:path] URLByDeletingLastPathComponent];
         NSString *code = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
         NSString *currentPath = [[NSFileManager defaultManager] currentDirectoryPath];

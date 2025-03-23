@@ -391,6 +391,10 @@ private func gProperty(_ fileURL: URL) -> FileProperty {
            property.symbol = "nx"
            property.color = Color.purple
            property.size = 8
+       case "nxm":
+           property.symbol = "nxm"
+           property.color = Color.blue
+           property.size = 5
        default:
            property.color = Color.primary
    }

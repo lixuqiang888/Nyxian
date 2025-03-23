@@ -741,7 +741,7 @@ func grule(_ isaythis: String) -> [HighlightRule] {
     }
 
     switch(isaythis) {
-        case "nx":
+        case "nx", "nxm":
             return [
                 // Comments
                 HighlightRule(pattern: try! NSRegularExpression(pattern: "(//.*|/\\*[\\s\\S]*?\\*/)", options: []), formattingRules: [
