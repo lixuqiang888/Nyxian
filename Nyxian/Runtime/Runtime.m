@@ -27,6 +27,7 @@
 #import <Runtime/Include.h>
 #import <Runtime/EnvRecover.h>
 #import <Nyxian-Swift.h>
+#import <Runtime/UISurface/UISurface.h>
 
 extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
 
@@ -85,6 +86,16 @@ extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
     printf("[EXIT]\n");
     
     _Context = nil;
+    
+    UIView *slave = UISurface_Handoff_Master();
+    
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        for (UIView *subview in slave.subviews) {
+            if (![subview isKindOfClass:[FridaTerminalView class]]) {
+                [subview removeFromSuperview];
+            }
+        }
+    });
     
     [_envRecover restoreBackup];
 }
