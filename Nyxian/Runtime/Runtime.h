@@ -50,6 +50,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// Module Handoff functions
 - (void)handoffModule:(Module*)module;
 
+/// Is module already imported?
+- (BOOL)isModuleImported:(NSString *)name;
+
 @end
 
 NS_ASSUME_NONNULL_END

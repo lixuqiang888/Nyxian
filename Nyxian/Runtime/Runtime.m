@@ -88,6 +88,13 @@ extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
     [_envRecover restoreBackup];
 }
 
+/// Module check
+- (BOOL)isModuleImported:(NSString *)name
+{
+    JSValue *module = [_Context objectForKeyedSubscript:name];
+    return !module.isUndefined && !module.isNull;
+}
+
 /// Module Handoff function
 - (void)handoffModule:(Module*)module
 {

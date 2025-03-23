@@ -46,6 +46,12 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 void NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
 {
+    // Checking if module with that name is already imported
+    if([Runtime isModuleImported:LibName])
+    {
+        return;
+    }
+    
     if ([LibName isEqualToString:@"io"]) {
         IO_MACRO_MAP();
         IOModule *ioModule = [[IOModule alloc] init];
@@ -77,6 +83,10 @@ void NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
     } else if ([LibName isEqualToString:@"timer"]) {
         TimerModule *timerModule = [[TimerModule alloc] init];
         [Runtime.Context setObject:timerModule forKeyedSubscript:@"timer"];
+    } else {
+        NSString *code = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@.nx", LibName] encoding:NSUTF8StringEncoding error:NULL];
+        [Runtime.Context evaluateScript:[NSString stringWithFormat:@"var %@ = (function() {\n%@}\n)();", LibName, code]];
+        JSValue *module = [Runtime.Context objectForKeyedSubscript:LibName];
     }
 }
 
