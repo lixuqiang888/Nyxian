@@ -43,6 +43,7 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
         hookStdout()
         self.isOpaque = false;
         tcom_set_size(Int32(self.getTerminal().rows), Int32(self.getTerminal().cols))
+        _ = self.becomeFirstResponder()
     }
     
     required init?(coder: NSCoder) {
