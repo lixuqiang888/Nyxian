@@ -1,0 +1,386 @@
+//
+// display.nx
+//
+// Created by SeanIsTethered on 22.03.25
+//
+ 
+include("ui");
+include("timer");
+
+let uirep = ui.uiReport();
+
+let width = uirep.width / 2.5;
+let heigth = uirep.heigth / 2.5;
+
+let display = ui.spawnDisplay(width, heigth);
+
+function fillBox(startX, startY, width, height, colorIndex) {
+    // Fill the interior of the box with the given color
+    for (let x = startX + 1; x < startX + width; x++) {
+        for (let y = startY + 1; y < startY + height; y++) {
+            display.setPixel(x, y, colorIndex);
+        }
+    }
+}
+
+fillBox(0, 0, width, heigth, 7);
+
+// character index
+const Color = 0;
+
+const Char_NA = [
+	[0, 0, 7],[1, 0, 7],[2, 0, 7],
+	[3, 0, 7],
+]
+const Char_PT = [
+	[0, 6, Color],
+]
+const Char_A = [
+	[1, 0, Color],[2, 0, Color],[0, 1, Color],
+	[0, 2, Color],[3, 1, Color],[3, 2, Color],
+	[0, 3, Color],[1, 3, Color],[2, 3, Color],
+	[3, 3, Color],[0, 4, Color],[0, 5, Color],
+	[0, 6, Color],[3, 4, Color],[3, 5, Color],
+	[3, 6, Color],
+];
+const Char_B = [
+	[0, 0, Color],[1, 0, Color],[2, 0, Color],
+	[0, 1, Color],[0, 2, Color],[3, 1, Color],
+	[3, 2, Color],[0, 3, Color],[1, 3, Color],
+	[2, 3, Color],[0, 4, Color],[0, 5, Color],
+	[3, 4, Color],[3, 5, Color],[0, 6, Color],
+	[1, 6, Color],[2, 6, Color],
+];
+const Char_C = [
+	[1, 0, Color],[2, 0, Color],[3, 0, Color],
+	[0, 1, Color],[0, 2, Color],[0, 3, Color],
+	[0, 4, Color],[0, 5, Color],[1, 6, Color],
+	[2, 6, Color],[3, 6, Color],
+];
+const Char_D = [
+	[0, 0, Color],[1, 0, Color],[2, 0, Color],
+	[0, 1, Color],[0, 2, Color],[0, 3, Color],
+	[0, 4, Color],[0, 5, Color],[3, 1, Color],
+	[3, 2, Color],[3, 3, Color],[3, 4, Color],
+	[3, 5, Color],[0, 6, Color],[1, 6, Color],
+	[2, 6, Color],
+];
+const Char_E = [
+	[0, 0, Color],[1, 0, Color],[2, 0, Color],
+	[3, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 3, Color],[1, 3, Color],[2, 3, Color],
+	[0, 4, Color],[0, 5, Color],[0, 6, Color],
+	[1, 6, Color],[2, 6, Color],[3, 6, Color],
+];
+const Char_F = [
+	[0, 0, Color],[1, 0, Color],[2, 0, Color],
+	[3, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 3, Color],[1, 3, Color],[2, 3, Color],
+	[0, 4, Color],[0, 5, Color],[0, 6, Color],
+];
+const Char_G = [
+	[3, 0, Color],[2, 0, Color],[1, 0, Color],
+	[0, 1, Color],[0, 2, Color],[0, 3, Color],
+	[0, 4, Color],[0, 5, Color],[1, 6, Color],
+	[2, 6, Color],[3, 5, Color],[3, 4, Color],
+	[3, 3, Color],[2, 3, Color],
+];
+const Char_H = [
+	[0, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 3, Color],[0, 4, Color],[0, 5, Color],
+	[0, 6, Color],[1, 3, Color],[2, 3, Color],
+	[3, 0, Color],[3, 1, Color],[3, 2, Color],
+	[3, 3, Color],[3, 4, Color],[3, 5, Color],
+	[3, 6, Color],
+];
+const Char_I = [
+	[0, 0, Color],[1, 0, Color],[2, 0, Color],
+	[1, 1, Color],[1, 2, Color],[1, 3, Color],
+	[1, 4, Color],[1, 5, Color],[0, 6, Color],
+	[1, 6, Color],[2, 6, Color],
+];
+const Char_J = [
+	[0, 0, Color],[1, 0, Color],[2, 0, Color],
+	[3, 0, Color],[3, 1, Color],[3, 2, Color],
+	[3, 3, Color],[3, 4, Color],[3, 5, Color],
+	[2, 6, Color],[1, 6, Color],[0, 5, Color],
+	[0, 4, Color],
+];
+const Char_K = [
+	[0, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 3, Color],[0, 4, Color],[0, 5, Color],
+	[0, 6, Color],[1, 3, Color],[2, 4, Color],
+	[2, 2, Color],[3, 1, Color],[3, 0, Color],
+	[3, 5, Color],[3, 6, Color],
+];
+const Char_L = [
+	[0, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 3, Color],[0, 4, Color],[0, 5, Color],
+	[0, 6, Color],[1, 6, Color],[2, 6, Color],
+	[3, 6, Color],
+];
+const Char_M = [
+	[0, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 3, Color],[0, 4, Color],[0, 5, Color],
+	[0, 6, Color],[1, 2, Color],[2, 3, Color],
+	[3, 2, Color],[4, 0, Color],[4, 1, Color],
+	[4, 2, Color],[4, 3, Color],[4, 4, Color],
+	[4, 5, Color],[4, 6, Color],
+];
+const Char_N = [
+	[0, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 3, Color],[0, 4, Color],[0, 5, Color],
+	[0, 6, Color],[1, 2, Color],[2, 3, Color],
+	[3, 0, Color],[3, 1, Color],[3, 2, Color],
+	[3, 3, Color],[3, 4, Color],[3, 5, Color],
+	[3, 6, Color],
+];
+const Char_O = [
+	[0, 1, Color],[0, 2, Color],[0, 3, Color],
+	[0, 4, Color],[0, 5, Color],[1, 0, Color],
+	[2, 0, Color],[3, 1, Color],[3, 2, Color],
+	[3, 3, Color],[3, 4, Color],[3, 5, Color],
+	[1, 6, Color],[2, 6, Color],
+];
+const Char_P = [
+	[1, 0, Color],[2, 0, Color],[0, 1, Color],
+	[0, 2, Color],[0, 3, Color],[0, 4, Color],
+	[0, 5, Color],[0, 6, Color],[1, 3, Color],
+	[2, 3, Color],[3, 2, Color],[3, 1, Color],
+];
+const Char_Q = [
+	[0, 1, Color],[0, 2, Color],[0, 3, Color],
+	[0, 4, Color],[0, 5, Color],[1, 0, Color],
+	[2, 0, Color],[2, 5, Color],[3, 6, Color],
+	[3, 1, Color],[3, 2, Color],[3, 3, Color],
+	[3, 4, Color],[3, 5, Color],[1, 6, Color],
+	[2, 6, Color],
+];
+const Char_R = [
+	[0, 0, Color],[1, 0, Color],[2, 0, Color],
+	[0, 1, Color],[0, 2, Color],[3, 1, Color],
+	[3, 2, Color],[0, 3, Color],[1, 3, Color],
+	[2, 3, Color],[0, 4, Color],[0, 5, Color],
+	[3, 4, Color],[3, 5, Color],[3, 6, Color],
+	[0, 6, Color],
+];
+const Char_S = [
+	[3, 1, Color],[2, 0, Color],[1, 0, Color],
+	[0, 1, Color],[0, 2, Color],[1, 3, Color],
+	[2, 3, Color],[3, 4, Color],[3, 5, Color],
+	[2, 6, Color],[1, 6, Color],[0, 5, Color],
+];
+const Char_T = [
+	[0, 0, Color],[1, 0, Color],[2, 0, Color],
+	[3, 0, Color],[4, 0, Color],[2, 1, Color],
+	[2, 2, Color],[2, 3, Color],[2, 4, Color],
+	[2, 5, Color],[2, 6, Color],
+];
+const Char_U = [
+	[0, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 3, Color],[0, 4, Color],[0, 5, Color],
+	[1, 6, Color],[2, 6, Color],[3, 6, Color],
+	[3, 0, Color],[3, 1, Color],[3, 2, Color],
+	[3, 3, Color],[3, 4, Color],[3, 5, Color],
+];
+const Char_V = [
+	[0, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 3, Color],[0, 4, Color],[0, 5, Color],
+	[1, 6, Color],[2, 6, Color],[3, 0, Color],
+	[3, 1, Color],[3, 2, Color],[3, 3, Color],
+	[3, 4, Color],[3, 5, Color],
+];
+const Char_W = [
+	[0, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 3, Color],[0, 4, Color],[0, 5, Color],
+	[1, 6, Color],[2, 5, Color],[2, 4, Color],
+	[2, 3, Color],[2, 2, Color],[3, 6, Color],
+	[4, 0, Color],[4, 1, Color],[4, 2, Color],
+	[4, 3, Color],[4, 4, Color],[4, 5, Color],
+];
+const Char_X = [
+	[0, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 4, Color],[0, 5, Color],[0, 6, Color],
+	[1, 3, Color],[2, 3, Color],[3, 0, Color],
+	[3, 1, Color],[3, 2, Color],[3, 4, Color],
+	[3, 5, Color],[3, 6, Color],
+];
+const Char_Y = [
+	[0, 0, Color],[0, 1, Color],[0, 2, Color],
+	[0, 3, Color],[1, 4, Color],[1, 5, Color],
+	[1, 6, Color],[2, 0, Color],[2, 1, Color],
+	[2, 2, Color],[2, 3, Color],
+];
+const Char_Z = [
+	[0, 0, Color],[1, 0, Color],[2, 0, Color],
+	[3, 0, Color],[3, 1, Color],[2, 2, Color],
+	[1, 3, Color],[0, 4, Color],[0, 5, Color],
+	[0, 6, Color],[1, 6, Color],[2, 6, Color],
+	[3, 6, Color],
+];
+const Heart = [
+    [2, 0, 1], [3, 0, 1], [6, 0, 1], [7, 0, 1],
+    [1, 1, 1], [4, 1, 1], [5, 1, 1], [8, 1, 1],
+    [0, 2, 1], [9, 2, 1],
+    [0, 3, 1], [9, 3, 1],
+    [1, 4, 1], [8, 4, 1],
+    [2, 5, 1], [7, 5, 1],
+    [3, 6, 1], [6, 6, 1],
+    [4, 7, 1], [5, 7, 1]
+];
+
+// character pos
+let col = 10;
+let row = 1;
+
+// helper
+function maxY(grid) {
+	let maxY = -Infinity;
+
+	for (let i = 0; i < grid.length; i++) {
+		let y = grid[i][1];
+		if (y > maxY) {
+			maxY = y;
+		}
+	}
+
+	return maxY;
+}
+
+function maxX(grid) {
+	let maxX = -Infinity;
+
+	for (let i = 0; i < grid.length; i++) {
+		let x = grid[i][0];
+		if (x > maxX) {
+			maxX = x;
+		}
+	}
+
+	return maxX + 1;
+}
+
+// print
+function draw(graph)
+{
+	let offsetA = maxX(graph);
+	let offsetB = col + offsetA;
+	if(offsetB > (width - 10))
+	{
+		row++;
+		col = 10;
+	}
+	const ret = display.storeGraph(graph);
+	display.drawGraph(ret, col, row * 8);
+	display.redraw();
+	display.unstoreGraph(ret);
+	col += offsetA + 1;
+}
+
+function print(msg)
+{
+	let len = msg.length;
+	for(let i = 0; i < len; i++)
+	{
+		switch(msg[i])
+		{
+			case "A":
+				draw(Char_A);
+				break;
+			case "B":
+				draw(Char_B);
+				break;
+			case "C":
+				draw(Char_C);
+				break;
+			case "D":
+				draw(Char_D);
+				break;
+			case "E":
+				draw(Char_E);
+				break;
+			case "F":
+				draw(Char_F);
+				break;
+			case "G":
+				draw(Char_G);
+				break;
+			case "H":
+				draw(Char_H);
+				break;
+			case "I":
+				draw(Char_I);
+				break;
+			case "J":
+				draw(Char_J);
+				break;
+			case "K":
+				draw(Char_K);
+				break;
+			case "L":
+				draw(Char_L);
+				break;
+			case "M":
+				draw(Char_M);
+				break;
+			case "N":
+				draw(Char_N);
+				break;
+			case "O":
+				draw(Char_O);
+				break;
+			case "P":
+				draw(Char_P);
+				break;
+			case "Q":
+				draw(Char_Q);
+				break;
+			case "R":
+				draw(Char_R);
+				break;
+			case "S":
+				draw(Char_S);
+				break;
+			case "T":
+				draw(Char_T);
+				break;
+			case "U":
+				draw(Char_U);
+				break;
+			case "V":
+				draw(Char_V);
+				break;
+			case "W":
+				draw(Char_W);
+				break;
+			case "X":
+				draw(Char_X);
+				break;
+			case "Y":
+				draw(Char_Y);
+				break;
+			case "Z":
+				draw(Char_Z);
+				break;
+			case ".":
+				draw(Char_PT);
+				break;
+			case "€":
+				draw(Heart);
+				break;
+			case "\n":
+				row++;
+				col = 10;
+				break;
+			default:
+				draw(Char_NA);
+				break;
+		}
+	}
+}
+
+print("€ HELLO WORLD €\n\nI AM SEANISTETHERED AND I \nMADE NYXIAN\n\nTHIS IS THE AWESOME SCREEN.\n\nLIKE FR M.. WOULD BE\nJEALOUS OF MY SKILLS. €");
+
+timer.wait(5);
+
+ui.destroy(display);
