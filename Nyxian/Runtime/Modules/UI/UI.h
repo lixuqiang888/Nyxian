@@ -55,6 +55,13 @@ JSExportAs(spawnAlert, - (BOOL)spawnAlert:(NSString*)title message:(NSString*)me
 /// haptic feedback
 - (void)hapticFeedback;
 
+///
+/// amateur functions of hiding/showing keyboard
+/// dont worry, tommorow is code cleanup day again
+///
+- (void)hideKeyboard;
+- (void)showKeyboard;
+
 @end
 
 @interface UIModule: Module <UIModuleExport>

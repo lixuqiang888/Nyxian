@@ -34,6 +34,8 @@
 #import <Runtime/Modules/UI/NyxianButton.h>
 #import <Runtime/Modules/UI/Display.h>
 
+#import <Nyxian-Swift.h>
+
 @implementation UIModule
 
 - (instancetype)init
@@ -163,6 +165,30 @@
 - (NSString*)getMsg
 {
     return UISurface_Get_Message();
+}
+
+- (void)hideKeyboard
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        for (UIView *subview in _view.subviews) {
+            if ([subview isKindOfClass:[FridaTerminalView class]]) {
+                [subview resignFirstResponder];
+                return;
+            }
+        }
+    });
+}
+
+- (void)showKeyboard
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        for (UIView *subview in _view.subviews) {
+            if ([subview isKindOfClass:[FridaTerminalView class]]) {
+                [subview becomeFirstResponder];
+                return;
+            }
+        }
+    });
 }
 
 @end
