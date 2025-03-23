@@ -120,7 +120,7 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
 
 struct TerminalViewUIViewRepresentable: UIViewRepresentable {
     @Binding var sheet: Bool
-    @State var code: String
+    @State var path: String
     
     func makeUIView(context: Context) -> some UIView {
         // mama view
@@ -137,7 +137,7 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         
         DispatchQueue.global(qos: .utility).async {
             let runtime: NYXIAN_Runtime = NYXIAN_Runtime()
-            runtime.run(code)
+            runtime.run(path)
             print("\nPress any key to continue\n");
             getchar()
             stdin_hook_cleanup()

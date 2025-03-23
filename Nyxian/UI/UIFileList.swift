@@ -66,7 +66,7 @@ struct FileObject: View {
    }
 }
 
-var code: String = ""
+var path: String = ""
 
 struct FileList: View {
    var title: String?
@@ -117,15 +117,7 @@ struct FileList: View {
                        if gsuffix(from: item.lastPathComponent) == "nx" {
                            Section  {
                                Button(action: {
-                                   let readcode = {
-                                       do {
-                                           return try String(contentsOfFile: item.path)
-                                       } catch {
-                                           sheet = false
-                                           return ""
-                                       }
-                                   }()
-                                   code = readcode
+                                   path = item.path
                                    sheet = true
                                }) {
                                    Label("Run Code", systemImage: "bolt.fill")
@@ -260,7 +252,7 @@ struct FileList: View {
        }
        .fullScreenCover(isPresented: $sheet) {
            //RuntimeRunnerView(sheet: $sheet, code: code)
-           TerminalViewUIViewRepresentable(sheet: $sheet, code: code)
+           TerminalViewUIViewRepresentable(sheet: $sheet, path: path)
        }
    }
 
