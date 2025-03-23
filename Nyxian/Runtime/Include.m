@@ -99,11 +99,13 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         
         chdir([[url path] UTF8String]);
         
+        NSString *realLibName = [[NSURL fileURLWithPath:LibName] lastPathComponent];
+        
         if (!code) {
             return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_FILE_NOT_FOUND]);
         }
         
-        [Runtime.Context evaluateScript:[NSString stringWithFormat:@"var %@ = (function() {\n%@}\n)();", LibName, code]];
+        [Runtime.Context evaluateScript:[NSString stringWithFormat:@"var %@ = (function() {\n%@}\n)();", realLibName, code]];
         
         JSValue *exception = Runtime.Context.exception;
         if (exception && !exception.isUndefined && !exception.isNull) {
