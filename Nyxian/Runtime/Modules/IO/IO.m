@@ -95,11 +95,21 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
     }
 }
 
-- (BOOL)isFDThere:(UInt64)fd
+- (BOOL)isFDThere:(UInt64)fd critical:(BOOL)critical
 {
     // Checking if Nyxian Runtime safety is even enabled
     if(NYXIAN_RUNTIME_SAFETY_ENABLED)
     {
+        // Checking if its a Standard IO
+        if(!critical)
+        {
+            if(fd == STDIN_FILENO || fd == STDOUT_FILENO || fd == STDERR_FILENO)
+            {
+                // It is so automatically return true
+                return true;
+            }
+        }
+        
         // Returning if the file descriptor is in the Nyxian Runtime Safety array
         return [_array containsObject:[[NSNumber alloc] initWithUnsignedLongLong:fd]];
     }
@@ -225,7 +235,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 - (id)close:(int)fd
 {
     // Because we cant just let the user close arbitary file descriptos we check if the file descriptor is in the Nyxian Runtime safety array
-    if(![self isFDThere:fd])
+    if(![self isFDThere:fd critical:YES])
     {
         // Its not so we throw a error
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
@@ -254,7 +264,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
     }
     
     // Because we cant just let the user write to arbitary file descriptors we check if its in the Nyxian Runtime safety array
-    if(![self isFDThere:fd])
+    if(![self isFDThere:fd critical:NO])
     {
         // The file descriptor is not in the Nyxian Runtime safety array so we throw the error
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
@@ -286,7 +296,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
     }
     
     // Because we cant just let the user read to arbitary file descriptors we check if its in the Nyxian Runtime safety array
-    if(![self isFDThere:fd])
+    if(![self isFDThere:fd critical:NO])
     {
         // The file descriptor is not in the Nyxian Runtime safety array so we throw the error
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
@@ -327,7 +337,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 - (id)stat:(int)fd
 {
     // Because we cant just let the user get arbitary stat structures using stat we need to ensure the file descriptor is in the Nyxian Runtime safety array
-    if(![self isFDThere:fd])
+    if(![self isFDThere:fd critical:NO])
     {
         // Its not so we throw an error
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
@@ -350,7 +360,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 - (id)seek:(int)fd position:(UInt16)position flags:(int)flags
 {
     // Because we cant just let the user change the position of arbitary file descriptors we check is its in the Nyxian Runtime safety array
-    if(![self isFDThere:fd])
+    if(![self isFDThere:fd critical:YES])
     {
         // Its not so we trow an error
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
@@ -522,7 +532,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
     }
     
     // We check if the file descriptor is in the Nyxian Runtime safety array
-    if(![self isFDThere:fd])
+    if(![self isFDThere:fd critical:YES])
     {
         // We throw an error is it is not in the Nyxian Runtime safety array
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
@@ -568,7 +578,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
     int fd = fileno(file);
     
     // We check if the file descriptor is in the Nyxian Runtime safety array
-    if(![self isFDThere:fd])
+    if(![self isFDThere:fd critical:YES])
     {
         // We throw an error is it is not in the Nyxian Runtime safety array
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
@@ -659,7 +669,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
     }
     
     // We check is the file descriptor is in the Nyxian Runtime safety array
-    if(![self isFDThere:fd])
+    if(![self isFDThere:fd critical:YES])
     {
         // Its not so we throw an error
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
@@ -708,7 +718,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
     }
     
     // We check if the file descriptor is in the Nyxian Runtime safety array
-    if (![self isFDThere:fd]) {
+    if (![self isFDThere:fd critical:NO]) {
         // We throw an error
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
@@ -758,7 +768,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
     }
     
     // We check if the file descriptor is in the Nyxian Runtime safety array
-    if (![self isFDThere:fd]) {
+    if (![self isFDThere:fd critical:YES]) {
         // Its not so we throw an error
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
