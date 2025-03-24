@@ -33,6 +33,9 @@ let inPipe = Pipe()
 
 // i love SwiftTerm
 class FridaTerminalView: TerminalView, TerminalViewDelegate {
+    var originalStdoutFD: Int32 = -1
+    var originalStderrFD: Int32 = -1
+    
     public override init (
         frame: CGRect
     ){
@@ -51,6 +54,9 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     }
     
     func hookStdout() {
+        originalStdoutFD = dup(STDOUT_FILENO)
+        originalStderrFD = dup(STDERR_FILENO)
+        
         loggingPipe.fileHandleForReading.readabilityHandler = { [weak self] fileHandle in
             let logData = fileHandle.availableData
             if !logData.isEmpty, var logString = String(data: logData, encoding: .utf8) {
@@ -63,11 +69,11 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
                     let blocksize = 1024
                     var next = 0
                     let last = sliced.endIndex
-
+                    
                     while next < last {
                         let end = min (next+blocksize, last)
                         let chunk = sliced [next..<end]
-
+                        
                         DispatchQueue.main.sync {
                             guard let self = self else { return }
                             self.feed(byteArray: chunk)
@@ -78,11 +84,18 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
             }
         }
         
-        setvbuf(stdout, nil, _IOLBF, 0)
-        setvbuf(stderr, nil, _IOLBF, 0)
+        let writeFD = loggingPipe.fileHandleForWriting.fileDescriptor
+        dup2(writeFD, STDOUT_FILENO)
+        dup2(writeFD, STDERR_FILENO)
+    }
+    
+    func cleanupStdout() {
+        loggingPipe.fileHandleForReading.readabilityHandler = nil
         
-        dup2(loggingPipe.fileHandleForWriting.fileDescriptor, STDOUT_FILENO)
-        dup2(loggingPipe.fileHandleForWriting.fileDescriptor, STDERR_FILENO)
+        if originalStdoutFD != -1 || originalStderrFD != -1 {
+            dup2(originalStdoutFD, STDOUT_FILENO)
+            dup2(originalStderrFD, STDERR_FILENO)
+        }
     }
     
     func clipboardCopy(source: SwiftTerm.TerminalView, content: Data) {
@@ -140,14 +153,14 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
             let runtime: NYXIAN_Runtime = NYXIAN_Runtime()
             runtime.run(path)
             print("\nPress any key to continue\n");
-            DispatchQueue.main.async {
+            DispatchQueue.main.sync {
                 tview.isUserInteractionEnabled = true
                 _ = tview.becomeFirstResponder()
             }
             getchar()
             DispatchQueue.main.sync {
-                loggingPipe.fileHandleForReading.readabilityHandler = { _ in }
                 stdin_hook_cleanup()
+                tview.cleanupStdout()
                 sheet = false
             }
         }
