@@ -135,32 +135,34 @@ void add_include_symbols(NYXIAN_Runtime *Runtime)
         // will need user verification
         __block NYXIAN_Runtime *runtime = Runtime;
         [Runtime.Context setObject:^id {
-            __block BOOL Consented = NO;
-            
-            dispatch_semaphore_t semaphore;
-            semaphore = dispatch_semaphore_create(0);
-            
-            showConsentAlertWithTitle(@"Runtime Safety", @"Script wants to disable safety checks which would grand access to craft malicious and arbitary not supervisable code.", @"Cancel", @"Consent", ^(BOOL consentGranted) {
-                Consented = consentGranted;
-                dispatch_semaphore_signal(semaphore);
-            });
-            
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-            
-            if(Consented == YES)
+            if(NYXIAN_RUNTIME_SAFETY_ENABLED)
             {
-                NYXIAN_RUNTIME_SAFETY_ENABLED = false;
-                [runtime.Context setObject:^id(NSString *name) {
-                    return ObjCSurface_Get_Class(name);
-                } forKeyedSubscript:@"objc_get_class"];
+                __block BOOL Consented = NO;
                 
-                [runtime.Context setObject:^id(id class, NSString *name) {
-                    return ObjCSurface_Send_Msg(class, name);
-                } forKeyedSubscript:@"objc_send_msg"];
-            } else {
-                return jsDoThrowError(@"Consent failure\n");
+                dispatch_semaphore_t semaphore;
+                semaphore = dispatch_semaphore_create(0);
+                
+                showConsentAlertWithTitle(@"Runtime Safety", @"Script wants to disable safety checks which would grand access to craft malicious and arbitary not supervisable code.", @"Cancel", @"Consent", ^(BOOL consentGranted) {
+                    Consented = consentGranted;
+                    dispatch_semaphore_signal(semaphore);
+                });
+                
+                dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                
+                if(Consented == YES)
+                {
+                    NYXIAN_RUNTIME_SAFETY_ENABLED = false;
+                    [runtime.Context setObject:^id(NSString *name) {
+                        return ObjCSurface_Get_Class(name);
+                    } forKeyedSubscript:@"objc_get_class"];
+                    
+                    [runtime.Context setObject:^id(id class, NSString *name) {
+                        return ObjCSurface_Send_Msg(class, name);
+                    } forKeyedSubscript:@"objc_send_msg"];
+                } else {
+                    return jsDoThrowError(@"Consent failure\n");
+                }
             }
-            
             return NULL;
         } forKeyedSubscript:@"disable_safety_checks"];
     }
