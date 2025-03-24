@@ -31,11 +31,11 @@ import UIKit
 let loggingPipe = Pipe()
 let inPipe = Pipe()
 
+var originalStdoutFD: Int32 = dup(STDOUT_FILENO)
+var originalStderrFD: Int32 = dup(STDERR_FILENO)
+
 // i love SwiftTerm
 class FridaTerminalView: TerminalView, TerminalViewDelegate {
-    var originalStdoutFD: Int32 = -1
-    var originalStderrFD: Int32 = -1
-    
     public override init (
         frame: CGRect
     ){
@@ -54,9 +54,6 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     }
     
     func hookStdout() {
-        originalStdoutFD = dup(STDOUT_FILENO)
-        originalStderrFD = dup(STDERR_FILENO)
-        
         loggingPipe.fileHandleForReading.readabilityHandler = { [weak self] fileHandle in
             let logData = fileHandle.availableData
             if !logData.isEmpty, var logString = String(data: logData, encoding: .utf8) {
