@@ -261,7 +261,7 @@ struct FileList: View {
            if type == 0 {
            var content = ""
                switch gsuffix(from: potextfield) {
-                   case "nx":
+                   case "nx", "nxm":
                        content = authorgen(file: potextfield)
                        break
                    default:
