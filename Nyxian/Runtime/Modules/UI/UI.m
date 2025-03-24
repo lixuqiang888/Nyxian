@@ -179,6 +179,18 @@
     });
 }
 
+- (void)showKeyboard
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        for (UIView *subview in _view.subviews) {
+            if ([subview isKindOfClass:[FridaTerminalView class]]) {
+                [subview becomeFirstResponder];
+                return;
+            }
+        }
+    });
+}
+
 - (void)cli_readonly
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
