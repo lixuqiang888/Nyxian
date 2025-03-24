@@ -52,7 +52,6 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     
     func hookStdout() {
         loggingPipe.fileHandleForReading.readabilityHandler = { [weak self] fileHandle in
-            guard let self = self else { return }
             let logData = fileHandle.availableData
             if !logData.isEmpty, var logString = String(data: logData, encoding: .utf8) {
                 logString = logString.replacingOccurrences(of: "\r", with: "\n\r")
@@ -70,6 +69,7 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
                         let chunk = sliced [next..<end]
 
                         DispatchQueue.main.sync {
+                            guard let self = self else { return }
                             self.feed(byteArray: chunk)
                         }
                         next = end
@@ -142,10 +142,12 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
             print("\nPress any key to continue\n");
             DispatchQueue.main.async {
                 tview.isUserInteractionEnabled = true
+                _ = tview.becomeFirstResponder()
             }
             getchar()
-            stdin_hook_cleanup()
-            DispatchQueue.main.async {
+            DispatchQueue.main.sync {
+                loggingPipe.fileHandleForReading.readabilityHandler = { _ in }
+                stdin_hook_cleanup()
                 sheet = false
             }
         }
