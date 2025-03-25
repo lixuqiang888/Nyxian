@@ -438,10 +438,11 @@ static int handle_luainit (lua_State *L) {
 ** lua_freeline defines how to free a line read by lua_readline.
 */
 
+#define LUA_USE_READLINE
 #if defined(LUA_USE_READLINE)
 
-#include <readline/readline.h>
-#include <readline/history.h>
+//#include <readline/readline.h>
+//#include <readline/history.h>
 #define lua_initreadline(L)	((void)L, rl_readline_name="lua")
 #define lua_readline(b,p)	((void)b, readline(p))
 #define lua_saveline(line)	add_history(line)
@@ -550,6 +551,7 @@ static int incomplete (lua_State *L, int status) {
   return 0;  /* else... */
 }
 
+char *fgetsnyxian(char *buffer, int size);
 
 /*
 ** Prompt the user, read a line, and push it into the Lua stack.
@@ -558,7 +560,10 @@ static int pushline (lua_State *L, int firstline) {
   char buffer[LUA_MAXINPUT];
   size_t l;
   const char *prmt = get_prompt(L, firstline);
-  char *b = lua_readline(buffer, prmt);
+  //char *b = lua_readline(buffer, prmt);
+  printf("%s", prmt);
+  char *base = malloc(256);
+  char *b = fgetsnyxian(base, 256);
   lua_pop(L, 1);  /* remove prompt */
   if (b == NULL)
     return 0;  /* no input */
@@ -637,7 +642,7 @@ static int loadline (lua_State *L) {
     status = multiline(L);  /* try as command, maybe with continuation lines */
   line = lua_tostring(L, 1);
   if (line[0] != '\0')  /* non empty? */
-    lua_saveline(line);  /* keep history */
+  //lua_saveline(line);  /* keep history */
   lua_remove(L, 1);  /* remove line from the stack */
   lua_assert(lua_gettop(L) == 1);
   return status;
@@ -664,11 +669,11 @@ static void l_print (lua_State *L) {
 ** Do the REPL: repeatedly read (load) a line, evaluate (call) it, and
 ** print any results.
 */
-static void doREPL (lua_State *L) {
+void doREPL (lua_State *L) {
   int status;
   const char *oldprogname = progname;
   progname = NULL;  /* no 'progname' on errors in interactive mode */
-  lua_initreadline(L);
+  //lua_initreadline(L);
   while ((status = loadline(L)) != -1) {
     if (status == LUA_OK)
       status = docall(L, 0, LUA_MULTRET);
