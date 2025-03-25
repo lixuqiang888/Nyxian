@@ -54,6 +54,9 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     }
     
     func hookStdout() {
+        fflush(stdout)
+        fflush(stderr)
+        
         loggingPipe.fileHandleForReading.readabilityHandler = { [weak self] fileHandle in
             let logData = fileHandle.availableData
             if !logData.isEmpty, var logString = String(data: logData, encoding: .utf8) {
@@ -147,22 +150,64 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         
         setupKeyboard(tv: tview, view: view)
         
-        UISurface_Handoff_Slave(view)
+        let suffix = gsuffix(from: path)
         
-        DispatchQueue.global(qos: .utility).async {
-            let runtime: NYXIAN_Runtime = NYXIAN_Runtime()
-            runtime.run(path)
-            print("\nPress any key to continue\n");
-            DispatchQueue.main.sync {
-                tview.isUserInteractionEnabled = true
-                _ = tview.becomeFirstResponder()
+        switch(suffix)
+        {
+        case "nx":
+            // Nyxian
+            UISurface_Handoff_Slave(view)
+            DispatchQueue.global(qos: .utility).async {
+                let runtime: NYXIAN_Runtime = NYXIAN_Runtime()
+                runtime.run(path)
+                print("\nPress any key to continue\n");
+                DispatchQueue.main.sync {
+                    tview.isUserInteractionEnabled = true
+                    _ = tview.becomeFirstResponder()
+                }
+                getchar()
+                DispatchQueue.main.sync {
+                    stdin_hook_cleanup()
+                    tview.cleanupStdout()
+                    sheet = false
+                }
             }
-            getchar()
-            DispatchQueue.main.sync {
-                stdin_hook_cleanup()
-                tview.cleanupStdout()
-                sheet = false
+        case "c":
+            // C
+            DispatchQueue.global(qos: .utility).async {
+                c_interpret(path + " ", URL(fileURLWithPath: path).deletingLastPathComponent().path)
+                print("\nPress any key to continue\n");
+                DispatchQueue.main.sync {
+                    tview.isUserInteractionEnabled = true
+                    _ = tview.becomeFirstResponder()
+                }
+                getchar()
+                DispatchQueue.main.sync {
+                    stdin_hook_cleanup()
+                    tview.cleanupStdout()
+                    sheet = false
+                }
             }
+        case "lua":
+            // Lua
+            DispatchQueue.global(qos: .utility).async {
+                o_lua(path);
+                print("\nPress any key to continue\n");
+                DispatchQueue.main.sync {
+                    tview.isUserInteractionEnabled = true
+                    _ = tview.becomeFirstResponder()
+                }
+                getchar()
+                DispatchQueue.main.sync {
+                    stdin_hook_cleanup()
+                    tview.cleanupStdout()
+                    sheet = false
+                }
+            }
+        default:
+            stdin_hook_cleanup()
+            tview.cleanupStdout()
+            sheet = false
         }
         
         return view

@@ -1,5 +1,5 @@
 {
-  "originHash" : "1b5b51dc335dc0d0064bc6885e8e1636eaf527a9f1cf7372baa00953f2d7b11d",
+  "originHash" : "2a54c0cf0abf9c33196c07a24bb54fad386defac8285f1917108eb942eaa05da",
   "pins" : [
     {
       "identity" : "fluidgradient",
@@ -11,12 +11,66 @@
       }
     },
     {
+      "identity" : "runestone",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/simonbs/Runestone.git",
+      "state" : {
+        "revision" : "1fad339aab99cf2136ce6bf8c32da3265b2e85e5",
+        "version" : "0.5.1"
+      }
+    },
+    {
       "identity" : "swiftterm",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/migueldeicaza/SwiftTerm.git",
       "state" : {
         "revision" : "e2b431dbf73f775fb4807a33e4572ffd3dc6933a",
         "version" : "1.2.5"
+      }
+    },
+    {
+      "identity" : "tree-sitter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tree-sitter/tree-sitter",
+      "state" : {
+        "revision" : "98be227227af10cc7a269cb3ffb23686c0610b17",
+        "version" : "0.20.9"
+      }
+    },
+    {
+      "identity" : "tree-sitter-c",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tree-sitter/tree-sitter-c.git",
+      "state" : {
+        "revision" : "2a265d69a4caf57108a73ad2ed1e6922dd2f998c",
+        "version" : "0.23.5"
+      }
+    },
+    {
+      "identity" : "tree-sitter-javascript",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tree-sitter/tree-sitter-javascript.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "6fbef40512dcd9f0a61ce03a4c9ae7597b36ab5c"
+      }
+    },
+    {
+      "identity" : "tree-sitter-lua",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tree-sitter-grammars/tree-sitter-lua.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "db16e76558122e834ee214c8dc755b4a3edc82a9"
+      }
+    },
+    {
+      "identity" : "tree-sitter-python",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tree-sitter/tree-sitter-python.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "710796b8b877a970297106e5bbc8e2afa47f86ec"
       }
     }
   ],

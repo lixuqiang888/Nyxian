@@ -26,5 +26,10 @@
 #import <Runtime/Hook/tcom.h>
 #import <Runtime/Hook/stdin.h>
 #import <Runtime/UISurface/UISurface.h>
+#import <Foundation/Foundation.h>
+
+// Coding/C implementation
+int c_interpret(NSString *files, NSString *proot);
+int o_lua(NSString *path);
 
 void setFJSafety(BOOL value);

@@ -7,8 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AF1015D52D92EEB6009F362F /* TreeSitterLua in Frameworks */ = {isa = PBXBuildFile; productRef = AF1015D42D92EEB6009F362F /* TreeSitterLua */; };
 		AF14830E2D8DE2700006B509 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = AF14830D2D8DE2700006B509 /* FluidGradient */; };
 		AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = AF4836262D8AF4AA00830CED /* SwiftTerm */; };
+		AF51435D2D92E9B70058C41D /* TreeSitterPython in Frameworks */ = {isa = PBXBuildFile; productRef = AF51435C2D92E9B70058C41D /* TreeSitterPython */; };
+		AFB1651D2D91A36300872EDB /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1651C2D91A36300872EDB /* Runestone */; };
+		AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */ = {isa = PBXBuildFile; productRef = AFB165232D91A4AB00872EDB /* TreeSitterJavaScript */; };
+		AFB1653D2D91BBEB00872EDB /* TreeSitterC in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1653C2D91BBEB00872EDB /* TreeSitterC */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,7 +34,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */,
+				AFB1651D2D91A36300872EDB /* Runestone in Frameworks */,
+				AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */,
+				AFB1653D2D91BBEB00872EDB /* TreeSitterC in Frameworks */,
 				AF14830E2D8DE2700006B509 /* FluidGradient in Frameworks */,
+				AF51435D2D92E9B70058C41D /* TreeSitterPython in Frameworks */,
+				AF1015D52D92EEB6009F362F /* TreeSitterLua in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +84,11 @@
 			packageProductDependencies = (
 				AF4836262D8AF4AA00830CED /* SwiftTerm */,
 				AF14830D2D8DE2700006B509 /* FluidGradient */,
+				AFB1651C2D91A36300872EDB /* Runestone */,
+				AFB165232D91A4AB00872EDB /* TreeSitterJavaScript */,
+				AFB1653C2D91BBEB00872EDB /* TreeSitterC */,
+				AF51435C2D92E9B70058C41D /* TreeSitterPython */,
+				AF1015D42D92EEB6009F362F /* TreeSitterLua */,
 			);
 			productName = FJS;
 			productReference = AFBE41752D85E4B500315155 /* Nyxian.app */;
@@ -107,6 +122,11 @@
 			packageReferences = (
 				AF4836252D8AF4AA00830CED /* XCRemoteSwiftPackageReference "SwiftTerm" */,
 				AF14830C2D8DE2700006B509 /* XCRemoteSwiftPackageReference "FluidGradient" */,
+				AFB1651B2D91A36300872EDB /* XCRemoteSwiftPackageReference "Runestone" */,
+				AFB165222D91A4AB00872EDB /* XCRemoteSwiftPackageReference "tree-sitter-javascript" */,
+				AFB1653B2D91BBEB00872EDB /* XCRemoteSwiftPackageReference "tree-sitter-c" */,
+				AF51435B2D92E9B70058C41D /* XCRemoteSwiftPackageReference "tree-sitter-python" */,
+				AF1015D32D92EEB6009F362F /* XCRemoteSwiftPackageReference "tree-sitter-lua" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AFBE41762D85E4B500315155 /* Products */;
@@ -192,7 +212,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = FJS;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -251,7 +271,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = FJS;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -276,12 +296,14 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = Nyxian;
+				INFOPLIST_KEY_CFBundleDisplayName = Nyxian;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -311,12 +333,14 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = Nyxian;
+				INFOPLIST_KEY_CFBundleDisplayName = Nyxian;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -355,6 +379,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		AF1015D32D92EEB6009F362F /* XCRemoteSwiftPackageReference "tree-sitter-lua" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tree-sitter-grammars/tree-sitter-lua.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		AF14830C2D8DE2700006B509 /* XCRemoteSwiftPackageReference "FluidGradient" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Cindori/FluidGradient";
@@ -371,9 +403,46 @@
 				minimumVersion = 1.2.5;
 			};
 		};
+		AF51435B2D92E9B70058C41D /* XCRemoteSwiftPackageReference "tree-sitter-python" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tree-sitter/tree-sitter-python.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		AFB1651B2D91A36300872EDB /* XCRemoteSwiftPackageReference "Runestone" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simonbs/Runestone.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.1;
+			};
+		};
+		AFB165222D91A4AB00872EDB /* XCRemoteSwiftPackageReference "tree-sitter-javascript" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tree-sitter/tree-sitter-javascript.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		AFB1653B2D91BBEB00872EDB /* XCRemoteSwiftPackageReference "tree-sitter-c" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tree-sitter/tree-sitter-c.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.16.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		AF1015D42D92EEB6009F362F /* TreeSitterLua */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF1015D32D92EEB6009F362F /* XCRemoteSwiftPackageReference "tree-sitter-lua" */;
+			productName = TreeSitterLua;
+		};
 		AF14830D2D8DE2700006B509 /* FluidGradient */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AF14830C2D8DE2700006B509 /* XCRemoteSwiftPackageReference "FluidGradient" */;
@@ -383,6 +452,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AF4836252D8AF4AA00830CED /* XCRemoteSwiftPackageReference "SwiftTerm" */;
 			productName = SwiftTerm;
+		};
+		AF51435C2D92E9B70058C41D /* TreeSitterPython */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF51435B2D92E9B70058C41D /* XCRemoteSwiftPackageReference "tree-sitter-python" */;
+			productName = TreeSitterPython;
+		};
+		AFB1651C2D91A36300872EDB /* Runestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AFB1651B2D91A36300872EDB /* XCRemoteSwiftPackageReference "Runestone" */;
+			productName = Runestone;
+		};
+		AFB165232D91A4AB00872EDB /* TreeSitterJavaScript */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AFB165222D91A4AB00872EDB /* XCRemoteSwiftPackageReference "tree-sitter-javascript" */;
+			productName = TreeSitterJavaScript;
+		};
+		AFB1653C2D91BBEB00872EDB /* TreeSitterC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AFB1653B2D91BBEB00872EDB /* XCRemoteSwiftPackageReference "tree-sitter-c" */;
+			productName = TreeSitterC;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -35,9 +35,10 @@
 #import <Runtime/Modules/String/String.h>
 #import <Runtime/Modules/Math/Math.h>
 #import <Runtime/Modules/Proc/Proc.h>
-#import <Runtime/Modules/ArbCall/ArbCall.h>     // UNDER TEST!!!
+#import <Runtime/Modules/ArbCall/ArbCall.h>         // UNDER TEST!!!
 #import <Runtime/Modules/UI/UI.h>
 #import <Runtime/Modules/Timer/Timer.h>
+#import <Runtime/Modules/LangBridge/LangBridge.h>   // UNDER TEST!!!
 
 #import <Runtime/ObjCSurface/objcsurface.h>
 
@@ -93,6 +94,14 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         TimerModule *timerModule = [[TimerModule alloc] init];
         [Runtime.Context setObject:timerModule forKeyedSubscript:@"timer"];
         return NULL;
+    } else if ([LibName isEqualToString:@"langbridge"])
+    {
+        if(NYXIAN_RUNTIME_SAFETY_ENABLED)
+        {
+            return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_RUNTIME_SAFETY]);
+        }
+        LBModule *lbModule = [[LBModule alloc] init];
+        [Runtime.Context setObject:lbModule forKeyedSubscript:@"langbridge"];
     } else {
         NSString *path = [NSString stringWithFormat:@"%@.nxm", LibName];
         NSURL *url = [[NSURL fileURLWithPath:path] URLByDeletingLastPathComponent];
