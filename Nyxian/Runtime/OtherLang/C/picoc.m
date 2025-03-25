@@ -48,5 +48,22 @@ int c_interpret(NSString *files, NSString *proot)
     PicocCleanup(&pc);
     return pc.PicocExitValue;
 }
+
+void c_repl(NSString *proot)
+{
+    chdir([proot UTF8String]);
+    
+    Picoc pc;
+    PicocInitialize(&pc, 1024);
+    
+    if (PicocPlatformSetRealExitPoint(&pc)) {
+        PicocCleanup(&pc);
+        return;
+    }
+    
+    PicocParseInteractive(&pc);
+    
+    PicocCleanup(&pc);
+}
 #endif
 

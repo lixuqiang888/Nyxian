@@ -17,6 +17,7 @@
 /* this has to be a macro, otherwise errors will occur due to
 	the stack being corrupt */
 #define PicocPlatformSetExitPoint(pc) setjmp((pc)->PicocExitBuf)
+#define PicocPlatformSetRealExitPoint(pc) setjmp((pc)->PicocRealExitBuf)
 
 
 /* parse.c */
