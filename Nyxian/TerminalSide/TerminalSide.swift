@@ -57,8 +57,12 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
         fflush(stdout)
         fflush(stderr)
         
-        fsync(STDOUT_FILENO)
-        fsync(STDERR_FILENO)
+        setvbuf(stdout, nil, _IOLBF, 0)
+        setvbuf(stderr, nil, _IOLBF, 0)
+        
+        let writeFD = loggingPipe.fileHandleForWriting.fileDescriptor
+        dup2(writeFD, STDOUT_FILENO)
+        dup2(writeFD, STDERR_FILENO)
         
         loggingPipe.fileHandleForReading.readabilityHandler = { [weak self] fileHandle in
             let logData = fileHandle.availableData
@@ -72,11 +76,11 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
                     let blocksize = 1024
                     var next = 0
                     let last = sliced.endIndex
-
+                    
                     while next < last {
                         let end = min (next+blocksize, last)
                         let chunk = sliced [next..<end]
-
+                        
                         DispatchQueue.main.sync {
                             guard let self = self else { return }
                             self.feed(byteArray: chunk)
@@ -86,13 +90,6 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
                 }
             }
         }
-        
-        setvbuf(stdout, nil, _IOLBF, 0)
-        setvbuf(stderr, nil, _IOLBF, 0)
-        
-        let writeFD = loggingPipe.fileHandleForWriting.fileDescriptor
-        dup2(writeFD, STDOUT_FILENO)
-        dup2(writeFD, STDERR_FILENO)
     }
     
     func cleanupStdout() {
