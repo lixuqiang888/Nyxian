@@ -30,6 +30,8 @@
 
 // Coding/C implementation
 int c_interpret(NSString *files, NSString *proot);
+void c_repl(NSString *proot);
 int o_lua(NSString *path);
+int o_lua_repl(NSString *path);
 
 void setFJSafety(BOOL value);
