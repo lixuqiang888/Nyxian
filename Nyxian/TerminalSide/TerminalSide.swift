@@ -57,6 +57,9 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
         fflush(stdout)
         fflush(stderr)
         
+        fsync(STDOUT_FILENO)
+        fsync(STDERR_FILENO)
+        
         loggingPipe.fileHandleForReading.readabilityHandler = { [weak self] fileHandle in
             let logData = fileHandle.availableData
             if !logData.isEmpty, var logString = String(data: logData, encoding: .utf8) {
