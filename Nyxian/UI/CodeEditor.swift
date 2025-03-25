@@ -23,9 +23,183 @@
  */
 
 // MARK: Code Editor
+import AudioToolbox
 import SwiftUI
 import UIKit
 import Foundation
+import Runestone
+import TreeSitterJavaScript
+import TreeSitterC
+import TreeSitterPython
+import TreeSitterLua
+
+enum HighlightName: String {
+    case comment
+    case constantBuiltin = "constant.builtin"
+    case constantCharacter = "constant.character"
+    case constructor
+    case function
+    case keyword
+    case number
+    case `operator`
+    case property
+    case punctuation
+    case string
+    case type
+    case variable
+    case variableBuiltin = "variable.builtin"
+
+    init?(_ rawHighlightName: String) {
+        var comps = rawHighlightName.split(separator: ".")
+        while !comps.isEmpty {
+            let candidateRawHighlightName = comps.joined(separator: ".")
+            if let highlightName = Self(rawValue: candidateRawHighlightName) {
+                self = highlightName
+                return
+            }
+            comps.removeLast()
+        }
+        return nil
+    }
+}
+
+class NyxianTheme: Theme {
+    let fontSize: CGFloat = CGFloat(UserDefaults.standard.double(forKey: "CEFontSize"))
+    
+    let font: UIFont = UIFont.monospacedSystemFont(ofSize: CGFloat(UserDefaults.standard.double(forKey: "CEFontSize")), weight: .medium)
+    
+    var lineNumberFont: UIFont {
+        return UIFont.monospacedSystemFont(ofSize: fontSize * 0.85, weight: .regular)
+    }
+    
+    var textColor: UIColor
+    var backgroundColor: UIColor
+    
+    var gutterBackgroundColor: UIColor
+    var gutterHairlineColor: UIColor
+    
+    var lineNumberColor: UIColor
+    
+    var selectedLineBackgroundColor: UIColor
+    var selectedLinesLineNumberColor: UIColor
+    var selectedLinesGutterBackgroundColor: UIColor
+    
+    var invisibleCharactersColor: UIColor
+    
+    var pageGuideHairlineColor: UIColor
+    var pageGuideBackgroundColor: UIColor
+    
+    var markedTextBackgroundColor: UIColor
+    
+    let colorKeyword: UIColor
+    let colorComment: UIColor
+    let colorString: UIColor
+    let colorNumber: UIColor
+    let colorRegex: UIColor
+    let colorFunction: UIColor
+    let colorOperator: UIColor
+    let colorProperty: UIColor
+    let colorPunctuation: UIColor
+    let colorDirective: UIColor
+    let colorType: UIColor
+    let colorConstantBuiltin: UIColor
+    
+    init() {
+        let userInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
+        
+        if userInterfaceStyle == .light {
+            // Light Mode Colors (VSCode Light+ Pro inspired)
+            backgroundColor = neoRGB(250, 250, 250)
+            textColor = neoRGB(30, 30, 30)
+            
+            gutterBackgroundColor = neoRGB(240, 240, 240)
+            gutterHairlineColor = neoRGB(220, 220, 220)
+            lineNumberColor = neoRGB(180, 180, 180)
+            
+            selectedLineBackgroundColor = neoRGB(220, 230, 250)
+            selectedLinesLineNumberColor = neoRGB(80, 120, 180)
+            selectedLinesGutterBackgroundColor = neoRGB(235, 235, 240)
+            
+            pageGuideHairlineColor = neoRGB(220, 220, 230)
+            pageGuideBackgroundColor = neoRGB(245, 245, 250)
+            markedTextBackgroundColor = neoRGB(230, 240, 250)
+            
+            colorKeyword = neoRGB(0, 0, 192)         // Deep blue
+            colorComment = neoRGB(0, 128, 0)         // Green
+            colorString = neoRGB(163, 21, 21)        // Red
+            colorNumber = neoRGB(128, 0, 128)        // Purple
+            colorRegex = neoRGB(255, 140, 0)         // Orange
+            colorFunction = neoRGB(43, 145, 175)     // Teal-blue
+            colorOperator = neoRGB(0, 0, 0)          // Black
+            colorProperty = neoRGB(0, 0, 128)        // Navy blue
+            colorPunctuation = neoRGB(50, 50, 50)    // Dark gray for punctuation
+            colorDirective = neoRGB(60, 60, 60)      // Dark gray directive
+            colorType = neoRGB(43, 43, 150)          // Type
+            colorConstantBuiltin = neoRGB(75, 0, 130)
+        } else {
+            // Dark Mode Colors (VSCode Dark+ Pro inspired)
+            backgroundColor = neoRGB(30, 30, 30)
+            textColor = neoRGB(232, 242, 255)
+            
+            gutterBackgroundColor = neoRGB(25, 25, 25)
+            gutterHairlineColor = neoRGB(50, 50, 50)
+            lineNumberColor = neoRGB(90, 90, 90)
+            
+            selectedLineBackgroundColor = neoRGB(40, 44, 52)
+            selectedLinesLineNumberColor = neoRGB(130, 180, 255)
+            selectedLinesGutterBackgroundColor = neoRGB(20, 20, 25)
+            
+            pageGuideHairlineColor = neoRGB(45, 45, 50)
+            pageGuideBackgroundColor = neoRGB(30, 30, 35)
+            markedTextBackgroundColor = neoRGB(60, 60, 70)
+            
+            colorKeyword = neoRGB(86, 156, 214)      // Blue
+            colorComment = neoRGB(106, 153, 85)      // Green
+            colorString = neoRGB(206, 145, 120)      // Orange
+            colorNumber = neoRGB(181, 206, 168)      // Soft green
+            colorRegex = neoRGB(255, 198, 109)       // Yellow-orange
+            colorFunction = neoRGB(220, 220, 170)    // Pale yellow
+            colorOperator = neoRGB(212, 212, 212)    // Light gray
+            colorProperty = neoRGB(156, 220, 254)    // Cyan
+            colorPunctuation = neoRGB(200, 200, 200)
+            colorDirective = neoRGB(255, 165, 0)     // Orange directive
+            colorType = neoRGB(78, 201, 176)         // Type
+            colorConstantBuiltin = neoRGB(0, 255, 255)
+        }
+        
+        invisibleCharactersColor = textColor.withAlphaComponent(0.25)
+    }
+    
+    func textColor(for highlightName: String) -> UIColor? {
+        guard let highlightName = HighlightName(highlightName) else {
+            return nil
+        }
+        switch highlightName {
+        case .keyword:
+            return colorKeyword
+        case .constantBuiltin:
+            return colorConstantBuiltin
+        case .number:
+            return colorNumber
+        case .comment:
+            return colorComment
+        case .operator:
+            return colorOperator
+        case .string:
+            return colorString
+        case .function, .variable:
+            return colorFunction
+        case .property:
+            return colorProperty
+        case .punctuation:
+            return colorPunctuation
+        case .type:
+            return colorType
+        default:
+            return textColor
+        }
+    }
+}
 
 struct NeoEditorHelper: View {
     @Binding var isPresented: Bool
@@ -49,16 +223,6 @@ struct NeoEditorHelper: View {
 var highlightLayerCache: [CAShapeLayer] = []
 var toolbarItemCache: [UIBarButtonItem] = []
 
-// configuration for NeoEditor
-struct NeoEditorConfig {
-    var background: UIColor
-    var selection: UIColor
-    var current: UIColor
-    var standard: UIColor
-    var font: UIFont
-}
-
-// restore class
 struct NavigationBarViewControllerRepresentable: UIViewControllerRepresentable {
     @Binding var isPresented: Bool
     var filepath: String
@@ -67,30 +231,9 @@ struct NavigationBarViewControllerRepresentable: UIViewControllerRepresentable {
     var backgroundColor: UIColor = UIColor.systemGray6
     var tintColor: UIColor = UIColor.label
 
-    let textView: CustomTextView = CustomTextView()
+    let textView: TextView = TextView()//CustomTextView()
 
     private var filename: String
-    private let config: NeoEditorConfig = {
-        let userInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
-
-        var meow: NeoEditorConfig = NeoEditorConfig(background: UIColor.clear, selection: UIColor.clear, current: UIColor.clear, standard: UIColor.clear, font: UIFont.systemFont(ofSize: 10.0))
-
-        meow.font = UIFont.monospacedSystemFont(ofSize: CGFloat(UserDefaults.standard.double(forKey: "CEFontSize")), weight: UIFont.Weight.medium)
-
-        if userInterfaceStyle == .light {
-            meow.background = neoRGB(255, 255, 255)
-            meow.selection = neoRGB(164, 205, 255)
-            meow.current = neoRGB(232, 242, 255)
-            meow.standard = UIColor.black
-        } else {
-            meow.background = neoRGB(31, 31, 36)
-            meow.selection = neoRGB(81, 91, 112)
-            meow.current = neoRGB(35, 37, 43)
-            meow.standard = UIColor.white
-        }
-
-        return meow
-    }()
 
     init(
         isPresented: Binding<Bool>,
@@ -106,8 +249,15 @@ struct NavigationBarViewControllerRepresentable: UIViewControllerRepresentable {
     }
 
     func makeUIViewController(context: Context) -> UINavigationController {
-        let hostingController = UIHostingController(rootView: NeoEditor(isPresented: $isPresented, filepath: filepath, textView: textView, config: config))
-        hostingController.view.backgroundColor = config.background
+        let hostingController = UIHostingController(rootView: NeoEditor(filename: filepath, textView: textView))
+        
+        let userInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
+        if userInterfaceStyle == .light {
+            hostingController.view.backgroundColor = neoRGB(255, 255, 255)
+        } else {
+            hostingController.view.backgroundColor = neoRGB(31, 31, 36)
+        }
+        
         let navigationController = UINavigationController(rootViewController: hostingController)
         let navigationBar = navigationController.navigationBar
         navigationBar.prefersLargeTitles = false
@@ -151,509 +301,227 @@ struct NavigationBarViewControllerRepresentable: UIViewControllerRepresentable {
 }
 
 struct NeoEditor: UIViewRepresentable {
-    private let containerView: UIView
-    private let textView: CustomTextView
-    private let highlightRules: [HighlightRule]
-    private let filepath: String
-    private let filename: String
+    private var filename: String
+    private var textView: TextView
     private let toolbar: UIToolbar
-
-    private let config: NeoEditorConfig
-
-    @Binding private var sheet: Bool
-
-    @AppStorage("CERender") var render: Double = 1.0
-    @AppStorage("CEFontSize") var font: Double = 13.0
-    @AppStorage("CEToolbar") var enableToolbar: Bool = true
-    @AppStorage("CECurrentLineHighlighting") var current_line_highlighting: Bool = false
-    @AppStorage("CEHighlightCache") var cachehighlightings: Bool = false
-
-    init(
-        isPresented: Binding<Bool>,
-        filepath: String,
-        textView: CustomTextView,
-        config: NeoEditorConfig
-    ) {
-        _sheet = isPresented
-
-        self.filepath = filepath
-        self.filename = {
-            let fileURL = URL(fileURLWithPath: filepath)
-            return fileURL.lastPathComponent
-        }()
-
-        self.highlightRules = grule(gsuffix(from: filename))
-        self.containerView = UIView()
+    
+    @AppStorage("CEToolbar") var toolbarenabled: Bool = true
+    @AppStorage("CEShowLines") var showlines: Bool = true
+    @AppStorage("CEShowTab") var showtab: Bool = true
+    @AppStorage("CEShowSpace") var showspace: Bool = true
+    @AppStorage("CEWrapLines") var wraplines: Bool = true
+    @AppStorage("CEShowReturn") var showreturn: Bool = true
+    
+    @AppStorage("CEDEFAULTTAB") var deftab: Bool = true
+    @AppStorage("CEDEFAULTSPACE") var defspace: Bool = true
+    @AppStorage("CEDEFAULTRETURN") var defreturn: Bool = true
+    
+    @AppStorage("CETab") var tab: String = ""
+    @AppStorage("CESpace") var space: String = ""
+    @AppStorage("CERETURN") var ret: String = ""
+    
+    init(filename: String, textView: TextView) {
+        self.filename = filename
         self.textView = textView
-        self.toolbar = UIToolbar()
-        self.config = config
+        toolbar = UIToolbar()
     }
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-
-    func makeUIView(context: Context) -> UIView {
-        textView.text = {
+    
+    func makeUIView(context: Context) -> some UIView {
+        let text = {
             do {
-                return try String(contentsOfFile: filepath)
+                return try String(contentsOfFile: filename)
             } catch {
-                sheet = false
                 return ""
             }
         }()
-        textView.delegate = context.coordinator
-        context.coordinator.applyHighlighting(to: textView, with: NSRange(location: 0, length: textView.text.utf16.count))
-        context.coordinator.runIntrospect(textView)
-
-        textView.translatesAutoresizingMaskIntoConstraints = false
-
-        containerView.addSubview(textView)
-
-        NSLayoutConstraint.activate([
-            textView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            textView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            textView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            textView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-        ])
-
-        textView.backgroundColor = config.background
-        textView.tintColor = config.selection
-        textView.textColor = config.standard
-        textView.lineLight = config.current.cgColor
-        if current_line_highlighting {
-            textView.setupHighlightLayer()
+        textView.text = text
+        
+        let userInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
+        
+        if userInterfaceStyle == .light {
+            textView.backgroundColor = neoRGB(255, 255, 255)
+        } else {
+            textView.backgroundColor = neoRGB(31, 31, 36)
         }
+        
+        textView.showLineNumbers = showlines
+        textView.lineSelectionDisplayType = .line
+        textView.showTabs = showtab
+        textView.showSpaces = showspace
+        textView.showLineBreaks = showreturn
+        textView.showSoftLineBreaks = showreturn
+        textView.lineHeightMultiplier = 1.3
         textView.keyboardType = .asciiCapable
-        textView.textContentType = .none
+        
         textView.smartQuotesType = .no
         textView.smartDashesType = .no
         textView.smartInsertDeleteType = .no
         textView.autocorrectionType = .no
         textView.autocapitalizationType = .none
-        textView.layoutManager.allowsNonContiguousLayout = true
-        textView.layer.shouldRasterize = true
-        textView.layer.rasterizationScale = UIScreen.main.scale * CGFloat(render)
+        textView.isLineWrappingEnabled = wraplines
         textView.isUserInteractionEnabled = true
-        textView.layoutManager.addTextContainer(textView.textContainer)
-        textView.layoutManager.ensureLayout(for: textView.textContainer)
-
-        if enableToolbar {
-            setupToolbar(textView: textView)
+        textView.textContainerInset = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 0)
+        
+        if showtab {
+            if !deftab {
+                textView.tabSymbol = tab
+            }
         }
-
-        return containerView
+        
+        if showspace {
+            if !defspace {
+                textView.spaceSymbol = space
+            }
+        }
+        
+        if showreturn {
+            if !defreturn {
+                textView.lineBreakSymbol = ret
+            }
+        }
+        
+        // get suffix
+        let suffix = gsuffix(from: filename)
+        
+        // code interpreter choosing switch
+        switch(suffix)
+        {
+        case "nx", "nxm":
+            let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/highlights.scm"))
+            let injectionsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/injections.scm"))
+            let language = TreeSitterLanguage(tree_sitter_javascript(), highlightsQuery: highlightsQuery, injectionsQuery: injectionsQuery)
+            let languageMode = TreeSitterLanguageMode(language: language)
+            textView.setLanguageMode(languageMode)
+            break
+        case "c":
+            let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/c.scm"))
+            let language = TreeSitterLanguage(tree_sitter_c(), highlightsQuery: highlightsQuery, injectionsQuery: nil)
+            let languageMode = TreeSitterLanguageMode(language: language)
+            textView.setLanguageMode(languageMode)
+            break
+        case "lua":
+            let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/lua.scm"))
+            let injectionsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/lua_inj.scm"))
+            let language = TreeSitterLanguage(tree_sitter_lua(), highlightsQuery: highlightsQuery, injectionsQuery: injectionsQuery)
+            let languageMode = TreeSitterLanguageMode(language: language)
+            textView.setLanguageMode(languageMode)
+            break
+        case "py":
+            let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/py.scm"))
+            let language = TreeSitterLanguage(tree_sitter_python(), highlightsQuery: highlightsQuery, injectionsQuery: nil)
+            let languageMode = TreeSitterLanguageMode(language: language)
+            textView.setLanguageMode(languageMode)
+        default:
+            break
+        }
+        
+        textView.theme = NyxianTheme()
+        
+        if(toolbarenabled)
+        {
+            setupToolbar(textView: textView, exten: suffix)
+        }
+        
+        return textView
     }
-
-    func setupToolbar(textView: UITextView) {
+    
+    func updateUIView(_ uiView: UIViewType, context: Context) {
+        
+    }
+    
+    func spawnBarButton(title: String) -> UIBarButtonItem {
+        let button = SymbolButton(symbolName: title, width: 28.0) {
+            insertTextAtCurrentPosition(textView: textView, newText: title)
+        }
+        
+        return UIBarButtonItem(customView: button)
+    }
+    
+    func spawnSeperator() -> UIBarButtonItem {
+        let fixedSpace = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        fixedSpace.width = 5
+        return fixedSpace
+    }
+    
+    func setupToolbar(textView: TextView, exten: String) {
         toolbar.sizeToFit()
-        let tabButton = ClosureButton(title: "Tab") {
+        
+        var additionalButtons: [UIBarButtonItem] = []
+        
+        let tabButton = SymbolButton(symbolName: "arrow.right.to.line", width: 35.0) {
             insertTextAtCurrentPosition(textView: textView, newText: "\t")
+        }
+        
+        switch(exten)
+        {
+            case "nx", "nxm":
+                additionalButtons.append(spawnBarButton(title: "("))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: ")"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "{"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "}"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "["))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "]"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: ";"))
+                break
+            case "lua":
+                additionalButtons.append(spawnBarButton(title: "("))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: ")"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "{"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "}"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "["))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "]"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: ";"))
+                break
+            case "c":
+                additionalButtons.append(spawnBarButton(title: "("))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: ")"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "{"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "}"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "["))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: "]"))
+                additionalButtons.append(spawnSeperator())
+                additionalButtons.append(spawnBarButton(title: ";"))
+                break
+            default:
+                break
+        }
+        
+        let hideButton = SymbolButton(symbolName: "keyboard.chevron.compact.down", width: 35.0) {
+            textView.resignFirstResponder()
         }
 
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-
-        let action1 = UIAction(title: "Go To Line", image: UIImage(systemName: "arrow.right")) { _ in
-            toolbarItemCache = toolbar.items ?? []
-
-            self.animateToolbarItemsDisappearance {
-                let textField = UITextField()
-                textField.text = ""
-                textField.placeholder = "Line number to jump to"
-                textField.borderStyle = .roundedRect
-                textField.keyboardType = .asciiCapable
-                textField.textContentType = .none
-                textField.smartQuotesType = .no
-                textField.smartDashesType = .no
-                textField.smartInsertDeleteType = .no
-                textField.autocorrectionType = .no
-                textField.autocapitalizationType = .none
-                let doneButton = ClosureButton(title: "Cancel") {
-                    self.animateToolbarItemsDisappearance {
-                        self.restoreToolbarItems()
-                    }
-                }
-                let gotoButton = ClosureButton(title: "Goto") {
-                    guard let lineNumber = Int(textField.text ?? "n/a") else { return }
-                    guard let textView = textView as? CustomTextView else { return }
-                    guard let askedRange: NSRange = textView.rangeOfLine(lineNumber: lineNumber - 1) else { return }
-                    guard let rect: CGRect = visualRangeRect(in: textView, for: askedRange) else { return }
-                    setSelectedTextRange(for: textView, with: askedRange)
-                    textView.scrollRangeToVisible(askedRange)
-                    guard let highlight: CAShapeLayer = textView.addPath(color: UIColor.yellow.withAlphaComponent(0.3), rect: rect, entirePath: false, radius: 4.0) else { return }
-                    let animation = CABasicAnimation(keyPath: "opacity")
-                    animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
-                    animation.fillMode = CAMediaTimingFillMode.forwards
-                    animation.isRemovedOnCompletion = false
-                    animation.fromValue = 1.0
-                    animation.toValue = 0.0
-                    animation.duration = 1.5
-                    highlight.add(animation, forKey: nil)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + animation.duration) {
-                        highlight.removeFromSuperlayer()
-                    }
-                    self.animateToolbarItemsDisappearance {
-                        self.restoreToolbarItems()
-                    }
-                }
-                let doneBarButtonItem = UIBarButtonItem(customView: doneButton)
-                let gotoBarButtonItem = UIBarButtonItem(customView: gotoButton)
-                let textBarButtonItem = UIBarButtonItem(customView: textField)
-                let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-                restoreToolbarItems(with: [doneBarButtonItem, flexibleSpace, textBarButtonItem, flexibleSpace, gotoBarButtonItem])
-            }
-        }
-
-        let action2 = UIAction(title: "Search String", image: UIImage(systemName: "magnifyingglass")) { _ in
-            toolbarItemCache = toolbar.items ?? []
-            self.animateToolbarItemsDisappearance {
-                let textField = UITextField()
-                textField.text = ""
-                textField.placeholder = "String to search"
-                textField.borderStyle = .roundedRect
-                textField.keyboardType = .asciiCapable
-                textField.textContentType = .none
-                textField.smartQuotesType = .no
-                textField.smartDashesType = .no
-                textField.smartInsertDeleteType = .no
-                textField.autocorrectionType = .no
-                textField.autocapitalizationType = .none
-                let doneButton = ClosureButton(title: "Close") {
-                    if !highlightLayerCache.isEmpty {
-                        for item in highlightLayerCache {
-                            item.removeFromSuperlayer()
-                        }
-                    }
-                    self.animateToolbarItemsDisappearance {
-                        self.restoreToolbarItems()
-                    }
-                }
-                let searchButton = ClosureButton(title: "Search") {
-                    guard let string = textField.text else { return }
-                    guard let textView = textView as? CustomTextView else { return }
-                    if !highlightLayerCache.isEmpty {
-                        for item in highlightLayerCache {
-                            item.removeFromSuperlayer()
-                        }
-                    }
-                    let nsranges: [NSRange] = findRanges(of: string, in: textView.text)
-                    for item in nsranges {
-                        if let rect = visualRangeRect(in: textView, for: item) {
-                            let layer = textView.addPath(color: UIColor.yellow.withAlphaComponent(0.3), rect: rect, entirePath: false, radius: 4.0)
-                            if let layer = layer {
-                                highlightLayerCache.append(layer)
-                            }
-                        }
-                    }
-                }
-                let doneBarButtonItem = UIBarButtonItem(customView: doneButton)
-                let gotoBarButtonItem = UIBarButtonItem(customView: searchButton)
-                let textBarButtonItem = UIBarButtonItem(customView: textField)
-                let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-                restoreToolbarItems(with: [doneBarButtonItem, flexibleSpace, textBarButtonItem, flexibleSpace, gotoBarButtonItem])
-            }
-        }
-
-        let menu = UIMenu(title: "Tools", children: [action2, action1])
-        let menuButton = UIButton(type: .system)
-        menuButton.tintColor = UIColor.label
-        menuButton.setTitle("Tools", for: .normal)
-        menuButton.menu = menu
-        menuButton.showsMenuAsPrimaryAction = true
-        let menuBarButtonItem = UIBarButtonItem(customView: menuButton)
-        let TabBarButtonItem = UIBarButtonItem(customView: tabButton)
-        toolbar.items = [TabBarButtonItem, flexibleSpace, menuBarButtonItem]
+        let flexibleSpace2 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        let tabBarButton = UIBarButtonItem(customView: tabButton)
+        let hideBarButton = UIBarButtonItem(customView: hideButton)
+        
+        toolbar.items = [tabBarButton, flexibleSpace2] + additionalButtons + [flexibleSpace, hideBarButton]
         textView.inputAccessoryView = toolbar
     }
-
-    func animateToolbarItemsDisappearance(completion: @escaping () -> Void) {
-        guard let items = toolbar.items else { return }
-        let fadeOutDuration: TimeInterval = 0.3
-        UIView.animate(withDuration: fadeOutDuration, animations: {
-            for item in items {
-                item.customView?.alpha = 0.0
-            }
-        }) { _ in
-            self.toolbar.items = []
-            completion()
-        }
-    }
-
-    func restoreToolbarItems(with cache: [UIBarButtonItem] = toolbarItemCache) {
-        toolbar.items = cache
-        guard let items = toolbar.items else { return }
-        let fadeInDuration: TimeInterval = 0.3
-        for item in items {
-            item.customView?.alpha = 0.0
-        }
-        UIView.animate(withDuration: fadeInDuration) {
-            for item in items {
-                item.customView?.alpha = 1.0
-            }
-        }
-    }
-
-    func insertTextAtCurrentPosition(textView: UITextView, newText: String) {
+        
+    func insertTextAtCurrentPosition(textView: TextView, newText: String) {
         if let selectedRange = textView.selectedTextRange {
             textView.replace(selectedRange, withText: newText)
         }
     }
-
-    func updateUIView(_ uiView: UIView, context: Context) { }
-
-    final class Coordinator: NSObject, UITextViewDelegate {
-        var parent: NeoEditor
-        private var highlightCache: [NSRange: [NSAttributedString.Key: Any]] = [:]
-
-        init(_ markdownEditorView: NeoEditor) {
-            self.parent = markdownEditorView
-        }
-
-        func runIntrospect(_ textView: UITextView) {
-            textView.font = parent.config.font
-        }
-
-        func textViewDidChange(_ textView: UITextView) {
-            guard let textView = textView as? CustomTextView else { return }
-
-            if textView.didPasted {
-                self.applyHighlighting(to: textView, with: NSRange(location: 0, length: textView.text.utf16.count))
-                textView.didPasted = false
-            } else {
-                self.applyHighlighting(to: textView, with: textView.cachedLineRange ?? NSRange(location: 0, length: 0))
-            }
-        }
-
-        func applyHighlighting(to textView: UITextView, with visibleRange: NSRange) {
-            let text = textView.text ?? ""
-
-            DispatchQueue.global(qos: .userInitiated).async {
-                var attributesToApply = [(NSRange, NSAttributedString.Key, Any)]()
-                self.parent.highlightRules.forEach { rule in
-                    let matches = rule.pattern.matches(in: text, options: [], range: visibleRange)
-                    matches.forEach { match in
-                        let matchRange = match.range
-                        if let cachedAttributes = self.highlightCache[matchRange] {
-                            for (key, value) in cachedAttributes {
-                                attributesToApply.append((matchRange, key, value))
-                            }
-                            return
-                        }
-                        let isOverlapping = attributesToApply.contains { (range, _, _) in
-                            NSIntersectionRange(range, matchRange).length > 0
-                        }
-                        guard !isOverlapping else { return }
-                        rule.formattingRules.forEach { formattingRule in
-                            guard let key = formattingRule.key,
-                                  let calculateValue = formattingRule.calculateValue else { return }
-                            if let matchRangeStr = Range(match.range, in: text) {
-                                let matchContent = String(text[matchRangeStr])
-                                let value = calculateValue(matchContent, matchRangeStr)
-                                if self.parent.cachehighlightings {
-                                    self.highlightCache[matchRange] = [key: value]
-                                }
-                                attributesToApply.append((match.range, key, value))
-                            }
-                        }
-                    }
-                }
-                DispatchQueue.main.async {
-                    textView.textStorage.beginEditing()
-                    textView.textStorage.addAttribute(.foregroundColor, value: self.parent.config.standard, range: visibleRange)
-                    attributesToApply.forEach { (range, key, value) in
-                        textView.textStorage.addAttribute(key, value: value, range: range)
-                    }
-                    textView.textStorage.endEditing()
-                }
-            }
-        }
-
-        func textViewDidBeginEditing(_ textView: UITextView) {
-            guard let textView = textView as? CustomTextView else { return }
-            textView.enableHighlightLayer()
-        }
-
-        func textViewDidEndEditing(_ textView: UITextView) {
-            guard let textView = textView as? CustomTextView else { return }
-            textView.disableHighlightLayer()
-        }
-    }
-}
-
-class CustomTextView: UITextView {
-    var didPasted: Bool = false
-    var lineLight: CGColor = UIColor.clear.cgColor
-
-    private(set) var hightlight_setuped: Bool = false
-    private(set) var cachedLineRange: NSRange?
-    private var wempty: Bool = false
-    private let highlightLayer = CAShapeLayer()
-    var highlightTMPLayer: [CAShapeLayer] = []
-    var buttonTMPLayer: [UIButton] = []
-
-    override func paste(_ sender: Any?) {
-        didPasted = true
-        super.paste(sender)
-    }
-
-    override func caretRect(for position: UITextPosition) -> CGRect {
-        let caretRect = super.caretRect(for: position)
-        updateCurrentLineRange()
-        return caretRect
-    }
-
-    func setupHighlightLayer() {
-        highlightLayer.fillColor = lineLight
-        layer.insertSublayer(highlightLayer, at: 0)
-        hightlight_setuped = true
-    }
-
-    private func updateCurrentLineRange() {
-        guard let caretPosition = selectedTextRange?.start else {
-            return
-        }
-
-        let caretIndex = offset(from: beginningOfDocument, to: caretPosition)
-        let text = self.text as NSString
-        let lineRange = text.lineRange(for: NSRange(location: caretIndex, length: 0))
-
-        cachedLineRange = lineRange
-
-        if hightlight_setuped {
-            updateHighlightLayer()
-        }
-    }
-
-    private func updateHighlightLayer() {
-        guard let currentLineRange = cachedLineRange else {
-            highlightLayer.path = nil
-            return
-        }
-
-        let path = UIBezierPath()
-
-        layoutManager.enumerateLineFragments(forGlyphRange: currentLineRange) { (rect, usedRect, _, glyphRange, _) in
-            let textRect = usedRect.offsetBy(dx: self.textContainerInset.left, dy: self.textContainerInset.top)
-            path.append(UIBezierPath(roundedRect: textRect, cornerRadius: 4.0))
-        }
-
-        animateHighlightLayer(from: highlightLayer.path, to: path.cgPath)
-
-        highlightLayer.path = path.cgPath
-    }
-
-    private func animateHighlightLayer(from oldPath: CGPath?, to newPath: CGPath) {
-        let animation = CABasicAnimation(keyPath: "path")
-        animation.duration = 0.25
-
-        animation.toValue = newPath
-        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
-        animation.fillMode = CAMediaTimingFillMode.forwards
-        animation.isRemovedOnCompletion = false
-
-        if newPath.boundingBox.isEmpty && !wempty {
-            animation.keyPath = "opacity"
-            animation.fromValue = 1.0
-            animation.toValue = 0.0
-            animation.duration = 0.50
-            wempty = true
-            highlightLayer.add(animation, forKey: nil)
-        } else if wempty && !newPath.boundingBox.isEmpty {
-            animation.keyPath = "opacity"
-            animation.fromValue = 0.0
-            animation.toValue = 1.0
-            animation.duration = 0.50
-            wempty = false
-        }
-
-        if wempty {
-            return
-        }
-
-        highlightLayer.add(animation, forKey: nil)
-    }
-
-    func enableHighlightLayer() {
-        if hightlight_setuped {
-            setupHighlightLayer()
-        }
-    }
-
-    func disableHighlightLayer() {
-        if hightlight_setuped {
-            highlightLayer.removeFromSuperlayer()
-        }
-    }
-
-    func rangeOfLine(lineNumber: Int) -> NSRange? {
-        let nsString = self.text as NSString
-        let lines = nsString.components(separatedBy: .newlines)
-        guard lineNumber >= 0 && lineNumber < lines.count else {
-            return nil
-        }
-        var location = 0
-        for i in 0..<lineNumber {
-            location += (lines[i] as NSString).length + 1
-        }
-        let length = (lines[lineNumber] as NSString).length
-        return NSRange(location: location, length: length)
-    }
-
-    func addPath(color: UIColor, rect: CGRect, entirePath: Bool? = nil, radius: CGFloat? = 0.0) -> CAShapeLayer? {
-        let newHighlightLayer = CAShapeLayer()
-        newHighlightLayer.fillColor = color.cgColor
-        layer.insertSublayer(newHighlightLayer, at: 1)
-
-        let path = UIBezierPath()
-        var newRect: CGRect = rect
-
-        if let entirePath = entirePath {
-            if entirePath {
-                newRect.size.width = UIScreen.main.bounds.size.width
-            }
-        } else {
-            newRect.size.width = UIScreen.main.bounds.size.width
-        }
-
-        path.append(UIBezierPath(roundedRect: newRect, cornerRadius: radius ?? 0.0))
-
-        newHighlightLayer.path = path.cgPath
-        highlightTMPLayer.append(newHighlightLayer)
-
-        return newHighlightLayer
-    }
-
-    var onLayoutCompletion: (() -> Void)?
-}
-
-struct TextFormattingRule {
-   typealias AttributedKeyCallback = (String, Range<String.Index>) -> Any
-
-   let key: NSAttributedString.Key?
-   let calculateValue: AttributedKeyCallback?
-
-   init(key: NSAttributedString.Key, value: Any) {
-       self.init(key: key, calculateValue: { _, _ in value })
-   }
-
-   init(
-       key: NSAttributedString.Key? = nil,
-       calculateValue: AttributedKeyCallback? = nil
-   ) {
-       self.key = key
-       self.calculateValue = calculateValue
-   }
-}
-
-struct HighlightRule {
-   let pattern: NSRegularExpression
-
-   let formattingRules: [TextFormattingRule]
-
-   init(pattern: NSRegularExpression, formattingRules: [TextFormattingRule]) {
-       self.pattern = pattern
-       self.formattingRules = formattingRules
-   }
 }
 
 class ClosureBarButtonItem: UIBarButtonItem {
@@ -678,151 +546,89 @@ class ClosureBarButtonItem: UIBarButtonItem {
     }
 }
 
-class ClosureButton: UIButton {
+class SymbolButton: UIButton {
     private var actionHandler: (() -> Void)?
-
-    init(title: String, actionHandler: @escaping () -> Void) {
+    private var currentAnimator: UIViewPropertyAnimator?
+    
+    init(symbolName: String, width: CGFloat, actionHandler: @escaping () -> Void) {
         self.actionHandler = actionHandler
         super.init(frame: .zero)
-        setTitle(title, for: .normal)
-        self.setTitleColor(.label, for: .normal)
+        
+        let image = UIImage(systemName: symbolName)
+        if image != nil {
+            setImage(image, for: .normal)
+        } else {
+            setTitle(symbolName, for: .normal)
+            titleLabel?.font = UIFont.systemFont(ofSize: 16)
+            setTitleColor(.label, for: .normal)
+        }
+        
+        tintColor = .label
+        
         self.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
-        self.tintColor = UIColor.label
+        self.addTarget(self, action: #selector(touchDown), for: .touchDown)
+        self.addTarget(self, action: #selector(touchUp), for: [.touchUpInside, .touchDragExit, .touchCancel])
+        
+        layer.cornerRadius = 5
+        
+        let userInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
+        
+        if userInterfaceStyle == .light {
+            backgroundColor = .systemGray5
+        } else {
+            backgroundColor = .systemGray6
+        }
+        
+        NSLayoutConstraint.activate([
+            self.widthAnchor.constraint(equalToConstant: width),
+            self.heightAnchor.constraint(equalToConstant: 35)
+        ])
     }
-
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-
+    
     @objc private func didTapButton() {
         actionHandler?()
+        playKeyboardSound()
+        triggerHapticFeedback()
+    }
+    
+    private func playKeyboardSound() {
+        AudioServicesPlaySystemSound(1104) // iOS keyboard tap sound
+    }
+    
+    private func triggerHapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+    }
+    
+    @objc private func touchDown() {
+        // Interrupt any existing animation
+        currentAnimator?.stopAnimation(true)
+        
+        // Create and start a new animation
+        currentAnimator = UIViewPropertyAnimator(duration: 0.1, curve: .easeInOut) {
+            self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        }
+        
+        currentAnimator?.startAnimation()
+    }
+    
+    @objc private func touchUp() {
+        // Interrupt any existing animation
+        currentAnimator?.stopAnimation(true)
+        
+        // Create and start a new animation to return to original state
+        currentAnimator = UIViewPropertyAnimator(duration: 0.1, curve: .easeInOut) {
+            self.transform = CGAffineTransform.identity
+        }
+        
+        currentAnimator?.startAnimation()
     }
 }
 
-func grule(_ isaythis: String) -> [HighlightRule] {
-    let userInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
-
-    // Define colors based on mode
-    let colorKeyword: UIColor
-    let colorComment: UIColor
-    let colorString: UIColor
-    let colorNumber: UIColor
-    let colorRegex: UIColor
-    let colorFunction: UIColor
-    let colorOperator: UIColor
-    let colorProperty: UIColor
-    let colorPunctuation: UIColor
-    let colorDirective: UIColor
-
-    if userInterfaceStyle == .light {
-        // Light Mode Colors (VSCode Light+ inspired)
-        colorKeyword = neoRGB(0, 0, 192)         // Deep blue
-        colorComment = neoRGB(0, 128, 0)         // Green
-        colorString = neoRGB(163, 21, 21)        // Red
-        colorNumber = neoRGB(128, 0, 128)        // Purple
-        colorRegex = neoRGB(255, 140, 0)         // Orange
-        colorFunction = neoRGB(43, 145, 175)     // Teal-blue
-        colorOperator = neoRGB(0, 0, 0)          // Black
-        colorProperty = neoRGB(0, 0, 128)        // Navy blue
-        colorPunctuation = neoRGB(0, 0, 0)
-        colorDirective = neoRGB(0, 0, 128)
-    } else {
-        // Dark Mode Colors (VSCode Dark+ inspired)
-        colorKeyword = neoRGB(86, 156, 214)      // Blue
-        colorComment = neoRGB(106, 153, 85)      // Green
-        colorString = neoRGB(206, 145, 120)      // Orange
-        colorNumber = neoRGB(181, 206, 168)      // Soft green
-        colorRegex = neoRGB(255, 198, 109)       // Yellow-orange
-        colorFunction = neoRGB(220, 220, 170)    // Pale yellow
-        colorOperator = neoRGB(212, 212, 212)    // Light gray
-        colorProperty = neoRGB(156, 220, 254)    // Cyan
-        colorPunctuation = neoRGB(212, 212, 212)
-        colorDirective = neoRGB(255, 165, 0)
-    }
-
-    switch(isaythis) {
-        case "nx", "nxm":
-            return [
-                // Comments
-                HighlightRule(pattern: try! NSRegularExpression(pattern: "(//.*|/\\*[\\s\\S]*?\\*/)", options: []), formattingRules: [
-                    TextFormattingRule(key: .foregroundColor, value: colorComment)
-                ]),
-                // Strings & Template Literals
-                HighlightRule(pattern: try! NSRegularExpression(pattern: "(?<!//)(\".*?\"|'.*?'|`.*?`)", options: []), formattingRules: [
-                    TextFormattingRule(key: .foregroundColor, value: colorString)
-                ]),
-                // Keywords
-                HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b(function|if|else|for|while|do|switch|case|default|break|continue|return|var|let|const|class|constructor|this|super|new|extends|static|null|undefined|true|false|try|catch|finally|throw|debugger|import|export|in|instanceof|await|async|yield|enum|implements|interface|let|package|private|protected|public|static|typeof|delete|void)\\b", options: []), formattingRules: [
-                    TextFormattingRule(key: .foregroundColor, value: colorKeyword)
-                ]),
-                // Function/Method Names
-                HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b\\w+(?=\\()", options: []), formattingRules: [
-                    TextFormattingRule(key: .foregroundColor, value: colorFunction)
-                ]),
-                // Numbers
-                HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b(0[xX][0-9a-fA-F]+|0[bB][01]+|\\d+\\.?\\d*|\\.\\d+)\\b", options: []), formattingRules: [
-                    TextFormattingRule(key: .foregroundColor, value: colorNumber)
-                ]),
-                // Regular Expressions
-                HighlightRule(pattern: try! NSRegularExpression(pattern: "(?<!\\w)(\\/[^\\/\\n]+\\/[gimsuy]*)", options: []), formattingRules: [
-                    TextFormattingRule(key: .foregroundColor, value: colorRegex)
-                ]),
-                // Operators
-                HighlightRule(pattern: try! NSRegularExpression(pattern: "([+\\-*/%=&|^!<>]=?|\\?\\?|\\?|:|~)", options: []), formattingRules: [
-                    TextFormattingRule(key: .foregroundColor, value: colorOperator)
-                ]),
-                // Property Names (dot notation)
-                HighlightRule(pattern: try! NSRegularExpression(pattern: "(?<=\\.)\\b\\w+\\b", options: []), formattingRules: [
-                    TextFormattingRule(key: .foregroundColor, value: colorProperty)
-                ]),
-                // Arrow functions
-                HighlightRule(pattern: try! NSRegularExpression(pattern: "=>", options: []), formattingRules: [
-                    TextFormattingRule(key: .foregroundColor, value: colorOperator)
-                ])
-            ]
-    case "c":
-        return [
-            // Comments
-            HighlightRule(pattern: try! NSRegularExpression(pattern: "(//.*|/\\*[\\s\\S]*?\\*/)", options: []), formattingRules: [
-                TextFormattingRule(key: .foregroundColor, value: colorComment)
-            ]),
-            // Strings
-            HighlightRule(pattern: try! NSRegularExpression(pattern: "\".*?\"", options: []), formattingRules: [
-                TextFormattingRule(key: .foregroundColor, value: colorString)
-            ]),
-            // Character Constants
-            HighlightRule(pattern: try! NSRegularExpression(pattern: "'(?:\\\\'|\\\\\\\"|\\\\[0-7]{1,3}|\\\\x[0-9a-fA-F]+|[^'\\\\])'", options: []), formattingRules: [
-                TextFormattingRule(key: .foregroundColor, value: colorString)
-            ]),
-            // Keywords
-            HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b(auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|inline|int|long|register|restrict|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while)\\b", options: []), formattingRules: [
-                TextFormattingRule(key: .foregroundColor, value: colorKeyword)
-            ]),
-            // Function Names
-            HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b\\w+(?=\\()", options: []), formattingRules: [
-                TextFormattingRule(key: .foregroundColor, value: colorFunction)
-            ]),
-            // Numbers
-            HighlightRule(pattern: try! NSRegularExpression(pattern: "\\b(0[xX][0-9a-fA-F]+|0[bB][01]+|\\d+\\.?\\d*|\\.\\d+)([eE][+-]?\\d+)?[fFlL]?[uU]?[lL]?[lL]?\\b", options: []), formattingRules: [
-                TextFormattingRule(key: .foregroundColor, value: colorNumber)
-            ]),
-            // Operators
-            HighlightRule(pattern: try! NSRegularExpression(pattern: "([+\\-*/%=&|^!<>]=?|\\+\\+|--|&&|\\|\\||\\?|:|~|<<|>>|->|\\.{3})", options: []), formattingRules: [
-                TextFormattingRule(key: .foregroundColor, value: colorOperator)
-            ]),
-            // Punctuation
-            HighlightRule(pattern: try! NSRegularExpression(pattern: "[{}[\\\\];(),.]", options: []), formattingRules: [
-                TextFormattingRule(key: .foregroundColor, value: colorPunctuation)
-            ]),
-            // Include Directives
-            HighlightRule(pattern: try! NSRegularExpression(pattern: "#include"), formattingRules: [
-                TextFormattingRule(key: .foregroundColor, value: colorDirective)
-            ])
-        ]
-        default:
-            return []
-    }
-}
 
 func neoRGB(_ red: CGFloat,_ green: CGFloat,_ blue: CGFloat ) -> UIColor {
     return UIColor(red: red/255.0, green: green/255.0, blue: blue/255.0, alpha: 1.0)
