@@ -69,244 +69,257 @@ struct FileObject: View {
 var path: String = ""
 
 struct FileList: View {
-   var title: String?
-   var directoryPath: URL
-   @State private var activeSheet: ActiveSheet?
-   @State private var files: [URL] = []
-   @State private var quar: Bool = false
-   @State private var selpath: String = ""
-   @State private var fbool: Bool = false
-   @Binding var actpath: String
-   @Binding var action: Int
-
-   @State private var poheader: String = ""
-   @State private var potextfield: String = ""
-   @State private var type: Int = 0
-
-   @State private var macros: [String] = []
-   @State private var cmacro: String = ""
+    var title: String?
+    var directoryPath: URL
+    @State private var activeSheet: ActiveSheet?
+    @State private var files: [URL] = []
+    @State private var quar: Bool = false
+    @State private var selpath: String = ""
+    @State private var fbool: Bool = false
+    @State private var sbool: Bool = false
+    @Binding var actpath: String
+    @Binding var action: Int
     
-   @State private var sheet: Bool = false
-   var body: some View {
-       List {
-           Section {
-               ForEach(files, id: \.self) { item in
-                   HStack {
-                       if isDirectory(item) {
-                           NavigationLink(destination: FileList(title: nil, directoryPath: item, actpath: $actpath, action: $action)) {
-                               HStack {
-                                   Image(systemName: "folder.fill")
-                                       .foregroundColor(.primary)
-                                   Text(item.lastPathComponent)
-                               }
-                           }
-                       } else {
-                           Button(action: {
-                               selpath = item.path
-                               if !gtypo(item: item.lastPathComponent) {
-                                   quar = true
-                               } else {
-                                   fbool = true
-                               }
-                           }) {
-                               FileObject(properties: gProperty(item), item: item)
-                           }
-                       }
-                   }
-                   .contextMenu {
-                       if gsuffix(from: item.lastPathComponent) == "nx" {
-                           Section  {
-                               Button(action: {
-                                   path = item.path
-                                   sheet = true
-                               }) {
-                                   Label("Run Code", systemImage: "bolt.fill")
-                               }
-                           }
-                       }
-                       Section {
-                           Button(action: {
-                               selpath = item.lastPathComponent
-                               potextfield = selpath
-                               activeSheet = .rename
-                           }) {
-                               Label("Rename", systemImage: "pencil")
-                           }
-                       }
-                       Section {
-                           Button(action: {
-                               actpath = item.path
-                               action = 1
-                           }) {
-                               Label("Copy", systemImage: "doc.on.doc.fill")
-                           }
-                           Button(action: {
-                               actpath = item.path
-                               action = 2
-                           }) {
-                               Label("Move", systemImage: "folder.fill")
-                           }
-                       }
-                       Section {
-                           Button( action: {
-                               share(url: item, remove: false)
-                           }) {
-                               Label("Share", systemImage: "square.and.arrow.up.fill")
-                           }
-                       }
-                       Section {
-                           Button(role: .destructive, action: {
-                               selpath = item.path
-                               activeSheet = .remove
-                               poheader = "Remove \"\(item.lastPathComponent)\"?"
-                           }) {
-                               Label("Remove", systemImage: "trash.fill")
-                           }
-                       }
-                   }
-               }
-           }
-       }
-       .refreshable {
-           DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-               withAnimation {
-                   files = []
-               }
-               DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
-                   bindLoadFiles(directoryPath: directoryPath, files: $files)
-               }
-           }
-       }
-       .onAppear {
-           bindLoadFiles(directoryPath: directoryPath, files: $files)
-       }
-       .listStyle(InsetGroupedListStyle())
-       .navigationTitle(
-           title ?? directoryPath.lastPathComponent
-       )
-       .navigationBarTitleDisplayMode(.inline)
-       .toolbar {
-           ToolbarItem(placement: .navigationBarTrailing) {
-               Menu {
-                   Section {
-                       Button(action: { activeSheet = .create }) {
-                           Label("Create", systemImage: "doc.fill.badge.plus")
-                       }
-                   }
-                   if action > 0 {
-                       Section {
-                           Button(action: {
-                               if action == 1 {
-                                   _ = cp(actpath, "\(directoryPath.path)/\(URL(fileURLWithPath: actpath).lastPathComponent)")
-                                   action = 0
-                               } else if action == 2 {
-                                   _ = mv(actpath, "\(directoryPath.path)/\(URL(fileURLWithPath: actpath).lastPathComponent)")
-                                   action = 0
-                               }
-                               //haptfeedback(1)
-                               bindLoadFiles(directoryPath: directoryPath, files: $files)
-                           }) {
-                               Label("Paste", systemImage: "doc.on.clipboard")
-                           }
-                       }
-                   }
-               } label: {
-                   Label("", systemImage: "ellipsis.circle")
-               }
-           }
-       }
-       .sheet(item: $activeSheet) { sheet in
-           Group {
-               BottomPopupView {
-                   switch sheet {
-                   case .create:
-                       POHeader(title: "Create")
-                       POTextField(title: "Filename", content: $potextfield)
-                       POPicker(function: create_selected, title: "Type", arrays: [PickerArrays(title: "Type", items: [PickerItems(id: 0, name: "File"), PickerItems(id: 1, name: "Folder")])], type: $type)
-                   case .rename:
-                       POHeader(title: "Rename")
-                       POTextField(title: "Filename", content: $potextfield)
-                       POButtonBar(cancel: dissmiss_sheet, confirm: rename_selected)
-                   case .remove:
-                       POBHeader(title: $poheader)
-                       Spacer().frame(height: 10)
-                       POButtonBar(cancel: dissmiss_sheet, confirm: remove_selected)
-                   default:
-                       Spacer()
-                   }
-               }
-           }
-           .background(BackgroundClearView())
-           .edgesIgnoringSafeArea([.bottom])
-           .onDisappear {
-               poheader = ""
-               potextfield = ""
-               bindLoadFiles(directoryPath: directoryPath, files: $files)
-           }
-       }
-       .fullScreenCover(isPresented: $quar) {
-           NeoEditorHelper(isPresented: $quar, filepath: $selpath)
-       }
-       .fullScreenCover(isPresented: $fbool) {
-           ImageView(imagePath: $selpath, fbool: $fbool)
-       }
-       .fullScreenCover(isPresented: $sheet) {
-           //RuntimeRunnerView(sheet: $sheet, code: code)
-           TerminalViewUIViewRepresentable(sheet: $sheet, path: path)
-       }
-   }
-
-   private func create_selected() -> Void {
-       if !potextfield.isEmpty && potextfield.rangeOfCharacter(from: CharacterSet(charactersIn: String(invalidFS))) == nil {
-           if type == 0 {
-           var content = ""
-               switch gsuffix(from: potextfield) {
-                   case "nx", "nxm":
-                       content = authorgen(file: potextfield)
-                       break
-                   default:
-                       break
-               }
-               cfile(atPath: "\(directoryPath.path)/\(potextfield)", withContent: content)
-           } else {
-               cfolder(atPath: "\(directoryPath.path)/\(potextfield)")
-           }
-           //haptfeedback(1)
-           activeSheet = nil
-       } else {
-           //haptfeedback(2)
-       }
-   }
-
-   private func rename_selected() -> Void {
-       if !potextfield.isEmpty && potextfield.rangeOfCharacter(from: CharacterSet(charactersIn: String(invalidFS))) == nil {
-           _ = mv("\(directoryPath.path)/\(selpath)", "\(directoryPath.path)/\(potextfield)")
-           //haptfeedback(1)
-           activeSheet = nil
-       } else {
-           //haptfeedback(2)
-       }
-   }
-
-   private func remove_selected() -> Void {
-       _ = rm(selpath)
-       //haptfeedback(1)
-       activeSheet = nil
-   }
-
-   private func dissmiss_sheet() -> Void {
-       activeSheet = nil
-   }
-
-   private func gtypo(item: String) -> Bool {
-       let suffix = gsuffix(from: item)
-       switch(suffix) {
-           case "png", "jpg", "jpeg", "PNG", "JPG":
-               return true
-           default:
-               return false
-       }
-   }
+    @State private var poheader: String = ""
+    @State private var potextfield: String = ""
+    @State private var type: Int = 0
+    
+    @State private var macros: [String] = []
+    @State private var cmacro: String = ""
+    
+    @State private var sheet: Bool = false
+    var body: some View {
+        List {
+            Section {
+                ForEach(files, id: \.self) { item in
+                    HStack {
+                        if isDirectory(item) {
+                            NavigationLink(destination: FileList(title: nil, directoryPath: item, actpath: $actpath, action: $action)) {
+                                HStack {
+                                    Image(systemName: "folder.fill")
+                                        .foregroundColor(.primary)
+                                    Text(item.lastPathComponent)
+                                }
+                            }
+                        } else {
+                            Button(action: {
+                                selpath = item.path
+                                if !gtypo(item: item.lastPathComponent) {
+                                    quar = true
+                                } else {
+                                    fbool = true
+                                }
+                            }) {
+                                FileObject(properties: gProperty(item), item: item)
+                            }
+                        }
+                    }
+                    .contextMenu {
+                        if gsuffix(from: item.lastPathComponent) == "nx" || gsuffix(from: item.lastPathComponent) == "c" || gsuffix(from: item.lastPathComponent) == "lua" {
+                            Section  {
+                                Button(action: {
+                                    path = item.path
+                                    sheet = true
+                                }) {
+                                    Label("Run Code", systemImage: "bolt.fill")
+                                }
+                            }
+                        }
+                        Section {
+                            Button(action: {
+                                selpath = item.lastPathComponent
+                                potextfield = selpath
+                                activeSheet = .rename
+                            }) {
+                                Label("Rename", systemImage: "pencil")
+                            }
+                        }
+                        Section {
+                            Button(action: {
+                                actpath = item.path
+                                action = 1
+                            }) {
+                                Label("Copy", systemImage: "doc.on.doc.fill")
+                            }
+                            Button(action: {
+                                actpath = item.path
+                                action = 2
+                            }) {
+                                Label("Move", systemImage: "folder.fill")
+                            }
+                        }
+                        Section {
+                            Button( action: {
+                                share(url: item, remove: false)
+                            }) {
+                                Label("Share", systemImage: "square.and.arrow.up.fill")
+                            }
+                        }
+                        Section {
+                            Button(role: .destructive, action: {
+                                selpath = item.path
+                                activeSheet = .remove
+                                poheader = "Remove \"\(item.lastPathComponent)\"?"
+                            }) {
+                                Label("Remove", systemImage: "trash.fill")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .refreshable {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                withAnimation {
+                    files = []
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+                    bindLoadFiles(directoryPath: directoryPath, files: $files)
+                }
+            }
+        }
+        .onAppear {
+            bindLoadFiles(directoryPath: directoryPath, files: $files)
+        }
+        .listStyle(InsetGroupedListStyle())
+        .navigationTitle(
+            title ?? directoryPath.lastPathComponent
+        )
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Section {
+                        Button(action: { activeSheet = .create }) {
+                            Label("Create", systemImage: "doc.fill.badge.plus")
+                        }
+                    }
+                    if action > 0 {
+                        Section {
+                            Button(action: {
+                                if action == 1 {
+                                    _ = cp(actpath, "\(directoryPath.path)/\(URL(fileURLWithPath: actpath).lastPathComponent)")
+                                    action = 0
+                                } else if action == 2 {
+                                    _ = mv(actpath, "\(directoryPath.path)/\(URL(fileURLWithPath: actpath).lastPathComponent)")
+                                    action = 0
+                                }
+                                //haptfeedback(1)
+                                bindLoadFiles(directoryPath: directoryPath, files: $files)
+                            }) {
+                                Label("Paste", systemImage: "doc.on.clipboard")
+                            }
+                        }
+                    }
+                } label: {
+                    Label("", systemImage: "ellipsis.circle")
+                }
+            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                if(title != nil) {
+                    Button(action: {
+                        sbool = true
+                    }) {
+                        Label("", systemImage: "gear")
+                    }
+                }
+            }
+        }
+        .sheet(item: $activeSheet) { sheet in
+            Group {
+                BottomPopupView {
+                    switch sheet {
+                    case .create:
+                        POHeader(title: "Create")
+                        POTextField(title: "Filename", content: $potextfield)
+                        POPicker(function: create_selected, title: "Type", arrays: [PickerArrays(title: "Type", items: [PickerItems(id: 0, name: "File"), PickerItems(id: 1, name: "Folder")])], type: $type)
+                    case .rename:
+                        POHeader(title: "Rename")
+                        POTextField(title: "Filename", content: $potextfield)
+                        POButtonBar(cancel: dissmiss_sheet, confirm: rename_selected)
+                    case .remove:
+                        POBHeader(title: $poheader)
+                        Spacer().frame(height: 10)
+                        POButtonBar(cancel: dissmiss_sheet, confirm: remove_selected)
+                    default:
+                        Spacer()
+                    }
+                }
+            }
+            .background(BackgroundClearView())
+            .edgesIgnoringSafeArea([.bottom])
+            .onDisappear {
+                poheader = ""
+                potextfield = ""
+                bindLoadFiles(directoryPath: directoryPath, files: $files)
+            }
+        }
+        .fullScreenCover(isPresented: $quar) {
+            NeoEditorHelper(isPresented: $quar, filepath: $selpath)
+                .ignoresSafeArea(.all)
+        }
+        .fullScreenCover(isPresented: $fbool) {
+            ImageView(imagePath: $selpath, fbool: $fbool)
+        }
+        .fullScreenCover(isPresented: $sheet) {
+            TerminalViewUIViewRepresentable(sheet: $sheet, path: path)
+        }
+        .sheet(isPresented: $sbool) {
+            SettingsView()
+        }
+    }
+    
+    private func create_selected() -> Void {
+        if !potextfield.isEmpty && potextfield.rangeOfCharacter(from: CharacterSet(charactersIn: String(invalidFS))) == nil {
+            if type == 0 {
+                var content = ""
+                switch gsuffix(from: potextfield) {
+                case "nx", "nxm", "c":
+                    content = authorgen(file: potextfield)
+                    break
+                default:
+                    break
+                }
+                cfile(atPath: "\(directoryPath.path)/\(potextfield)", withContent: content)
+            } else {
+                cfolder(atPath: "\(directoryPath.path)/\(potextfield)")
+            }
+            //haptfeedback(1)
+            activeSheet = nil
+        } else {
+            //haptfeedback(2)
+        }
+    }
+    
+    private func rename_selected() -> Void {
+        if !potextfield.isEmpty && potextfield.rangeOfCharacter(from: CharacterSet(charactersIn: String(invalidFS))) == nil {
+            _ = mv("\(directoryPath.path)/\(selpath)", "\(directoryPath.path)/\(potextfield)")
+            //haptfeedback(1)
+            activeSheet = nil
+        } else {
+            //haptfeedback(2)
+        }
+    }
+    
+    private func remove_selected() -> Void {
+        _ = rm(selpath)
+        //haptfeedback(1)
+        activeSheet = nil
+    }
+    
+    private func dissmiss_sheet() -> Void {
+        activeSheet = nil
+    }
+    
+    private func gtypo(item: String) -> Bool {
+        let suffix = gsuffix(from: item)
+        switch(suffix) {
+        case "png", "jpg", "jpeg", "PNG", "JPG":
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 struct ImageView: View {
@@ -395,6 +408,18 @@ private func gProperty(_ fileURL: URL) -> FileProperty {
            property.symbol = "nxm"
            property.color = Color.blue
            property.size = 5
+       case "c":
+           property.symbol = "c"
+           property.color = Color.gray
+           property.size = 10
+       case "lua":
+           property.symbol = "lua"
+           property.color = Color.orange
+           property.size = 5
+       case "py":
+           property.symbol = "py"
+           property.color = Color.green
+           property.size = 8
        default:
            property.color = Color.primary
    }
