@@ -93,7 +93,7 @@ void StdlibExit(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
     //PlatformExit(Parser->pc, Param[0]->Val->Integer);
-    longjmp(Parser->pc->PicocExitBuf, 1);
+    longjmp(Parser->pc->PicocRealExitBuf, 1);
 }
 
 void StdlibGetenv(struct ParseState *Parser, struct Value *ReturnValue,

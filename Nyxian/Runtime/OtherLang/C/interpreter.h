@@ -502,6 +502,7 @@ struct Picoc_Struct {
     /* exit longjump buffer */
 #if defined(UNIX_HOST) || defined(WIN32)
     jmp_buf PicocExitBuf;
+    jmp_buf PicocRealExitBuf;
 #endif
 
     /* string table */
