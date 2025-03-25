@@ -48,12 +48,46 @@ int o_lua(NSString *path) {
         return 1;
     }
 
-    // Retrieve the value of `x` from the Lua script
-    lua_getglobal(L, "x");
-    if (lua_isnumber(L, -1)) {
-        int x = (int)lua_tointeger(L, -1);
-        printf("Value of x: %d\n", x);
+    // Close the Lua state
+    lua_close(L);
+
+    // Restore the original working directory
+    if (chdir(original_dir) != 0) {
+        perror("Failed to restore directory");
+        return 1;
     }
+
+    return 0;
+}
+
+
+int o_lua_repl(NSString *path) {
+    // Save the current working directory
+    char original_dir[FILENAME_MAX];
+    if (getcwd(original_dir, sizeof(original_dir)) == NULL) {
+        perror("Failed to get current directory");
+        return 1;
+    }
+
+    // Change the current working directory to the script's directory
+    if (chdir([path UTF8String]) != 0) {
+        perror("Failed to change directory");
+        return 1;
+    }
+
+    // Create a new Lua state
+    lua_State *L = luaL_newstate();
+
+    // Load Lua standard libraries
+    luaL_openlibs(L);
+
+    
+    // Load Version
+    printf("%s\n", LUA_COPYRIGHT);
+    
+    // Load and execute the Lua script from the file
+    void doREPL (lua_State *L);
+    doREPL(L);
 
     // Close the Lua state
     lua_close(L);
