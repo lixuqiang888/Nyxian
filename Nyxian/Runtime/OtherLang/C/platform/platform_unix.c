@@ -14,6 +14,7 @@ static int gEnableDebugger = false;
 
 /* mark where to end the program for platforms which require this */
 jmp_buf PicocExitBuf;
+jmp_buf PicocExitRBuf;
 
 #ifdef DEBUGGER
 #include <signal.h>
@@ -63,7 +64,7 @@ char *fgetsnyxian(char *buffer, int size) {
                 }
             } else if (seq[0] == '\n' || seq[0] == '\r') {
                 buffer[cursor] = seq[0];
-                putchar(seq[0]);
+                //putchar(seq[0]);
                 break;
             } else {
                 buffer[cursor] = seq[0];
@@ -86,7 +87,9 @@ char *PlatformGetLine(char *Buf, int MaxLen, const char *Prompt)
         printf("%s", Prompt);
 
     fflush(stdout);
-    return fgetsnyxian(Buf, MaxLen);
+    char *buffer = fgetsnyxian(Buf, MaxLen);
+    printf("\n");
+    return buffer;
 }
 
 /* get a character of interactive input */
