@@ -52,8 +52,8 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "-com.apple.CoreData.SQLDebug"
-            value = "0"
+            key = "OS_ACTIVITY_MODE"
+            value = "disabled"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
