@@ -618,6 +618,43 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
     return fileObject;
 }
 
+- (id)fileno:(JSValue*)fileObject
+{
+    // We check if the user passed a file structure
+    if(fileObject == NULL)
+    {
+        // As the user hasnt we throw an error
+        return JS_THROW_ERROR(EW_INVALID_INPUT);
+    }
+    
+    // We try to get the file pointer based on the passed file structure
+    FILE *file = restoreFILE(fileObject);
+    
+    // We check is the operation suceeded
+    if(file == NULL)
+    {
+        // As it didnt we throw an error
+        return JS_THROW_ERROR(EW_NULL_POINTER);
+    }
+    
+    // We need the file descriptor to check is its in the Nyxian Runtime safety array
+    int fd = fileno(file);
+    
+    if(fd == -1)
+    {
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    }
+    
+    // We check if the file descriptor is in the Nyxian Runtime safety array
+    if(![self isFDThere:fd critical:YES])
+    {
+        // We throw an error is it is not in the Nyxian Runtime safety array
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+    
+    return @(fd);
+}
+
 ///
 /// Functions for basic directory I/O
 ///

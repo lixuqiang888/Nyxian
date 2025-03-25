@@ -83,6 +83,7 @@ JSExportAs(chmod,   - (id)chmod:(NSString*)path flags:(UInt16)flags             
 /// file pointers.
 ///
 - (id)fclose:(JSValue*)fileObject;
+- (id)fileno:(JSValue*)fileObject;
 JSExportAs(fopen,   - (id)fopen:(NSString*)path mode:(NSString*)mode                                    );
 JSExportAs(freopen, - (id)freopen:(NSString*)path mode:(NSString*)mode fileObject:(JSValue*)fileObject  );
 
