@@ -204,6 +204,31 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
                     sheet = false
                 }
             }
+        
+        
+        ///
+        /// The REPLs are beginning here
+        ///
+        case "c_repl999":
+            // C REPL
+            DispatchQueue.global(qos: .utility).async {
+                c_repl(URL(fileURLWithPath: path).deletingLastPathComponent().path)
+                DispatchQueue.main.sync {
+                    stdin_hook_cleanup()
+                    tview.cleanupStdout()
+                    sheet = false
+                }
+            }
+        case "lua_repl999":
+            // C REPL
+            DispatchQueue.global(qos: .utility).async {
+                o_lua_repl(URL(fileURLWithPath: path).deletingLastPathComponent().path)
+                DispatchQueue.main.sync {
+                    stdin_hook_cleanup()
+                    tview.cleanupStdout()
+                    sheet = false
+                }
+            }
         default:
             stdin_hook_cleanup()
             tview.cleanupStdout()

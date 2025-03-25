@@ -211,6 +211,20 @@ struct FileList: View {
                             }
                         }
                     }
+                    Section {
+                        Button(action: {
+                            path = "command.c_repl999"
+                            sheet = true
+                        }) {
+                            Label("C REPL", systemImage: "apple.terminal.fill")
+                        }
+                        Button(action: {
+                            path = "command.lua_repl999"
+                            sheet = true
+                        }) {
+                            Label("Lua REPL", systemImage: "apple.terminal.fill")
+                        }
+                    }
                 } label: {
                     Label("", systemImage: "ellipsis.circle")
                 }
