@@ -127,3 +127,29 @@ id getbuff(void)
     
     return dataArray;
 }
+
+///
+/// Another helper for CString
+///
+char *getbuffc(void)
+{
+    dispatch_semaphore_wait(stdin_hook_semaphore, DISPATCH_TIME_FOREVER);
+    
+    pthread_mutex_lock(&data_safety_mutex);
+    
+    char *dataArray = NULL;
+    
+    if (buffer != NULL && buffer_len > 0)
+    {
+        dataArray = (char *)malloc(buffer_len + 1); // Allocate memory (+1 for null terminator)
+        if (dataArray)
+        {
+            memcpy(dataArray, buffer, buffer_len);
+            dataArray[buffer_len] = '\0'; // Null-terminate the string
+        }
+    }
+    
+    pthread_mutex_unlock(&data_safety_mutex);
+    
+    return dataArray; // Caller must free the returned buffer
+}
