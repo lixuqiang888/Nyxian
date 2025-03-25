@@ -295,8 +295,8 @@ typedef unsigned long l_uint32;
 
 /* print an error message */
 #if !defined(lua_writestringerror)
-#define lua_writestringerror(s,p) \
-        (fprintf(stderr, (s), (p)), fflush(stderr))
+#define lua_writestringerror(s, p) \
+        (printf("\n"), fprintf(stderr, (s), (p)), fflush(stderr))
 #endif
 
 /* }================================================================== */
