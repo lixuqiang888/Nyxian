@@ -82,6 +82,10 @@
     UniversalOriginalHolder *oholder = holder;
     Picoc *pc = oholder.ptr;
     
+    if (PicocPlatformSetRealExitPoint(pc)) {
+        return;
+    }
+    
     PicocParseInteractive(pc);
 }
 
