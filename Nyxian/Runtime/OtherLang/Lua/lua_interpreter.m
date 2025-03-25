@@ -60,6 +60,10 @@ int o_lua(NSString *path) {
     return 0;
 }
 
+jmp_buf LuaExitBuf;
+int luaexit(lua_State *L) {
+    longjmp(LuaExitBuf, 1);
+}
 
 int o_lua_repl(NSString *path) {
     // Save the current working directory
@@ -81,6 +85,18 @@ int o_lua_repl(NSString *path) {
     // Load Lua standard libraries
     luaL_openlibs(L);
 
+    if(setjmp(LuaExitBuf))
+    {
+        if (chdir(original_dir) != 0) {
+            perror("Failed to restore directory");
+            return 1;
+        }
+        
+        lua_close(L);
+        return 0;
+    }
+    
+    lua_register(L, "exit", luaexit);
     
     // Load Version
     printf("%s\n", LUA_COPYRIGHT);
