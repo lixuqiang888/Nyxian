@@ -25,10 +25,9 @@ int c_interpret(NSString *files, NSString *proot)
     chdir([proot UTF8String]);
     
     int ParamCount = 1;
-    int StackSize = getenv("STACKSIZE") ? atoi(getenv("STACKSIZE")) : PICOC_STACK_SIZE;
     Picoc pc;
 
-    PicocInitialize(&pc, StackSize);
+    PicocInitialize(&pc, PICOC_STACK_SIZE);
 
     if (PicocPlatformSetExitPoint(&pc)) {
         PicocCleanup(&pc);
@@ -54,7 +53,7 @@ void c_repl(NSString *proot)
     chdir([proot UTF8String]);
     
     Picoc pc;
-    PicocInitialize(&pc, 1024);
+    PicocInitialize(&pc, PICOC_STACK_SIZE);
     
     if (PicocPlatformSetRealExitPoint(&pc)) {
         PicocCleanup(&pc);
