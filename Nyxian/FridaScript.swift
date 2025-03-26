@@ -28,6 +28,9 @@ let RootPath: String = "\(NSHomeDirectory())/Documents"
 
 @main
 struct FJSApp: App {
+    init() {
+        UIInit(type: 1)
+    }
     var body: some Scene {
         WindowGroup {
             ContentView()

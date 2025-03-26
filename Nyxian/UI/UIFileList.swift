@@ -276,7 +276,7 @@ struct FileList: View {
             ImageView(imagePath: $selpath, fbool: $fbool)
         }
         .fullScreenCover(isPresented: $sheet) {
-            TerminalViewUIViewRepresentable(sheet: $sheet, path: path)
+            HeadTerminalView(sheet: $sheet, path: path, title: "Terminal")
         }
         .sheet(isPresented: $sbool) {
             SettingsView()

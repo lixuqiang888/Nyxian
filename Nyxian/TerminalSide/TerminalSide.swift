@@ -34,6 +34,8 @@ let inPipe = Pipe()
 var originalStdoutFD: Int32 = dup(STDOUT_FILENO)
 var originalStderrFD: Int32 = dup(STDERR_FILENO)
 
+var changeTerminalTitle: (String) -> Void = { _ in }
+
 // i love SwiftTerm
 class FridaTerminalView: TerminalView, TerminalViewDelegate {
     public override init (
@@ -43,6 +45,7 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
         super.init (frame: frame)
         terminalDelegate = self
         self.setTerminalTitle(source: self, title: "Nyxian")
+        self.keyboardAppearance = .dark
         hookStdout()
         self.isOpaque = false;
         tcom_set_size(Int32(self.getTerminal().rows), Int32(self.getTerminal().cols))
@@ -110,7 +113,7 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     }
     
     func setTerminalTitle(source: SwiftTerm.TerminalView, title: String) {
-        
+        changeTerminalTitle(title)
     }
     
     func sizeChanged(source: SwiftTerm.TerminalView, newCols: Int, newRows: Int) {
@@ -250,5 +253,44 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         tv.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
         tv.keyboardLayoutGuide.topAnchor.constraint(equalTo: tv.bottomAnchor).isActive = true
+    }
+}
+
+struct HeadTerminalView: View {
+    @Binding var sheet: Bool
+    @State var path: String
+    @State var title: String
+    
+    init(sheet: Binding<Bool>, path: String, title: String) {
+        self._sheet = sheet
+        self._path = State(initialValue: path)
+        self._title = State(initialValue: title)
+
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor.black
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.shadowColor = UIColor.gray
+        
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
+    var body: some View {
+        NavigationView {
+            TerminalViewUIViewRepresentable(sheet: $sheet, path: path)
+                .navigationTitle(title)
+                .navigationBarTitleDisplayMode(.inline)
+                .background(Color.black.edgesIgnoringSafeArea(.all))
+                .navigationViewStyle(.stack)
+                .onAppear {
+                    changeTerminalTitle = { ntitle in
+                        _title.wrappedValue = ntitle
+                    }
+                }
+                .onDisappear {
+                    UIInit(type: 1)
+                }
+        }
     }
 }
