@@ -208,7 +208,7 @@ THE SOFTWARE.
                 }
             }
             .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
