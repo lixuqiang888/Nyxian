@@ -1,5 +1,5 @@
 {
-  "originHash" : "f03576df09b68a493def88ad4aeed5ec784b353b3d345447d35c82d54a49caba",
+  "originHash" : "14d1d9309c07dfd6729b24fdc2de15111fcc4360fe709b9acd1e86bf6f081327",
   "pins" : [
     {
       "identity" : "fluidgradient",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "1fad339aab99cf2136ce6bf8c32da3265b2e85e5",
         "version" : "0.5.1"
+      }
+    },
+    {
+      "identity" : "swifter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/httpswift/swifter.git",
+      "state" : {
+        "revision" : "9483a5d459b45c3ffd059f7b55f9638e268632fd",
+        "version" : "1.5.0"
       }
     },
     {
