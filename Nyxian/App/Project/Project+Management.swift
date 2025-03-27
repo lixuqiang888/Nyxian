@@ -8,11 +8,21 @@
 import SwiftUI
 import Foundation
 
-struct Project: Identifiable, Equatable {
+class Project: Identifiable, Equatable, ObservableObject {
     let id: UUID = UUID()
-    let name: String
-    let type: String
-    let path: String
+    @Published var name: String
+    @Published var type: String
+    @Published var path: String
+    
+    init(name: String, path: String, type: String) {
+        self.name = name
+        self.path = path
+        self.type = type
+    }
+    
+    static func ==(lhs: Project, rhs: Project) -> Bool {
+        return lhs.name == rhs.name && lhs.path == rhs.path && lhs.type == rhs.type
+    }
 }
 
 func MakeMiniProject(Name: String, type: Int) -> Int {
@@ -83,7 +93,7 @@ func GetProjectsBind(Projects: Binding<[Project]>) -> Void {
                         }
                     }
 
-                    let newProject = Project(name: NAME, type: TYPE, path: Item)
+                    let newProject = Project(name: NAME, path: Item, type: TYPE)
 
                     if let existingIndex = currentProjects.firstIndex(where: { $0.path == Item }) {
                         let existingProject = currentProjects[existingIndex]
