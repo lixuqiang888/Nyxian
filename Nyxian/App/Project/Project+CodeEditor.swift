@@ -22,7 +22,6 @@
  SOFTWARE.
  */
 
-// MARK: Code Editor
 import AudioToolbox
 import SwiftUI
 import UIKit
@@ -33,6 +32,7 @@ import TreeSitterC
 import TreeSitterPython
 import TreeSitterLua
 import TreeSitterXML
+import TreeSitterHTML
 
 enum HighlightName: String {
     case comment
@@ -49,6 +49,7 @@ enum HighlightName: String {
     case type
     case variable
     case variableBuiltin = "variable.builtin"
+    case tag
 
     init?(_ rawHighlightName: String) {
         var comps = rawHighlightName.split(separator: ".")
@@ -196,6 +197,8 @@ class NyxianTheme: Theme {
             return colorPunctuation
         case .type:
             return colorType
+        case .tag:
+            return colorString
         default:
             return textColor
         }
@@ -412,11 +415,20 @@ struct NeoEditor: UIViewRepresentable {
             let language = TreeSitterLanguage(tree_sitter_python(), highlightsQuery: highlightsQuery, injectionsQuery: nil)
             let languageMode = TreeSitterLanguageMode(language: language)
             textView.setLanguageMode(languageMode)
+            break
         case "xml","plist":
             let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/xml.scm"))
             let language = TreeSitterLanguage(tree_sitter_xml(), highlightsQuery: highlightsQuery, injectionsQuery: nil)
             let languageMode = TreeSitterLanguageMode(language: language)
             textView.setLanguageMode(languageMode)
+            break
+        case "html":
+            let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/html.scm"))
+            let injectionsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/html_inj.scm"))
+            let language = TreeSitterLanguage(tree_sitter_html(), highlightsQuery: highlightsQuery, injectionsQuery: injectionsQuery)
+            let languageMode = TreeSitterLanguageMode(language: language)
+            textView.setLanguageMode(languageMode)
+            break
         default:
             break
         }
