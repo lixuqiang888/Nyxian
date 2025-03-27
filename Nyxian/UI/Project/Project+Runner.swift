@@ -23,13 +23,14 @@
  */
 
 import SwiftUI
+import Foundation
 
-// FileList(title: "Nyxian", directoryPath: URL(fileURLWithPath: RootPath), actpath: $actpath, action: $action)
-
-struct ContentView: View {
-    @State private var actpath: String = ""
-    @State private var action: Int = 0
+struct RunnerView: View {
+    @State var project: Project
     var body: some View {
-        ProjectView()
+        Text("\(project.id)")
+        Text("\(project.name)")
+        Text("\(project.path)")
+        Text("\(project.type)")
     }
 }

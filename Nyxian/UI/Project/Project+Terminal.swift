@@ -140,7 +140,23 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
 
 struct TerminalViewUIViewRepresentable: UIViewRepresentable {
     @Binding var sheet: Bool
-    @State var path: String
+    @State var project: Project
+    @Binding var title: String
+    
+    func didExit(tview: FridaTerminalView) {
+        print("\nPress any key to continue\n");
+        DispatchQueue.main.sync {
+            tview.isUserInteractionEnabled = true
+            _ = tview.becomeFirstResponder()
+        }
+        getchar()
+        
+        DispatchQueue.main.sync {
+            stdin_hook_cleanup()
+            tview.cleanupStdout()
+            sheet = false
+        }
+    }
     
     func makeUIView(context: Context) -> some UIView {
         // mama view
@@ -151,91 +167,40 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         let tview: FridaTerminalView = FridaTerminalView(frame: view.bounds) //TerminalView(frame: view.bounds)
         view.addSubview(tview)
         
+        // setting up keyboard so it wont bother us
         setupKeyboard(tv: tview, view: view)
         
-        let suffix = gsuffix(from: path)
-        
-        switch(suffix)
-        {
-        case "nx":
-            // Nyxian
-            UISurface_Handoff_Slave(view)
-            DispatchQueue.global(qos: .utility).async {
+        // now we execute
+        let execution_queue: DispatchQueue = DispatchQueue(label: "\(UUID())")
+        execution_queue.async {
+            switch(project.type)
+            {
+            case "1": // Nyxian
+                // Hand off mamaview to UISurface
+                UISurface_Handoff_Slave(view)
+                
+                // allocate Nyxian Runtime
                 let runtime: NYXIAN_Runtime = NYXIAN_Runtime()
-                runtime.run(path)
-                print("\nPress any key to continue\n");
-                DispatchQueue.main.sync {
-                    tview.isUserInteractionEnabled = true
-                    _ = tview.becomeFirstResponder()
-                }
-                getchar()
-                DispatchQueue.main.sync {
-                    stdin_hook_cleanup()
-                    tview.cleanupStdout()
-                    sheet = false
-                }
+                
+                // run code
+                runtime.run("\(NSHomeDirectory())/Documents/\(project.path)/main.nx")
+                
+                didExit(tview: tview)
+                break
+            case "2": // C
+                let c_files: [String] = FindFilesStack("\(NSHomeDirectory())/Documents/\(project.path)", [".c"], [])
+                c_interpret(c_files.joined(separator: " "), "\(NSHomeDirectory())/Documents/\(project.path)")
+                
+                didExit(tview: tview)
+                break
+            case "3": // Lua
+                o_lua("\(NSHomeDirectory())/Documents/\(project.path)/main.lua")
+                
+                didExit(tview: tview)
+                break
+            default:
+                break
             }
-        case "c":
-            // C
-            DispatchQueue.global(qos: .utility).async {
-                c_interpret(path + " ", URL(fileURLWithPath: path).deletingLastPathComponent().path)
-                print("\nPress any key to continue\n");
-                DispatchQueue.main.sync {
-                    tview.isUserInteractionEnabled = true
-                    _ = tview.becomeFirstResponder()
-                }
-                getchar()
-                DispatchQueue.main.sync {
-                    stdin_hook_cleanup()
-                    tview.cleanupStdout()
-                    sheet = false
-                }
-            }
-        case "lua":
-            // Lua
-            DispatchQueue.global(qos: .utility).async {
-                o_lua(path);
-                print("\nPress any key to continue\n");
-                DispatchQueue.main.sync {
-                    tview.isUserInteractionEnabled = true
-                    _ = tview.becomeFirstResponder()
-                }
-                getchar()
-                DispatchQueue.main.sync {
-                    stdin_hook_cleanup()
-                    tview.cleanupStdout()
-                    sheet = false
-                }
-            }
-        
-        
-        ///
-        /// The REPLs are beginning here
-        ///
-        case "c_repl999":
-            // C REPL
-            DispatchQueue.global(qos: .utility).async {
-                c_repl(URL(fileURLWithPath: path).deletingLastPathComponent().path)
-                DispatchQueue.main.sync {
-                    stdin_hook_cleanup()
-                    tview.cleanupStdout()
-                    sheet = false
-                }
-            }
-        case "lua_repl999":
-            // C REPL
-            DispatchQueue.global(qos: .utility).async {
-                o_lua_repl(URL(fileURLWithPath: path).deletingLastPathComponent().path)
-                DispatchQueue.main.sync {
-                    stdin_hook_cleanup()
-                    tview.cleanupStdout()
-                    sheet = false
-                }
-            }
-        default:
-            stdin_hook_cleanup()
-            tview.cleanupStdout()
-            sheet = false
         }
         
         return view
@@ -258,13 +223,11 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
 
 struct HeadTerminalView: View {
     @Binding var sheet: Bool
-    @State var path: String
-    @State var title: String
+    @State var title: String = ""
+    @State var project: Project
     
-    init(sheet: Binding<Bool>, path: String, title: String) {
+    init(sheet: Binding<Bool>, project: Project) {
         self._sheet = sheet
-        self._path = State(initialValue: path)
-        self._title = State(initialValue: title)
 
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -274,11 +237,13 @@ struct HeadTerminalView: View {
         
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        
+        self.project = project
     }
     
     var body: some View {
         NavigationView {
-            TerminalViewUIViewRepresentable(sheet: $sheet, path: path)
+            TerminalViewUIViewRepresentable(sheet: $sheet, project: project, title: $title)
                 .navigationTitle(title)
                 .navigationBarTitleDisplayMode(.inline)
                 .background(Color.black.edgesIgnoringSafeArea(.all))

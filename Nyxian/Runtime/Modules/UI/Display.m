@@ -224,6 +224,28 @@
     }
 }
 
+- (id)attachMouse
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        CGRect screenSize = [[UIScreen mainScreen] bounds];
+        CGFloat screenWidth = screenSize.size.width;
+        CGFloat screenHeight = screenSize.size.height;
+
+        _tracker = [[TouchTracker alloc] initWithView:self scale:(screenWidth / _screenWidth)];
+        [_tracker startTracking];
+    });
+    
+    return _tracker;
+}
+
+- (void)detachMouse
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [_tracker stopTracking];
+        _tracker = NULL;
+    });
+}
+
 - (void)deleteSavedArrayWithIdentifier:(NSNumber *)identifier {
     [savedArrays removeObjectForKey:identifier];
 }

@@ -1,6 +1,6 @@
 # ToDo
 
-- [ ] Traditional Projects like in FridaCodeManager.
+- [x] Traditional Projects like in FridaCodeManager.
 - [ ] Code Editor customization using themes and saving them like in CustCalc.
 - [ ] Better Icon Design for the FileLists.
 - [ ] UIFileList rewrite specifically to make things more advanced and bring them to the standard of SeanIsTethereds coding skills of 2025. And add safety and confirmation for file overwrites.

@@ -209,6 +209,8 @@ THE SOFTWARE.
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
+            .accentColor(.primary)
+            .tint(.primary)
         }
     }
 }

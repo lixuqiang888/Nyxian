@@ -25,6 +25,7 @@
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <UIKit/UIKit.h>
+#import <Runtime/Modules/UI/Mouse.h>
 
 @protocol NyxianDisplayExport <JSExport>
 
@@ -48,6 +49,9 @@ JSExportAs(colorPixel,
 
 - (void)undraw;
 
+- (id)attachMouse;
+- (void)detachMouse;
+
 @end
 
 @interface NyxianDisplay : UIView <NyxianDisplayExport>
@@ -55,6 +59,7 @@ JSExportAs(colorPixel,
 @property (nonatomic,readonly) int screenWidth;
 @property (nonatomic,readonly) int screenHeight;
 @property (nonatomic, assign) NSInteger uniqueID;
+@property (nonatomic, strong) TouchTracker *tracker;
 
 - (instancetype)initWithFrame:(CGRect)frame screenWidth:(int)width screenHeight:(int)height;
 - (void)setPixelAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex;

@@ -79,6 +79,7 @@ struct FileList: View {
     @State private var sbool: Bool = false
     @Binding var actpath: String
     @Binding var action: Int
+    var buildv: Binding<Bool>?
     
     @State private var poheader: String = ""
     @State private var potextfield: String = ""
@@ -115,16 +116,6 @@ struct FileList: View {
                         }
                     }
                     .contextMenu {
-                        if gsuffix(from: item.lastPathComponent) == "nx" || gsuffix(from: item.lastPathComponent) == "c" || gsuffix(from: item.lastPathComponent) == "lua" {
-                            Section  {
-                                Button(action: {
-                                    path = item.path
-                                    sheet = true
-                                }) {
-                                    Label("Run Code", systemImage: "bolt.fill")
-                                }
-                            }
-                        }
                         Section {
                             Button(action: {
                                 selpath = item.lastPathComponent
@@ -170,9 +161,6 @@ struct FileList: View {
         }
         .refreshable {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                withAnimation {
-                    files = []
-                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
                     bindLoadFiles(directoryPath: directoryPath, files: $files)
                 }
@@ -189,6 +177,15 @@ struct FileList: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
+                    if let buildv = buildv {
+                        Section {
+                            Button(action: {
+                                buildv.wrappedValue = true
+                            }) {
+                                Label("Run", systemImage: "play.fill")
+                            }
+                        }
+                    }
                     Section {
                         Button(action: { activeSheet = .create }) {
                             Label("Create", systemImage: "doc.fill.badge.plus")
@@ -211,31 +208,8 @@ struct FileList: View {
                             }
                         }
                     }
-                    Section {
-                        Button(action: {
-                            path = "command.c_repl999"
-                            sheet = true
-                        }) {
-                            Label("C REPL", systemImage: "apple.terminal.fill")
-                        }
-                        Button(action: {
-                            path = "command.lua_repl999"
-                            sheet = true
-                        }) {
-                            Label("Lua REPL", systemImage: "apple.terminal.fill")
-                        }
-                    }
                 } label: {
                     Label("", systemImage: "ellipsis.circle")
-                }
-            }
-            ToolbarItem(placement: .navigationBarLeading) {
-                if(title != nil) {
-                    Button(action: {
-                        sbool = true
-                    }) {
-                        Label("", systemImage: "gear")
-                    }
                 }
             }
         }
@@ -274,12 +248,6 @@ struct FileList: View {
         }
         .fullScreenCover(isPresented: $fbool) {
             ImageView(imagePath: $selpath, fbool: $fbool)
-        }
-        .fullScreenCover(isPresented: $sheet) {
-            HeadTerminalView(sheet: $sheet, path: path, title: "Terminal")
-        }
-        .sheet(isPresented: $sbool) {
-            SettingsView()
         }
     }
     

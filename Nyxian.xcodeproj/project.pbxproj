@@ -10,6 +10,7 @@
 		AF1015D52D92EEB6009F362F /* TreeSitterLua in Frameworks */ = {isa = PBXBuildFile; productRef = AF1015D42D92EEB6009F362F /* TreeSitterLua */; };
 		AF14830E2D8DE2700006B509 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = AF14830D2D8DE2700006B509 /* FluidGradient */; };
 		AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = AF4836262D8AF4AA00830CED /* SwiftTerm */; };
+		AF504BD72D956849005FA8D2 /* TreeSitterXML in Frameworks */ = {isa = PBXBuildFile; productRef = AF504BD62D956849005FA8D2 /* TreeSitterXML */; };
 		AF51435D2D92E9B70058C41D /* TreeSitterPython in Frameworks */ = {isa = PBXBuildFile; productRef = AF51435C2D92E9B70058C41D /* TreeSitterPython */; };
 		AFB1651D2D91A36300872EDB /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1651C2D91A36300872EDB /* Runestone */; };
 		AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */ = {isa = PBXBuildFile; productRef = AFB165232D91A4AB00872EDB /* TreeSitterJavaScript */; };
@@ -34,6 +35,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */,
+				AF504BD72D956849005FA8D2 /* TreeSitterXML in Frameworks */,
 				AFB1651D2D91A36300872EDB /* Runestone in Frameworks */,
 				AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */,
 				AFB1653D2D91BBEB00872EDB /* TreeSitterC in Frameworks */,
@@ -89,6 +91,7 @@
 				AFB1653C2D91BBEB00872EDB /* TreeSitterC */,
 				AF51435C2D92E9B70058C41D /* TreeSitterPython */,
 				AF1015D42D92EEB6009F362F /* TreeSitterLua */,
+				AF504BD62D956849005FA8D2 /* TreeSitterXML */,
 			);
 			productName = FJS;
 			productReference = AFBE41752D85E4B500315155 /* Nyxian.app */;
@@ -127,6 +130,7 @@
 				AFB1653B2D91BBEB00872EDB /* XCRemoteSwiftPackageReference "tree-sitter-c" */,
 				AF51435B2D92E9B70058C41D /* XCRemoteSwiftPackageReference "tree-sitter-python" */,
 				AF1015D32D92EEB6009F362F /* XCRemoteSwiftPackageReference "tree-sitter-lua" */,
+				AF504BD52D956849005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-xml" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AFBE41762D85E4B500315155 /* Products */;
@@ -409,6 +413,14 @@
 				minimumVersion = 1.2.5;
 			};
 		};
+		AF504BD52D956849005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-xml" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tree-sitter-grammars/tree-sitter-xml.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		AF51435B2D92E9B70058C41D /* XCRemoteSwiftPackageReference "tree-sitter-python" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tree-sitter/tree-sitter-python.git";
@@ -458,6 +470,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AF4836252D8AF4AA00830CED /* XCRemoteSwiftPackageReference "SwiftTerm" */;
 			productName = SwiftTerm;
+		};
+		AF504BD62D956849005FA8D2 /* TreeSitterXML */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF504BD52D956849005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-xml" */;
+			productName = TreeSitterXML;
 		};
 		AF51435C2D92E9B70058C41D /* TreeSitterPython */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -32,6 +32,7 @@ import TreeSitterJavaScript
 import TreeSitterC
 import TreeSitterPython
 import TreeSitterLua
+import TreeSitterXML
 
 enum HighlightName: String {
     case comment
@@ -409,6 +410,11 @@ struct NeoEditor: UIViewRepresentable {
         case "py":
             let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/py.scm"))
             let language = TreeSitterLanguage(tree_sitter_python(), highlightsQuery: highlightsQuery, injectionsQuery: nil)
+            let languageMode = TreeSitterLanguageMode(language: language)
+            textView.setLanguageMode(languageMode)
+        case "xml","plist":
+            let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/xml.scm"))
+            let language = TreeSitterLanguage(tree_sitter_xml(), highlightsQuery: highlightsQuery, injectionsQuery: nil)
             let languageMode = TreeSitterLanguageMode(language: language)
             textView.setLanguageMode(languageMode)
         default:
