@@ -845,9 +845,6 @@ enum LexToken LexGetRawToken(struct ParseState *Parser, struct Value **Value,
             Parser->Pos += TOKEN_DATA_OFFSET;
     }
 
-#ifdef DEBUG_LEXER
-    printf("Got token=%02x inc=%d pos=%d\n", Token, IncPos, Parser->CharacterPos);
-#endif
     assert(Token >= TokenNone && Token <= TokenEndOfFunction);
     return Token;
 }
@@ -943,112 +940,6 @@ void LexHashEndif(struct ParseState *Parser)
     if (Parser->HashIfEvaluateToLevel > Parser->HashIfLevel)
         Parser->HashIfEvaluateToLevel = Parser->HashIfLevel;
 }
-
-#if 0 /* useful for debug */
-void LexPrintToken(enum LexToken Token)
-{
-    char* TokenNames[] = {
-        /* 0x00 */  "None",
-        /* 0x01 */  "Comma",
-        /* 0x02 */  "Assign",
-                    "AddAssign",
-                    "SubtractAssign",
-                    "MultiplyAssign",
-                    "DivideAssign",
-                    "ModulusAssign",
-        /* 0x08 */  "ShiftLeftAssign",
-                    "ShiftRightAssign",
-                    "ArithmeticAndAssign",
-                    "ArithmeticOrAssign",
-                    "ArithmeticExorAssign",
-        /* 0x0d */  "QuestionMark",
-                    "Colon",
-        /* 0x0f */  "LogicalOr",
-        /* 0x10 */  "LogicalAnd",
-        /* 0x11 */  "ArithmeticOr",
-        /* 0x12 */  "ArithmeticExor",
-        /* 0x13 */  "Ampersand",
-        /* 0x14 */  "Equal",
-                    "NotEqual",
-        /* 0x16 */  "LessThan",
-                    "GreaterThan",
-                    "LessEqual",
-                    "GreaterEqual",
-        /* 0x1a */  "ShiftLeft",
-                    "ShiftRight",
-        /* 0x1c */  "Plus",
-                    "Minus",
-        /* 0x1e */  "Asterisk",
-                    "Slash",
-                    "Modulus",
-        /* 0x21 */  "Increment",
-                    "Decrement",
-                    "UnaryNot",
-                    "UnaryExor",
-                    "Sizeof",
-                    "Cast",
-        /* 0x27 */  "LeftSquareBracket",
-                    "RightSquareBracket",
-                    "Dot",
-                    "Arrow",
-        /* 0x2b */  "OpenBracket",
-                    "CloseBracket",
-        /* 0x2d */  "Identifier",
-                    "IntegerConstant",
-                    "FPConstant",
-                    "StringConstant",
-                    "CharacterConstant",
-        /* 0x32 */  "Semicolon",
-                    "Ellipsis",
-        /* 0x34 */  "LeftBrace",
-                    "RightBrace",
-        /* 0x36 */  "IntType",
-                    "CharType",
-                    "FloatType",
-                    "DoubleType",
-                    "VoidType",
-                    "EnumType",
-        /* 0x3c */  "LongType",
-                    "SignedType",
-                    "ShortType",
-                    "StaticType",
-                    "AutoType",
-                    "RegisterType",
-                    "ExternType",
-                    "StructType",
-                    "UnionType",
-                    "UnsignedType",
-                    "Typedef",
-        /* 0x46 */  "Continue",
-                    "Do",
-                    "Else",
-                    "For",
-                    "Goto",
-                    "If",
-                    "While",
-                    "Break",
-                    "Switch",
-                    "Case",
-                    "Default",
-                    "Return",
-        /* 0x52 */
-                    "HashDefine",
-                    "HashInclude",
-                    "HashIf",
-                    "HashIfdef",
-                    "HashIfndef",
-                    "HashElse",
-                    "HashEndif",
-        /* 0x59 */  "New",
-                    "Delete",
-        /* 0x5b */  "OpenMacroBracket",
-        /* 0x5c */  "EOF",
-                    "EndOfLine",
-                    "EndOfFunction"
-    };
-    printf("{%s}", TokenNames[Token]);
-}
-#endif
 
 /* get the next token given a parser state, pre-processing as we go */
 enum LexToken LexGetToken(struct ParseState *Parser, struct Value **Value,
