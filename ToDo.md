@@ -9,7 +9,7 @@
 - [ ] Adding more settings to customize the way you can interact with Nyxian.
 - [ ] Making a Stdout hook to stop these anoying messages.
 - [ ] Elevating low levelness by removing putchar because you can directly write to stdout
-- [ ] Adding website development.
+- [x] Adding website development.
 - [ ] Adding Sean16 development for the die hard fans.
 - [ ] Enhancing Sean16 and adding it to the LangBridge for fun.
 - [ ] Adding Lua to the langbridge.
