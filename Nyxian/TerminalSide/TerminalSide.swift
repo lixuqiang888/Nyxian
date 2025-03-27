@@ -282,7 +282,6 @@ struct HeadTerminalView: View {
                 .navigationTitle(title)
                 .navigationBarTitleDisplayMode(.inline)
                 .background(Color.black.edgesIgnoringSafeArea(.all))
-                .navigationViewStyle(.stack)
                 .onAppear {
                     changeTerminalTitle = { ntitle in
                         _title.wrappedValue = ntitle
@@ -292,5 +291,6 @@ struct HeadTerminalView: View {
                     UIInit(type: 1)
                 }
         }
+        .navigationViewStyle(.stack)
     }
 }
