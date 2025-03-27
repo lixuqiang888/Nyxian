@@ -29,7 +29,7 @@
 @protocol NyxianDisplayExport <JSExport>
 
 JSExportAs(setPixel,
-           - (void)setPixelAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex
+- (void)setPixelMainAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex
            );
 - (void)redraw;
 
@@ -41,6 +41,9 @@ JSExportAs(drawGraph,
            );
 JSExportAs(unstoreGraph,
 - (void)deleteSavedArrayWithIdentifier:(NSNumber *)identifier
+           );
+JSExportAs(colorPixel,
+- (NSInteger)colorIndexAtPixelX:(NSInteger)x y:(NSInteger)y
            );
 
 - (void)undraw;

@@ -113,6 +113,14 @@
     //});
 }
 
+- (void)setPixelMainAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex {
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight && colorIndex < COLOR_COUNT) {
+            pixelData[x][y] = colorIndex;
+        }
+    });
+}
+
 - (UIColor *)colorAtPixelX:(NSInteger)x y:(NSInteger)y {
     if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight) {
         NSInteger colorIndex = pixelData[x][y];
@@ -131,10 +139,15 @@
 }
 
 - (NSInteger)colorIndexAtPixelX:(NSInteger)x y:(NSInteger)y {
-    if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight) {
-        return pixelData[x][y];
-    }
-    return -1;
+    __block NSUInteger colorindex = 0;
+    
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight) {
+            colorindex = pixelData[x][y];
+        }
+    });
+    
+    return colorindex;
 }
 
 - (NSNumber *)save2DArray:(NSArray<NSArray *> *)array {
