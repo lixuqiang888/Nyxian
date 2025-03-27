@@ -11,6 +11,8 @@
 		AF14830E2D8DE2700006B509 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = AF14830D2D8DE2700006B509 /* FluidGradient */; };
 		AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = AF4836262D8AF4AA00830CED /* SwiftTerm */; };
 		AF504BD72D956849005FA8D2 /* TreeSitterXML in Frameworks */ = {isa = PBXBuildFile; productRef = AF504BD62D956849005FA8D2 /* TreeSitterXML */; };
+		AF504BEA2D9579E1005FA8D2 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = AF504BE92D9579E1005FA8D2 /* Swifter */; };
+		AF504BED2D957A72005FA8D2 /* TreeSitterHTML in Frameworks */ = {isa = PBXBuildFile; productRef = AF504BEC2D957A72005FA8D2 /* TreeSitterHTML */; };
 		AF51435D2D92E9B70058C41D /* TreeSitterPython in Frameworks */ = {isa = PBXBuildFile; productRef = AF51435C2D92E9B70058C41D /* TreeSitterPython */; };
 		AFB1651D2D91A36300872EDB /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1651C2D91A36300872EDB /* Runestone */; };
 		AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */ = {isa = PBXBuildFile; productRef = AFB165232D91A4AB00872EDB /* TreeSitterJavaScript */; };
@@ -34,7 +36,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF504BEA2D9579E1005FA8D2 /* Swifter in Frameworks */,
 				AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */,
+				AF504BED2D957A72005FA8D2 /* TreeSitterHTML in Frameworks */,
 				AF504BD72D956849005FA8D2 /* TreeSitterXML in Frameworks */,
 				AFB1651D2D91A36300872EDB /* Runestone in Frameworks */,
 				AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */,
@@ -92,6 +96,8 @@
 				AF51435C2D92E9B70058C41D /* TreeSitterPython */,
 				AF1015D42D92EEB6009F362F /* TreeSitterLua */,
 				AF504BD62D956849005FA8D2 /* TreeSitterXML */,
+				AF504BE92D9579E1005FA8D2 /* Swifter */,
+				AF504BEC2D957A72005FA8D2 /* TreeSitterHTML */,
 			);
 			productName = FJS;
 			productReference = AFBE41752D85E4B500315155 /* Nyxian.app */;
@@ -131,6 +137,8 @@
 				AF51435B2D92E9B70058C41D /* XCRemoteSwiftPackageReference "tree-sitter-python" */,
 				AF1015D32D92EEB6009F362F /* XCRemoteSwiftPackageReference "tree-sitter-lua" */,
 				AF504BD52D956849005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-xml" */,
+				AF504BE82D9579E1005FA8D2 /* XCRemoteSwiftPackageReference "swifter" */,
+				AF504BEB2D957A72005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-html" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AFBE41762D85E4B500315155 /* Products */;
@@ -421,6 +429,22 @@
 				kind = branch;
 			};
 		};
+		AF504BE82D9579E1005FA8D2 /* XCRemoteSwiftPackageReference "swifter" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/httpswift/swifter.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
+		AF504BEB2D957A72005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-html" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tree-sitter/tree-sitter-html.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		AF51435B2D92E9B70058C41D /* XCRemoteSwiftPackageReference "tree-sitter-python" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tree-sitter/tree-sitter-python.git";
@@ -475,6 +499,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AF504BD52D956849005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-xml" */;
 			productName = TreeSitterXML;
+		};
+		AF504BE92D9579E1005FA8D2 /* Swifter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF504BE82D9579E1005FA8D2 /* XCRemoteSwiftPackageReference "swifter" */;
+			productName = Swifter;
+		};
+		AF504BEC2D957A72005FA8D2 /* TreeSitterHTML */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF504BEB2D957A72005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-html" */;
+			productName = TreeSitterHTML;
 		};
 		AF51435C2D92E9B70058C41D /* TreeSitterPython */ = {
 			isa = XCSwiftPackageProductDependency;
