@@ -38,47 +38,6 @@ void PlatformInit(Picoc *pc) { }
 
 void PlatformCleanup(Picoc *pc) { }
 
-char *getbuffc(void);
-
-// regardless no filestream
-char *fgetsnyxian(char *buffer, int size) {
-    if (size <= 1) return NULL;
-    
-    int csize = 0, cursor = 0;
-    
-    while (csize < size - 1) {
-        fflush(stdout);
-        char *seq = getbuffc();
-        
-        if(seq[0] != '\033')
-        {
-            if(seq[0] == 8 | seq[0] == 127)
-            {
-                if(csize != 0)
-                {
-                    printf("\b \b");
-                    fflush(stdout);
-                    cursor--;
-                    csize--;
-                    buffer[cursor] = '\0';
-                }
-            } else if (seq[0] == '\n' || seq[0] == '\r') {
-                buffer[cursor] = seq[0];
-                //putchar(seq[0]);
-                break;
-            } else {
-                buffer[cursor] = seq[0];
-                putchar(seq[0]);
-                cursor++;
-                csize++;
-            }
-        }
-    }
-    
-    buffer[csize] = '\0';
-    return buffer;
-}
-
 /* get a line of interactive input */
 char *PlatformGetLine(char *Buf, int MaxLen, const char *Prompt)
 {
@@ -87,9 +46,7 @@ char *PlatformGetLine(char *Buf, int MaxLen, const char *Prompt)
         printf("%s", Prompt);
 
     fflush(stdout);
-    char *buffer = fgetsnyxian(Buf, MaxLen);
-    printf("\n");
-    return buffer;
+    return fgets(Buf, MaxLen, stdin);
 }
 
 /* get a character of interactive input */

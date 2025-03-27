@@ -40,6 +40,8 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+char* readline(const char *prompt);
+
 ///
 /// This is the rediraction of the safety variable
 ///
@@ -138,21 +140,6 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 {
     // Flushing automatically stdout, still have to work on stdio passthrough
     fflush(stdout);
-}
-
-- (void)putchar:(char)data
-{
-    putchar(data);
-}
-
-- (int)getchar
-{
-    return getchar();
-}
-
-- (id)getbuff
-{
-    return getbuff();
 }
 
 - (id)getTermSize

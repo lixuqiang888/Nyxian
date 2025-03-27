@@ -28,128 +28,24 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <dispatch/dispatch.h>
+#include <fcntl.h>
 
-// GLOBALS
-uint8_t *buffer = NULL;
-size_t buffer_len = 0;
+int fake_stdin[2];
+char fake_stdin_buffer[100];
 
-dispatch_semaphore_t stdin_hook_semaphore;
-pthread_mutex_t data_safety_mutex;
-
-/// Stdin hook setup
-void stdin_hook_prepare(void)
+void fake_stdin_init(void)
 {
-    stdin_hook_semaphore = dispatch_semaphore_create(0);
-    pthread_mutex_init(&data_safety_mutex, NULL);
-}
-
-/// Cleanup
-void stdin_hook_cleanup(void)
-{
-    pthread_mutex_destroy(&data_safety_mutex);
-    if (buffer != NULL) {
-        free(buffer);
-        buffer = NULL;
-        buffer_len = 0;
+    if (pipe(fake_stdin) == -1) {
+        perror("pipe failed");
+        return;
     }
+    
+    dup2(fake_stdin[0], STDIN_FILENO);
 }
-
 ///
 /// Function for SwiftTerm to call
 ///
 void sendchar(const uint8_t *ro_buffer, size_t len)
 {
-    pthread_mutex_lock(&data_safety_mutex);
-    
-    // Free previous buffer
-    if (buffer != NULL)
-    {
-        free(buffer);
-        buffer = NULL;
-        buffer_len = 0;
-    }
-    
-    // Allocate new buffer
-    buffer = malloc(len);
-    if (buffer != NULL)
-    {
-        memcpy(buffer, ro_buffer, len);
-        buffer_len = len;
-    }
-    
-    // Signal semaphore
-    dispatch_semaphore_signal(stdin_hook_semaphore);
-    
-    pthread_mutex_unlock(&data_safety_mutex);
-}
-
-///
-/// Hooked getchar - returns first byte
-///
-int getchar(void)
-{
-    dispatch_semaphore_wait(stdin_hook_semaphore, DISPATCH_TIME_FOREVER);
-    
-    pthread_mutex_lock(&data_safety_mutex);
-    
-    int data = 0;
-    
-    if (buffer != NULL && buffer_len > 0)
-    {
-        data = buffer[0];
-    }
-    
-    pthread_mutex_unlock(&data_safety_mutex);
-    
-    return data;
-}
-
-///
-/// Sister function of getchar: returns whole buffer
-///
-id getbuff(void)
-{
-    dispatch_semaphore_wait(stdin_hook_semaphore, DISPATCH_TIME_FOREVER);
-    
-    pthread_mutex_lock(&data_safety_mutex);
-    
-    NSMutableArray *dataArray = [NSMutableArray array];
-    
-    if (buffer != NULL && buffer_len > 0)
-    {
-        for (size_t i = 0; i < buffer_len; i++)
-        {
-            [dataArray addObject:@(buffer[i])];
-        }
-    }
-    
-    pthread_mutex_unlock(&data_safety_mutex);
-    
-    return dataArray;
-}
-
-///
-/// Another helper for CString
-///
-char *getbuffc(void)
-{
-    dispatch_semaphore_wait(stdin_hook_semaphore, DISPATCH_TIME_FOREVER);
-    
-    pthread_mutex_lock(&data_safety_mutex);
-    
-    char *dataArray = NULL;
-    
-    if (buffer != NULL && buffer_len > 0)
-    {
-        dataArray = (char *)malloc(buffer_len + 1); // Allocate memory (+1 for null terminator)
-        if (dataArray)
-        {
-            memcpy(dataArray, buffer, buffer_len);
-            dataArray[buffer_len] = '\0'; // Null-terminate the string
-        }
-    }
-    
-    pthread_mutex_unlock(&data_safety_mutex);
-    
-    return dataArray; // Caller must free the returned buffer
+    write(fake_stdin[1], ro_buffer, len);
 }

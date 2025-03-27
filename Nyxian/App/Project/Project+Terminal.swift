@@ -41,7 +41,6 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     public override init (
         frame: CGRect
     ){
-        stdin_hook_prepare()
         super.init (frame: frame)
         terminalDelegate = self
         self.setTerminalTitle(source: self, title: "Nyxian")
@@ -70,7 +69,6 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
         loggingPipe.fileHandleForReading.readabilityHandler = { [weak self] fileHandle in
             let logData = fileHandle.availableData
             if !logData.isEmpty, var logString = String(data: logData, encoding: .utf8) {
-                logString = logString.replacingOccurrences(of: "\r", with: "\n\r")
                 logString = logString.replacingOccurrences(of: "\n", with: "\n\r")
                 if let normalizedData = logString.data(using: .utf8) {
                     let normalizedByteArray = Array(normalizedData)
@@ -152,7 +150,6 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         getchar()
         
         DispatchQueue.main.sync {
-            stdin_hook_cleanup()
             tview.cleanupStdout()
             sheet = false
         }

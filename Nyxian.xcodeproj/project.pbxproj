@@ -20,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AF504C402D95A617005FA8D2 /* libreadline.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libreadline.tbd; path = usr/lib/libreadline.tbd; sourceTree = SDKROOT; };
 		AFBE41752D85E4B500315155 /* Nyxian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nyxian.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -52,10 +53,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AF504C3F2D95A616005FA8D2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AF504C402D95A617005FA8D2 /* libreadline.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AFBE416C2D85E4B500315155 = {
 			isa = PBXGroup;
 			children = (
 				AFBE41772D85E4B500315155 /* Nyxian */,
+				AF504C3F2D95A616005FA8D2 /* Frameworks */,
 				AFBE41762D85E4B500315155 /* Products */,
 			);
 			sourceTree = "<group>";

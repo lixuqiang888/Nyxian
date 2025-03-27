@@ -35,3 +35,4 @@ int o_lua(NSString *path);
 int o_lua_repl(NSString *path);
 
 void setFJSafety(BOOL value);
+void fake_stdin_init(void);

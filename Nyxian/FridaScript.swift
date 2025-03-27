@@ -29,6 +29,7 @@ let RootPath: String = "\(NSHomeDirectory())/Documents"
 @main
 struct FJSApp: App {
     init() {
+        fake_stdin_init()
         UIInit(type: 1)
     }
     var body: some Scene {

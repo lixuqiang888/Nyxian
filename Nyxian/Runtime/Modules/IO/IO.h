@@ -44,10 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// hook
 ///
 - (void)fflush;
-- (void)putchar:(char)data;
-- (int)getchar;
-- (id)getbuff;
 - (id)getTermSize;
+- (id)readline:(NSString*)prompt;
 
 ///
 /// These are basically macro redirections so Nyxian Runtime can
