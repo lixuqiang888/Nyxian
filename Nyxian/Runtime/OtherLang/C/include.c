@@ -9,9 +9,7 @@ void IncludeInit(Picoc *pc)
 {
     IncludeRegister(pc, "ctype.h", NULL, &StdCtypeFunctions[0], NULL);
     IncludeRegister(pc, "errno.h", &StdErrnoSetupFunc, NULL, NULL);
-# ifndef NO_FP
     IncludeRegister(pc, "math.h", &MathSetupFunc, &MathFunctions[0], NULL);
-# endif
     IncludeRegister(pc, "stdbool.h", &StdboolSetupFunc, NULL, StdboolDefs);
     IncludeRegister(pc, "stdio.h", &StdioSetupFunc, &StdioFunctions[0], StdioDefs);
     IncludeRegister(pc, "stdlib.h", &StdlibSetupFunc, &StdlibFunctions[0], NULL);
@@ -20,12 +18,8 @@ void IncludeInit(Picoc *pc)
     IncludeRegister(pc, "stdint.h", &StdIntSetupFunc, NULL, StdIntDefs);
     IncludeRegister(pc, "fcntl.h", &StdFcntlSetupFunc, &StdFcntlFunctions[0] , StdFcntlDefs);
     IncludeRegister(pc, "dirent.h", &StdDirentSetupFunc, &StdDirentFunctions[0], StdDirentDefs);
-    
-    // XNU sys folder
     IncludeRegister(pc, "sys/__endian.h", &SysEndianSetupFunc, NULL, NULL);
-# ifndef WIN32
     IncludeRegister(pc, "unistd.h", &UnistdSetupFunc, &UnistdFunctions[0], UnistdDefs);
-# endif
 }
 
 /* clean up space used by the include system */
