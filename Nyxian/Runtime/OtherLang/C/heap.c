@@ -4,20 +4,6 @@
     the top of heap space */
 #include "interpreter.h"
 
-#ifdef DEBUG_HEAP
-void ShowBigList(Picoc *pc)
-{
-    struct AllocNode *LPos;
-
-    printf("Heap: bottom=0x%lx 0x%lx-0x%lx, big freelist=", (long)pc->HeapBottom,
-        (long)&(pc->HeapMemory)[0], (long)&(pc->HeapMemory)[HEAP_SIZE]);
-    for (LPos = pc->FreeListBig; LPos != NULL; LPos = LPos->NextFree)
-        printf("0x%lx:%d ", (long)LPos, LPos->Size);
-
-    printf("\n");
-}
-#endif
-
 /* initialize the stack and heap storage */
 void HeapInit(Picoc *pc, int StackOrHeapSize)
 {
@@ -53,10 +39,6 @@ void *HeapAllocStack(Picoc *pc, int Size)
 {
     char *NewMem = pc->HeapStackTop;
     char *NewTop = (char*)pc->HeapStackTop + MEM_ALIGN(Size);
-#ifdef DEBUG_HEAP
-    printf("HeapAllocStack(%ld) at 0x%lx\n", (unsigned long)MEM_ALIGN(Size),
-        (unsigned long)pc->HeapStackTop);
-#endif
     if (NewTop > (char*)pc->HeapBottom)
         return NULL;
 
@@ -68,10 +50,6 @@ void *HeapAllocStack(Picoc *pc, int Size)
 /* allocate some space on the stack, in the current stack frame */
 void HeapUnpopStack(Picoc *pc, int Size)
 {
-#ifdef DEBUG_HEAP
-    printf("HeapUnpopStack(%ld) at 0x%lx\n", (unsigned long)MEM_ALIGN(Size),
-        (unsigned long)pc->HeapStackTop);
-#endif
     pc->HeapStackTop = (void*)((char*)pc->HeapStackTop + MEM_ALIGN(Size));
 }
 
@@ -82,10 +60,6 @@ int HeapPopStack(Picoc *pc, void *Addr, int Size)
     if (ToLose > ((char*)pc->HeapStackTop - (char*)&(pc->HeapMemory)[0]))
         return false;
 
-#ifdef DEBUG_HEAP
-    printf("HeapPopStack(0x%lx, %ld) back to 0x%lx\n", (unsigned long)Addr,
-        (unsigned long)MEM_ALIGN(Size), (unsigned long)pc->HeapStackTop - ToLose);
-#endif
     pc->HeapStackTop = (void*)((char*)pc->HeapStackTop - ToLose);
     assert(Addr == NULL || pc->HeapStackTop == Addr);
 
@@ -95,9 +69,6 @@ int HeapPopStack(Picoc *pc, void *Addr, int Size)
 /* push a new stack frame on to the stack */
 void HeapPushStackFrame(Picoc *pc)
 {
-#ifdef DEBUG_HEAP
-    printf("Adding stack frame at 0x%lx\n", (unsigned long)pc->HeapStackTop);
-#endif
     *(void**)pc->HeapStackTop = pc->StackFrame;
     pc->StackFrame = pc->HeapStackTop;
     pc->HeapStackTop = (void*)((char*)pc->HeapStackTop +
@@ -111,10 +82,6 @@ int HeapPopStackFrame(Picoc *pc)
     if (*(void**)pc->StackFrame != NULL) {
         pc->HeapStackTop = pc->StackFrame;
         pc->StackFrame = *(void**)pc->StackFrame;
-#ifdef DEBUG_HEAP
-        printf("Popping stack frame back to 0x%lx\n",
-            (unsigned long)pc->HeapStackTop);
-#endif
         return true;
     } else
         return false;
