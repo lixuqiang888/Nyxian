@@ -1,0 +1,65 @@
+//
+// main.nx
+//
+// Created by Anonym on 28.03.25
+//
+ 
+// PROOF OF CONCEPT
+
+include("io");
+
+function print(msg)
+{
+	io.write(STDOUT_FILENO, msg, msg.length);
+}
+
+function poc(path)
+{
+	// variable placeholders for later
+	let loc = 0;
+	let size = 0;
+	let dir = null;
+	let dirent = null;
+	let entries = [];
+
+	// to read a directory u need to ensure it exists
+	if(io.access(path, F_OK) != 0)
+	{
+		print("Path doesnt exist\n");
+		return null;
+	}
+
+	// now we open it as normal fd
+	let fd = io.open(path, O_RDONLY | O_DIRECTORY)
+
+	// now we get the stat structure
+	let stat = io.stat(fd);
+
+	// and now we check if its a directory
+	if(!io.S_ISDIR(stat.st_mode))
+	{
+		print("Path is not a dorectory");
+		return null;
+	}
+
+	// now we get the size without masses of work
+	size = stat.st_size;
+
+	// and now we close the file descriptor and open the directory initially
+	io.close(fd);
+
+	// now open the directory for reading it
+	dir = io.opendir(path);
+
+	// loop
+	while(size > loc)
+	{
+		dirent = io.readdir(dir);
+		loc = dir.__dd_loc;
+		entries.push(dirent.d_name);
+	}
+	return entries;
+}
+
+let arr = poc("/");
+print("" + arr);
