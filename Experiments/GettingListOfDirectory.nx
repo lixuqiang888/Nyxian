@@ -15,6 +15,13 @@ function print(msg)
 
 function poc(path)
 {
+	// variable placeholders for later
+	let loc = 0;
+	let size = 0;
+	let dir = null;
+	let dirent = null;
+	let entries = [];
+
 	// to read a directory u need to ensure it exists
 	if(io.access(path, F_OK) != 0)
 	{
@@ -35,19 +42,16 @@ function poc(path)
 		return;
 	}
 
+	// now we get the size without masses of work
+	size = stat.st_size;
+
 	// and now we close the file descriptor and open the directory initially
 	io.close(fd);
 
-	let dir = io.opendir(path);
-
-	// getting its size
-	stat = io.stat(dir.__dd_fd);
-	let size = stat.st_size;
-	let loc = 0;
+	// now open the directory for reading it
+	dir = io.opendir(path);
 
 	// loop
-	let dirent = null;
-	let entries = [];
 	while(size > loc)
 	{
 		dirent = io.readdir(dir);
@@ -58,5 +62,5 @@ function poc(path)
 	return entries;
 }
 
-let arr = poc("/System/Library");
+let arr = poc("/");
 print("" + arr);
