@@ -49,69 +49,6 @@ JSValue* buildFILE(FILE *file)
     fileObject[@"_bf"] = sbufObject;
     fileObject[@"_lbfsize"] = @(file->_lbfsize);
     
-    // who ever wanna implement cookie, have fun
-    //fileObject[@"_cookie"] = @(file->_cookie);
-    
-    // close function
-    fileObject[@"_close"] = ^JSValue* {
-        // prevent crash
-        if(file == NULL || file->_close == NULL)
-        {
-            return jsDoThrowError(@"Arguments invalid\n");
-        }
-
-        file->_close(file);
-        
-        return NULL;
-    };
-    
-    fileObject[@"_read"] = ^id (UInt16 length) {
-        // prevent crash
-        if(file == NULL || file->_read == NULL)
-        {
-            return jsDoThrowError(@"Arguments invalid\n");
-        }
-
-        // calling function
-        char *buffer = malloc(length);
-        ssize_t bytesRead = file->_read(file, buffer, length);
-        
-        // returning
-        return ReturnObjectBuilder(@{
-            @"bytesRead": @(bytesRead),
-            @"buffer": @(buffer),
-        });
-    };
-    
-    fileObject[@"_seek"] = ^id (UInt16 pos, UInt16 flags) {
-        // prevent crash
-        if(file == NULL || file->_read == NULL)
-        {
-            return jsDoThrowError(@"Arguments invalid\n");
-        }
-        
-        fpos_t npos = file->_seek(file, pos, flags);
-        
-        // returning the new pos after you passed the flags and stuff
-        return @(npos);
-    };
-    
-    fileObject[@"_write"] = ^id (NSString *buffer, UInt16 size) {
-        // prevent crash
-        if(file == NULL || file->_write == NULL || buffer == NULL)
-        {
-            return jsDoThrowError(@"Arguments invalid\n");
-        }
-        
-        // we need the buffer
-        const char *ro_buffer = [buffer UTF8String];
-        
-        // writing thr buffer
-        ssize_t bytesWritten = file->_write(file, ro_buffer, size);
-        
-        return @(bytesWritten);
-    };
-    
     // now lets continue with the rest of the structure
     JSValue *sbufSecondObject = [JSValue valueWithNewObjectInContext:[JSContext currentContext]];
     sbufSecondObject[@"_base"] = [NSString stringWithFormat:@"%s", file->_ub._base];
@@ -160,66 +97,6 @@ void updateFILE(FILE *file, JSValue *fileObject)
     
     // who ever wanna implement cookie, have fun
     //fileObject[@"_cookie"] = @(file->_cookie);
-    
-    // close function
-    fileObject[@"_close"] = ^JSValue* {
-        // prevent crash
-        if(file == NULL || file->_close == NULL)
-        {
-            return jsDoThrowError(@"Arguments invalid\n");
-        }
-
-        file->_close(file);
-        
-        return NULL;
-    };
-    
-    fileObject[@"_read"] = ^id (UInt16 length) {
-        // prevent crash
-        if(file == NULL || file->_read == NULL)
-        {
-            return jsDoThrowError(@"Arguments invalid\n");
-        }
-
-        // calling function
-        char *buffer = malloc(length);
-        ssize_t bytesRead = file->_read(file, buffer, length);
-        
-        // returning
-        return ReturnObjectBuilder(@{
-            @"bytesRead": @(bytesRead),
-            @"buffer": @(buffer),
-        });
-    };
-    
-    fileObject[@"_seek"] = ^id (UInt16 pos, UInt16 flags) {
-        // prevent crash
-        if(file == NULL || file->_read == NULL)
-        {
-            return jsDoThrowError(@"Arguments invalid\n");
-        }
-        
-        fpos_t npos = file->_seek(file, pos, flags);
-        
-        // returning the new pos after you passed the flags and stuff
-        return @(npos);
-    };
-    
-    fileObject[@"_write"] = ^id (NSString *buffer, UInt16 size) {
-        // prevent crash
-        if(file == NULL || file->_write == NULL || buffer == NULL)
-        {
-            return jsDoThrowError(@"Arguments invalid\n");
-        }
-        
-        // we need the buffer
-        const char *ro_buffer = [buffer UTF8String];
-        
-        // writing thr buffer
-        ssize_t bytesWritten = file->_write(file, ro_buffer, size);
-        
-        return @(bytesWritten);
-    };
     
     // now lets continue with the rest of the structure
     JSValue *sbufSecondObject = [JSValue valueWithNewObjectInContext:[JSContext currentContext]];
