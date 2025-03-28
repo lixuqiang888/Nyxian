@@ -55,7 +55,6 @@ function poc(path)
 	while(size > loc)
 	{
 		dirent = io.readdir(dir);
-		size = dir.__dd_size;
 		loc = dir.__dd_loc;
 		entries.push(dirent.d_name);
 	}
