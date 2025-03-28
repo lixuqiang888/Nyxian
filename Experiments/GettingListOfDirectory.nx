@@ -26,7 +26,7 @@ function poc(path)
 	if(io.access(path, F_OK) != 0)
 	{
 		print("Path doesnt exist\n");
-		return;
+		return null;
 	}
 
 	// now we open it as normal fd
@@ -39,7 +39,7 @@ function poc(path)
 	if(!io.S_ISDIR(stat.st_mode))
 	{
 		print("Path is not a dorectory");
-		return;
+		return null;
 	}
 
 	// now we get the size without masses of work
