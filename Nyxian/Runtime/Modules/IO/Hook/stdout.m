@@ -22,16 +22,40 @@
  SOFTWARE.
  */
 
-#import "Runtime.h"
-#import <Runtime/Hook/tcom.h>
-#import <Runtime/Modules/IO/Hook/stdin.h>
-#import <Runtime/Modules/IO/Hook/stdout.h>
-#import <Runtime/Modules/IO/Hook/stderr.h>
-#import <Runtime/UISurface/UISurface.h>
-#import <Foundation/Foundation.h>
+#include <Runtime/Modules/IO/Hook/stdin.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <dispatch/dispatch.h>
+#include <fcntl.h>
 
-// Coding/C implementation
-int c_interpret(NSString *files, NSString *proot);
-void c_repl(NSString *proot);
-int o_lua(NSString *path);
-int o_lua_repl(NSString *path);
+int fake_stdout[2];
+
+void fake_stdout_init(void)
+{
+    if (pipe(fake_stdout) == -1) {
+        perror("pipe failed");
+        return;
+    }
+}
+
+int getFakeStdoutReadFD(void)
+{
+    return fake_stdout[0];
+}
+
+int getFakeStdoutWriteFD(void)
+{
+    return fake_stdout[1];
+}
+
+void setFakeStdoutReadFD(int fd)
+{
+    fake_stdout[0] = fd;
+}
+
+void setFakeStdoutWriteFD(int fd)
+{
+    fake_stdout[1] = fd;
+}

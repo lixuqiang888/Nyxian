@@ -28,6 +28,7 @@
 #import <Runtime/EnvRecover.h>
 #import <Nyxian-Swift.h>
 #import <Runtime/UISurface/UISurface.h>
+#import <Runtime/Modules/IO/Hook/stdout.h>
 
 extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
 
@@ -67,7 +68,7 @@ extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
     chdir([[url path] UTF8String]);
     
     _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
-        printf("%s", [[NSString stringWithFormat:@"\nNyxian %@", exception] UTF8String]);
+        dprintf(getFakeStdoutWriteFD(), "%s", [[NSString stringWithFormat:@"\nNyxian %@", exception] UTF8String]);
     };
     [_Context evaluateScript:code];
     
@@ -83,7 +84,7 @@ extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
     }
     [_array removeAllObjects];
     
-    printf("[EXIT]\n");
+    dprintf(getFakeStdoutWriteFD(), "[EXIT]\n");
     
     _Context = nil;
     

@@ -26,6 +26,9 @@
 #import <Runtime/Include.h>
 #import <Runtime/ErrorThrow.h>
 #import <Runtime/Modules/UI/Alert.h>
+#import <Runtime/Modules/IO/Hook/stdin.h>
+#import <Runtime/Modules/IO/Hook/stdout.h>
+#import <Runtime/Modules/IO/Hook/stderr.h>
 
 #import <UIKit/UIKit.h>
 
@@ -57,6 +60,11 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
     
     if ([LibName isEqualToString:@"io"]) {
         IO_MACRO_MAP();
+        
+        // fake stdout for iOS
+        Runtime.Context[@"STDOUT_FILENO"] = @(getFakeStdoutWriteFD());
+        Runtime.Context[@"STDERR_FILENO"] = @(getFakeStderrWriteFD());
+        
         IOModule *ioModule = [[IOModule alloc] init];
         [Runtime.Context setObject:ioModule forKeyedSubscript:@"io"];
         [Runtime handoffModule:ioModule];

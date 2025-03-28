@@ -31,8 +31,11 @@
 #include <fcntl.h>
 
 int fake_stdin[2];
-char fake_stdin_buffer[100];
 
+///
+/// Here we create a fake stdin we then overwrite the old stdin with our fake one
+/// as they usually dont work on iOS because there is no PTY nor TTY
+///
 void fake_stdin_init(void)
 {
     if (pipe(fake_stdin) == -1) {
@@ -42,8 +45,9 @@ void fake_stdin_init(void)
     
     dup2(fake_stdin[0], STDIN_FILENO);
 }
+
 ///
-/// Function for SwiftTerm to call
+/// The function bridges the terminal input to our fake stdin
 ///
 void sendchar(const uint8_t *ro_buffer, size_t len)
 {

@@ -3,6 +3,9 @@
 #include <errno.h>
 #include <inttypes.h>
 
+#include <Runtime/Modules/IO/Hook/stdout.h>
+#include <Runtime/Modules/IO/Hook/stderr.h>
+
 #include "../interpreter.h"
 
 #define MAX_FORMAT (80)
@@ -46,10 +49,13 @@ struct StdVararg
 /* initializes the I/O system so error reporting works */
 void BasicIOInit(Picoc *pc)
 {
-    pc->CStdOut = stdout;
+    FILE *fakeStdout = fdopen(getFakeStdoutWriteFD(), "w+");
+    FILE *fakeStderr = fdopen(getFakeStderrWriteFD(), "w+");
+    
+    pc->CStdOut = fakeStdout;
     stdinValue = stdin;
-    stdoutValue = stdout;
-    stderrValue = stderr;
+    stdoutValue = fakeStdout;
+    stderrValue = fakeStderr;
 }
 
 /* output a single character to either a FILE * or a string */

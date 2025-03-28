@@ -25,6 +25,12 @@
 #import <Foundation/Foundation.h>
 
 ///
-/// Function for Swift Term to call
+/// Here we create a fake stdin we then overwrite the old stdin with our fake one
+/// as they usually dont work on iOS because there is no PTY nor TTY
+///
+void fake_stdin_init(void);
+
+///
+/// The function bridges the terminal input to our fake stdin
 ///
 void sendchar(const uint8_t *ro_buffer, size_t len);

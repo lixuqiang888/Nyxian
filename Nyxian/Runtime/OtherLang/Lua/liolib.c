@@ -23,6 +23,8 @@
 #include "lualib.h"
 #include "llimits.h"
 
+#include <Runtime/Modules/IO/Hook/stdout.h>
+#include <Runtime/Modules/IO/Hook/stderr.h>
 
 /*
 ** Change this macro to accept other modes for 'fopen' besides
@@ -840,8 +842,11 @@ LUAMOD_API int luaopen_io (lua_State *L) {
   luaL_newlib(L, iolib);  /* new module */
   createmeta(L);
   /* create (and set) default files */
+  FILE *fakestdout = fdopen(getFakeStdoutWriteFD(), "w+");
+  FILE *fakestderr = fdopen(getFakeStderrWriteFD(), "w+");
+    
   createstdfile(L, stdin, IO_INPUT, "stdin");
-  createstdfile(L, stdout, IO_OUTPUT, "stdout");
-  createstdfile(L, stderr, NULL, "stderr");
+  createstdfile(L, fakestdout, IO_OUTPUT, "stdout");
+  createstdfile(L, fakestderr, NULL, "stderr");
   return 1;
 }

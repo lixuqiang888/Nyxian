@@ -56,15 +56,18 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     }
     
     func hookStdout() {
-        fflush(stdout)
-        fflush(stderr)
+        //fflush(stdout)
+        //fflush(stderr)
         
-        setvbuf(stdout, nil, _IOLBF, 0)
+        /*setvbuf(stdout, nil, _IOLBF, 0)
         setvbuf(stderr, nil, _IOLBF, 0)
         
         let writeFD = loggingPipe.fileHandleForWriting.fileDescriptor
         dup2(writeFD, STDOUT_FILENO)
-        dup2(writeFD, STDERR_FILENO)
+        dup2(writeFD, STDERR_FILENO)*/
+        
+        setFakeStdoutWriteFD(loggingPipe.fileHandleForWriting.fileDescriptor)
+        setFakeStderrWriteFD(loggingPipe.fileHandleForWriting.fileDescriptor)
         
         loggingPipe.fileHandleForReading.readabilityHandler = { [weak self] fileHandle in
             let logData = fileHandle.availableData
@@ -94,12 +97,12 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     }
     
     func cleanupStdout() {
-        loggingPipe.fileHandleForReading.readabilityHandler = nil
+        /*loggingPipe.fileHandleForReading.readabilityHandler = nil
         
         if originalStdoutFD != -1 || originalStderrFD != -1 {
             dup2(originalStdoutFD, STDOUT_FILENO)
             dup2(originalStderrFD, STDERR_FILENO)
-        }
+        }*/
     }
     
     func clipboardCopy(source: SwiftTerm.TerminalView, content: Data) {
@@ -141,8 +144,22 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
     @State var project: Project
     @Binding var title: String
     
+    func printfake(_ message: String) {
+        let data = message.data(using: .utf8)!
+
+        let fd: Int32 = getFakeStdoutWriteFD()
+
+        let bytesWritten = data.withUnsafeBytes { buffer in
+            write(fd, buffer.baseAddress, buffer.count)
+        }
+
+        if bytesWritten < 0 {
+            print("Error writing to stdout")
+        }
+    }
+    
     func didExit(tview: FridaTerminalView) {
-        print("\nPress any key to continue\n");
+        printfake("\nPress any key to continue\n");
         DispatchQueue.main.sync {
             tview.isUserInteractionEnabled = true
             _ = tview.becomeFirstResponder()

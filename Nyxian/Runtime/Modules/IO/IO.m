@@ -24,13 +24,15 @@
 
 /// Nyxian Runtime headers
 #import <Runtime/Modules/IO/IO.h>
+#import <Runtime/Modules/IO/Hook/stdin.h>
+#import <Runtime/Modules/IO/Hook/stdout.h>
+#import <Runtime/Modules/IO/Hook/stderr.h>
 #import <Runtime/Modules/IO/Types/Stat.h>
 #import <Runtime/Modules/IO/Types/DIR.h>
 #import <Runtime/Modules/IO/Types/FILE.h>
 #import <Runtime/Modules/IO/Types/Dirent.h>
 #import <Runtime/ReturnObjBuilder.h>
 #import <Runtime/ErrorThrow.h>
-#import <Runtime/Hook/stdin.h>
 #import <Runtime/Hook/tcom.h>
 
 /// Some standard headers we need
@@ -105,7 +107,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
         // Checking if its a Standard IO
         if(!critical)
         {
-            if(fd == STDIN_FILENO || fd == STDOUT_FILENO || fd == STDERR_FILENO)
+            if(fd == STDIN_FILENO || fd == getFakeStdoutWriteFD() || fd == getFakeStderrWriteFD())
             {
                 // It is so automatically return true
                 return true;

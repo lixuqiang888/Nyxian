@@ -22,16 +22,20 @@
  SOFTWARE.
  */
 
-#import "Runtime.h"
-#import <Runtime/Hook/tcom.h>
-#import <Runtime/Modules/IO/Hook/stdin.h>
-#import <Runtime/Modules/IO/Hook/stdout.h>
-#import <Runtime/Modules/IO/Hook/stderr.h>
-#import <Runtime/UISurface/UISurface.h>
-#import <Foundation/Foundation.h>
+///
+/// Here we forge a none existing stdout file descriptor
+///
+void fake_stderr_init(void);
 
-// Coding/C implementation
-int c_interpret(NSString *files, NSString *proot);
-void c_repl(NSString *proot);
-int o_lua(NSString *path);
-int o_lua_repl(NSString *path);
+///
+/// As we dont want that other printf and OSLOG calls are being captured by stdout
+/// there is basically no hook
+///
+int getFakeStderrReadFD(void);
+int getFakeStderrWriteFD(void);
+
+///
+/// As we also have logpipes we can also just handoff the logpipe writefd
+///
+void setFakeStderrReadFD(int fd);
+void setFakeStderrWriteFD(int fd);
