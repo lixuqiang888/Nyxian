@@ -46,6 +46,13 @@ JSExportAs(unstoreGraph,
 JSExportAs(colorPixel,
 - (NSInteger)colorIndexAtPixelX:(NSInteger)x y:(NSInteger)y
            );
+JSExportAs(fillBox,
+           - (void)fillBoxWithColorIndex:(NSInteger)xStart
+                                   atY:(NSInteger)yStart
+                               withWidth:(NSInteger)width
+                              withHeight:(NSInteger)height
+                              colorIndex:(NSUInteger)colorIndex
+           );
 
 - (void)undraw;
 
