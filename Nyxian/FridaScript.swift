@@ -34,7 +34,7 @@ struct FJSApp: App {
     }
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ProjectView()
         }
     }
 }
