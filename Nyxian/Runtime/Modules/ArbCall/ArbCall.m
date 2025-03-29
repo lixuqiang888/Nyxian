@@ -25,6 +25,8 @@
 #import <Runtime/Modules/ArbCall/ArbCall.h>
 #import <Runtime/Modules/ArbCall/ArbCallCore.h>
 #import <Runtime/Modules/ArbCall/Types/Call.h>
+#import <Runtime/ErrorThrow.h>
+#import <Runtime/Safety.h>
 
 @implementation ArbCallModule
 
@@ -40,6 +42,9 @@
 ///
 - (id)allocCall
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     // We allocate the call structure
     call_t *call_struct = malloc(sizeof(call_t));
     
@@ -52,6 +57,9 @@
 
 - (id)deallocCall:(JSValue*)callObject
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     // We get the call structure
     call_t *call_struct = restoreCall(callObject);
     
@@ -64,6 +72,9 @@
 
 - (id)allocFuncName:(JSValue*)callObject name:(NSString*)name
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     // We get the call structure
     call_t *call_struct = restoreCall(callObject);
     
@@ -92,6 +103,9 @@
 
 - (id)deallocFuncName:(JSValue*)callObject name:(NSString*)name
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     // We get the call structure
     call_t *call_struct = restoreCall(callObject);
     
@@ -118,6 +132,9 @@
 /// 8 bit functions to set a 8 bit value in a arg
 - (id)args_set_int8:(JSValue*)callObject pos:(UInt8)pos param:(int8_t)param
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     call_t *call_struct = restoreCall(callObject);
     call_set_int8(call_struct, pos, param);
     updateCALL(callObject);
@@ -127,6 +144,9 @@
 
 - (id)args_set_uint8:(JSValue*)callObject pos:(UInt8)pos param:(uint8_t)param
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     call_t *call_struct = restoreCall(callObject);
     call_set_uint8(call_struct, pos, param);
     updateCALL(callObject);
@@ -137,6 +157,9 @@
 /// 16 bit functions to set a 16 bit value in a arg
 - (id)args_set_int16:(JSValue*)callObject pos:(UInt8)pos param:(int16_t)param
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     call_t *call_struct = restoreCall(callObject);
     call_set_int16(call_struct, pos, param);
     updateCALL(callObject);
@@ -146,6 +169,9 @@
 
 - (id)args_set_uint16:(JSValue*)callObject pos:(UInt8)pos param:(uint16_t)param
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     call_t *call_struct = restoreCall(callObject);
     call_set_uint16(call_struct, pos, param);
     updateCALL(callObject);
@@ -156,6 +182,9 @@
 /// 32 bit functions to set a 32 bit value in a arg
 - (id)args_set_int32:(JSValue*)callObject pos:(UInt8)pos param:(int32_t)param
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     call_t *call_struct = restoreCall(callObject);
     call_set_int32(call_struct, pos, param);
     updateCALL(callObject);
@@ -165,6 +194,9 @@
 
 - (id)args_set_uint32:(JSValue*)callObject pos:(UInt8)pos param:(uint32_t)param
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     call_t *call_struct = restoreCall(callObject);
     call_set_uint32(call_struct, pos, param);
     updateCALL(callObject);
@@ -175,6 +207,9 @@
 /// 64 bit functions to set a 64 bit value in a arg
 - (id)args_set_int64:(JSValue*)callObject pos:(UInt8)pos param:(int64_t)param
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     call_t *call_struct = restoreCall(callObject);
     call_set_int64(call_struct, pos, param);
     updateCALL(callObject);
@@ -184,6 +219,9 @@
 
 - (id)args_set_uint64:(JSValue*)callObject pos:(UInt8)pos param:(uint64_t)param
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     call_t *call_struct = restoreCall(callObject);
     call_set_uint64(call_struct, pos, param);
     updateCALL(callObject);
@@ -197,6 +235,9 @@
 ///
 - (id)args_set_ptr:(JSValue*)callObject pos:(UInt8)pos param:(uint64_t)param
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     call_t *call_struct = restoreCall(callObject);
     call_set_ptr(call_struct, pos, (void*)param);
     updateCALL(callObject);
@@ -207,22 +248,29 @@
 ///
 /// This function calls the function behind the call structure
 ///
-- (UInt64)call:(JSValue*)callObject
+- (id)call:(JSValue*)callObject
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     call_t *call_struct = restoreCall(callObject);
     
-    return call(*call_struct);
+    return @(call(*call_struct));
 }
 
 ///
 /// This function finds a symbol and assigns it to the call structure using
 /// dlsym
 ///
-- (void)findFunc:(JSValue*)callObject
+- (id)findFunc:(JSValue*)callObject
 {
+    if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     call_t *call_struct = restoreCall(callObject);
     call_find_func(call_struct);
     updateCALL(callObject);
+    return NULL;
 }
 
 @end

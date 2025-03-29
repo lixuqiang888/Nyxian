@@ -77,13 +77,13 @@ JSExportAs(args_set_ptr,                        - (id)args_set_ptr:(JSValue*)cal
 ///
 /// This function calls the function behind the call structure
 ///
-- (UInt64)call:(JSValue*)callObject;
+- (id)call:(JSValue*)callObject;
 
 ///
 /// This function finds a symbol and assigns it to the call structure using
 /// dlsym
 ///
-- (void)findFunc:(JSValue*)callObject;
+- (id)findFunc:(JSValue*)callObject;
 
 @end
 
