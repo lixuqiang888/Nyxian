@@ -25,6 +25,7 @@
 /// Runtime Headers
 #import <Runtime/Include.h>
 #import <Runtime/ErrorThrow.h>
+#import <Runtime/Safety.h>
 #import <Runtime/Modules/UI/Alert.h>
 #import <Runtime/Modules/IO/Hook/stdin.h>
 #import <Runtime/Modules/IO/Hook/stdout.h>
@@ -42,13 +43,12 @@
 #import <Runtime/Modules/UI/UI.h>
 #import <Runtime/Modules/Timer/Timer.h>
 #import <Runtime/Modules/LangBridge/LangBridge.h>   // UNDER TEST!!!
+#import <Runtime/Modules/Consent/Consent.h>
 
 #import <Runtime/ObjCSurface/objcsurface.h>
 
 /// UI Headers
 #import <Nyxian-Swift.h>
-
-extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
 {
@@ -88,12 +88,9 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         return NULL;
     } else if ([LibName isEqualToString:@"arbcall"])
     {
-        if(NYXIAN_RUNTIME_SAFETY_ENABLED)
-        {
-            return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_RUNTIME_SAFETY]);
-        }
         ArbCallModule *arbCallModule = [[ArbCallModule alloc] init];
         [Runtime.Context setObject:arbCallModule forKeyedSubscript:@"arbcall"];
+        return NULL;
     } else if ([LibName isEqualToString:@"ui"]) {
         UIModule *uiModule = [[UIModule alloc] init];
         [Runtime.Context setObject:uiModule forKeyedSubscript:@"ui"];
@@ -102,14 +99,14 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         TimerModule *timerModule = [[TimerModule alloc] init];
         [Runtime.Context setObject:timerModule forKeyedSubscript:@"timer"];
         return NULL;
-    } else if ([LibName isEqualToString:@"langbridge"])
-    {
-        if(NYXIAN_RUNTIME_SAFETY_ENABLED)
-        {
-            return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_RUNTIME_SAFETY]);
-        }
+    } else if ([LibName isEqualToString:@"langbridge"]) {
         LBModule *lbModule = [[LBModule alloc] init];
         [Runtime.Context setObject:lbModule forKeyedSubscript:@"langbridge"];
+        return NULL;
+    } else if ([LibName isEqualToString:@"consent"]) {
+        ConsentModule *consentModule = [[ConsentModule alloc] init];
+        [Runtime.Context setObject:consentModule forKeyedSubscript:@"consent"];
+        return NULL;
     } else {
         NSString *path = [NSString stringWithFormat:@"%@.nxm", LibName];
         NSURL *url = [[NSURL fileURLWithPath:path] URLByDeletingLastPathComponent];
@@ -142,45 +139,10 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
 void add_include_symbols(NYXIAN_Runtime *Runtime)
 {
     __block NYXIAN_Runtime *BlockRuntime = Runtime;
+    
     if (Runtime) {
         [Runtime.Context setObject:^id(NSString *LibName) {
             return NYXIAN_include(BlockRuntime, LibName);
         } forKeyedSubscript:@"include"];
-        
-        // ! ATTENTION !
-        // very sensitive symbol
-        // will need user verification
-        __block NYXIAN_Runtime *runtime = Runtime;
-        [Runtime.Context setObject:^id {
-            if(NYXIAN_RUNTIME_SAFETY_ENABLED)
-            {
-                __block BOOL Consented = NO;
-                
-                dispatch_semaphore_t semaphore;
-                semaphore = dispatch_semaphore_create(0);
-                
-                showConsentAlertWithTitle(@"Runtime Safety", @"Script wants to disable safety checks which would grand access to craft malicious and arbitary not supervisable code.", @"Cancel", @"Consent", ^(BOOL consentGranted) {
-                    Consented = consentGranted;
-                    dispatch_semaphore_signal(semaphore);
-                });
-                
-                dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-                
-                if(Consented == YES)
-                {
-                    NYXIAN_RUNTIME_SAFETY_ENABLED = false;
-                    [runtime.Context setObject:^id(NSString *name) {
-                        return ObjCSurface_Get_Class(name);
-                    } forKeyedSubscript:@"objc_get_class"];
-                    
-                    [runtime.Context setObject:^id(id class, NSString *name) {
-                        return ObjCSurface_Send_Msg(class, name);
-                    } forKeyedSubscript:@"objc_send_msg"];
-                } else {
-                    return jsDoThrowError(@"Consent failure\n");
-                }
-            }
-            return NULL;
-        } forKeyedSubscript:@"disable_safety_checks"];
     }
 }
