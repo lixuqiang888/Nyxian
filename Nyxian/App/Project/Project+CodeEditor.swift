@@ -390,7 +390,7 @@ struct NeoEditor: UIViewRepresentable {
         // code interpreter choosing switch
         switch(suffix)
         {
-        case "nx", "nxm":
+        case "nx", "nxm", "js":
             let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/highlights.scm"))
             let injectionsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/injections.scm"))
             let language = TreeSitterLanguage(tree_sitter_javascript(), highlightsQuery: highlightsQuery, injectionsQuery: injectionsQuery)
@@ -472,37 +472,7 @@ struct NeoEditor: UIViewRepresentable {
         
         switch(exten)
         {
-            case "nx", "nxm":
-                additionalButtons.append(spawnBarButton(title: "("))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: ")"))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: "{"))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: "}"))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: "["))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: "]"))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: ";"))
-                break
-            case "lua":
-                additionalButtons.append(spawnBarButton(title: "("))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: ")"))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: "{"))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: "}"))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: "["))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: "]"))
-                additionalButtons.append(spawnSeperator())
-                additionalButtons.append(spawnBarButton(title: ";"))
-                break
-            case "c":
+            case "nx", "nxm", "js", "lua", "c":
                 additionalButtons.append(spawnBarButton(title: "("))
                 additionalButtons.append(spawnSeperator())
                 additionalButtons.append(spawnBarButton(title: ")"))
