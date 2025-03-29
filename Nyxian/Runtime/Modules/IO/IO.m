@@ -134,10 +134,22 @@ char* readline(const char *prompt);
 /// They are for the purpose to communicate with with the stdin
 /// hook
 ///
-- (void)fflush
+- (id)fync:(int)fd
 {
-    // Flushing automatically stdout, still have to work on stdio passthrough
-    fflush(stdout);
+    // Because we cant just let the user sync arbitary file descriptos we check if the file descriptor is in the Nyxian Runtime safety array
+    if(![self isFDThere:fd critical:YES])
+    {
+        // Its not so we throw a error
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    }
+    
+    // Its in the Nyxian Runtime safety array array so we just sync the file descriptor
+    if(fsync(fd) == -1) {
+        // The action as not successful so we throw a error
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    }
+    
+    return NULL;
 }
 
 - (id)getTermSize
