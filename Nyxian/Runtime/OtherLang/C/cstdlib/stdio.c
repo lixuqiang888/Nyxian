@@ -49,8 +49,8 @@ struct StdVararg
 /* initializes the I/O system so error reporting works */
 void BasicIOInit(Picoc *pc)
 {
-    FILE *fakeStdout = fdopen(getFakeStdoutWriteFD(), "w+");
-    FILE *fakeStderr = fdopen(getFakeStderrWriteFD(), "w+");
+    FILE *fakeStdout = fdopen(getFakeStdoutWriteFD(), "a");
+    FILE *fakeStderr = fdopen(getFakeStderrWriteFD(), "a");
     
     pc->CStdOut = fakeStdout;
     stdinValue = stdin;

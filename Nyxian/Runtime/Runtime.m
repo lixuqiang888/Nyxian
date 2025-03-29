@@ -29,8 +29,8 @@
 #import <Nyxian-Swift.h>
 #import <Runtime/UISurface/UISurface.h>
 #import <Runtime/Modules/IO/Hook/stdout.h>
-
-extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
+#import <Runtime/Modules/UI/NyxianAlert.h>
+#import <Runtime/Safety.h>
 
 /*
  @Brief Nyxian runtime extension
@@ -50,42 +50,54 @@ extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
 - (instancetype)init
 {
     self = [super init];
-    NYXIAN_RUNTIME_SAFETY_ENABLED = true;
     _Context = [[JSContext alloc] init];
     _envRecover = [[EnvRecover alloc] init];
-    [_envRecover createBackup];
     _array = [[NSMutableArray alloc] init];
-    add_include_symbols(self);
     return self;
 }
 
 /// Main Runtime function to execute code
 - (void)run:(NSString*)path
 {
+    // Creating a backup of the current envp
+    [_envRecover createBackup];
+    
+    // Gathering code from the file
     NSString *code = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
     
+    // Changing current work directory
     NSURL *url = [[NSURL fileURLWithPath:path] URLByDeletingLastPathComponent];
     chdir([[url path] UTF8String]);
     
+    // Setting environment up to be safe
+    reset_runtime_safety_to_default();
+    add_include_symbols(self);
+    
+    // Setting up and running the code in the environment
     _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
         dprintf(getFakeStdoutWriteFD(), "%s", [[NSString stringWithFormat:@"\nNyxian %@", exception] UTF8String]);
     };
     [_Context evaluateScript:code];
     
-    // cleaning up
+    // Cleaning up mess in case
     [self cleanup];
 }
 
 /// Private cleanup function
 - (void)cleanup
 {
+    // We run each modules cleanup function
     for (id item in _array) {
         [item moduleCleanup];
     }
+    
+    // And we remove all modules from the array
     [_array removeAllObjects];
     
+    // And here we get fake stdout
     dprintf(getFakeStdoutWriteFD(), "[EXIT]\n");
     
+    // And we tell ARC that ARC can fuck them selves and release the Context
     _Context = nil;
     
     UIView *slave = UISurface_Handoff_Master();
@@ -109,6 +121,8 @@ extern bool NYXIAN_RUNTIME_SAFETY_ENABLED;
 }
 
 /// Module Handoff function
+///
+/// Function to handoff a module that has extra cleanup work todo
 - (void)handoffModule:(Module*)module
 {
     [_array addObject:module];
