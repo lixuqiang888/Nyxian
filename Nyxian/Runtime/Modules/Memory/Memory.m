@@ -24,12 +24,11 @@
 
 #import <Runtime/Modules/Memory/Memory.h>
 #import <Runtime/ErrorThrow.h>
+#import <Runtime/Safety.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 /*
  @Brief Memory Module Implementation
@@ -46,7 +45,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 - (void)moduleCleanup
 {
     [super moduleCleanup];
-    if(NYXIAN_RUNTIME_SAFETY_ENABLED)
+    if(NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
     {
         for (id item in _array) {
             MemorySafetyArrayItem_t mitem;
@@ -59,7 +58,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 /// Runtime Safety
 - (void)addPtr:(UInt64)pointer size:(UInt16)size
 {
-    if (NYXIAN_RUNTIME_SAFETY_ENABLED)
+    if (NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
     {
         MemorySafetyArrayItem_t item;
         item.pointer = @(pointer);
@@ -71,7 +70,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 - (BOOL)isPtrThere:(UInt64)pointer
 {
-    if (NYXIAN_RUNTIME_SAFETY_ENABLED)
+    if (NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
     {
         for (NSValue *value in _array)
         {
@@ -88,7 +87,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 - (void)removePtr:(UInt64)pointer
 {
-    if (NYXIAN_RUNTIME_SAFETY_ENABLED)
+    if (NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
     {
         for (NSValue *value in _array)
         {
@@ -105,7 +104,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 - (UInt16)sizeForPtr:(UInt64)pointer
 {
-    if (NYXIAN_RUNTIME_SAFETY_ENABLED)
+    if (NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
     {
         for (NSValue *value in _array)
         {

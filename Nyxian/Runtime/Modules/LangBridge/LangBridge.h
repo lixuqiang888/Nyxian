@@ -38,17 +38,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 // C Language
 - (id)C_Alloc;
-- (void)C_Release:(id)holder;
-- (void)C_CleanUp:(id)holder;
-- (void)C_Interactive:(id)holder;
+- (id)C_Release:(id)holder;
+- (id)C_CleanUp:(id)holder;
+- (id)C_Interactive:(id)holder;
 JSExportAs(C_Init,
-           - (void)C_Init:(id)holder stack_size:(int)stack_size
+           - (id)C_Init:(id)holder stack_size:(int)stack_size
            );
 JSExportAs(C_ParseFile,
-           - (void)C_ParseFile:(id)holder path:(NSString*)path
+           - (id)C_ParseFile:(id)holder path:(NSString*)path
            );
 JSExportAs(C_CallMain,
-           - (int)C_CallMain:(id)holder args:(NSArray*)args
+           - (id)C_CallMain:(id)holder args:(NSArray*)args
            );
 
 @end

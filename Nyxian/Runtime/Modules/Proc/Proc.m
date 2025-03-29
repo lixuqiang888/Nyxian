@@ -24,10 +24,9 @@
 
 #import <Runtime/Modules/Proc/Proc.h>
 #import <Runtime/ErrorThrow.h>
+#import <Runtime/Safety.h>
 
 #include <unistd.h>
-
-extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 /*
  @Brief Proc Module Implementation
@@ -78,19 +77,19 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 - (id)setuid:(UInt32)uid
 {
-    if(!NYXIAN_RUNTIME_SAFETY_ENABLED) { return @(setuid(uid)); }
+    if(!NYXIAN_RUNTIME_SAFETY_PROCESS) { return @(setuid(uid)); }
     return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
 }
 
 - (id)setgid:(UInt32)gid
 {
-    if(!NYXIAN_RUNTIME_SAFETY_ENABLED) { return @(setgid(gid)); }
+    if(!NYXIAN_RUNTIME_SAFETY_PROCESS) { return @(setgid(gid)); }
     return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
 }
 
 - (id)setpgid:(UInt32)pid pgid:(UInt32)pgid
 {
-    if(!NYXIAN_RUNTIME_SAFETY_ENABLED) { return @(setpgid(pid, pgid)); }
+    if(!NYXIAN_RUNTIME_SAFETY_PROCESS) { return @(setpgid(pid, pgid)); }
     return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
 }
 

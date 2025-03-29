@@ -34,6 +34,7 @@
 #import <Runtime/ReturnObjBuilder.h>
 #import <Runtime/ErrorThrow.h>
 #import <Runtime/Hook/tcom.h>
+#import <Runtime/Safety.h>
 
 /// Some standard headers we need
 #include <errno.h>
@@ -43,11 +44,6 @@
 #include <sys/stat.h>
 
 char* readline(const char *prompt);
-
-///
-/// This is the rediraction of the safety variable
-///
-extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 
 /*
  @Brief I/O Module Implementation
@@ -71,7 +67,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
     [super moduleCleanup];
     
     // Checking if Nyxian Runtime safety is even enabled
-    if(NYXIAN_RUNTIME_SAFETY_ENABLED)
+    if(NYXIAN_RUNTIME_SAFETY_IO_ENABLED)
     {
         // Now we execute for each item...
         for (id item in _array) {
@@ -92,7 +88,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 - (void)addFD:(UInt64)fd
 {
     // Checking if Nyxian Runtime safety is even enabled
-    if(NYXIAN_RUNTIME_SAFETY_ENABLED)
+    if(NYXIAN_RUNTIME_SAFETY_IO_ENABLED)
     {
         // Now we add the file descriptor to the Nyxian Runtime Safety array
         [_array addObject:[[NSNumber alloc] initWithUnsignedLongLong:fd]];
@@ -102,7 +98,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 - (BOOL)isFDThere:(UInt64)fd critical:(BOOL)critical
 {
     // Checking if Nyxian Runtime safety is even enabled
-    if(NYXIAN_RUNTIME_SAFETY_ENABLED)
+    if(NYXIAN_RUNTIME_SAFETY_IO_ENABLED)
     {
         // Checking if its a Standard IO
         if(!critical)
@@ -125,7 +121,7 @@ extern BOOL NYXIAN_RUNTIME_SAFETY_ENABLED;
 - (void)removeFD:(UInt64)fd
 {
     // Checking if Nyxian Runtime safety is even enabled
-    if(NYXIAN_RUNTIME_SAFETY_ENABLED)
+    if(NYXIAN_RUNTIME_SAFETY_IO_ENABLED)
     {
         // removing the file descriptor from the Nyxian Runtime safety array
         [_array removeObject:[[NSNumber alloc] initWithUnsignedLongLong:fd]];

@@ -8,6 +8,8 @@
 #import <Runtime/Modules/LangBridge/LangBridge.h>
 #import <Runtime/Modules/IO/Helper/UniOrigHolder.h>
 #import <Runtime/OtherLang/C/picoc.h>
+#import <Runtime/ErrorThrow.h>
+#import <Runtime/Safety.h>
 
 @implementation LBModule
 
@@ -19,41 +21,67 @@
 
 - (id)C_Alloc
 {
+    if(NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     Picoc *pc = malloc(sizeof(Picoc));
     UniversalOriginalHolder *holder = [[UniversalOriginalHolder alloc] init:pc];
     return holder;
 }
 
-- (void)C_Release:(id)holder
+- (id)C_Release:(id)holder
 {
+    if(NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     UniversalOriginalHolder *oholder = holder;
     Picoc *pc = oholder.ptr;
     free(pc);
+    
+    return NULL;
 }
 
-- (void)C_Init:(id)holder stack_size:(int)stack_size
+- (id)C_Init:(id)holder stack_size:(int)stack_size
 {
+    if(NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     UniversalOriginalHolder *oholder = holder;
     Picoc *pc = oholder.ptr;
     PicocInitialize(pc, stack_size);
+    
+    return NULL;
 }
 
-- (void)C_CleanUp:(id)holder
+- (id)C_CleanUp:(id)holder
 {
+    if(NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     UniversalOriginalHolder *oholder = holder;
     Picoc *pc = oholder.ptr;
     PicocCleanup(pc);
+    
+    return NULL;
 }
 
-- (void)C_ParseFile:(id)holder path:(NSString*)path
+- (id)C_ParseFile:(id)holder path:(NSString*)path
 {
+    if(NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     UniversalOriginalHolder *oholder = holder;
     Picoc *pc = oholder.ptr;
     PicocPlatformScanFile(pc, [path UTF8String]);
+    
+    return NULL;
 }
 
-- (int)C_CallMain:(id)holder args:(NSArray*)args
+- (id)C_CallMain:(id)holder args:(NSArray*)args
 {
+    if(NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     UniversalOriginalHolder *oholder = holder;
     Picoc *pc = oholder.ptr;
     
@@ -74,19 +102,24 @@
     }
     free(argv);
     
-    return pc->PicocExitValue;
+    return @(pc->PicocExitValue);
 }
 
-- (void)C_Interactive:(id)holder
+- (id)C_Interactive:(id)holder
 {
+    if(NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED)
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
     UniversalOriginalHolder *oholder = holder;
     Picoc *pc = oholder.ptr;
     
     if (PicocPlatformSetRealExitPoint(pc)) {
-        return;
+        return NULL;
     }
     
     PicocParseInteractive(pc);
+    
+    return NULL;
 }
 
 @end
