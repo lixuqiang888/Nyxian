@@ -106,19 +106,9 @@
 }
 
 - (void)setPixelAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex {
-    //dispatch_sync(dispatch_get_main_queue(), ^{
-        if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight && colorIndex < COLOR_COUNT) {
-            pixelData[x][y] = colorIndex;
-        }
-    //});
-}
-
-- (void)setPixelMainAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex {
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight && colorIndex < COLOR_COUNT) {
-            pixelData[x][y] = colorIndex;
-        }
-    });
+    if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight && colorIndex < COLOR_COUNT) {
+        pixelData[x][y] = colorIndex;
+    }
 }
 
 - (UIColor *)colorAtPixelX:(NSInteger)x y:(NSInteger)y {

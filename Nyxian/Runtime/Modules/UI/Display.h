@@ -30,7 +30,7 @@
 @protocol NyxianDisplayExport <JSExport>
 
 JSExportAs(setPixel,
-- (void)setPixelMainAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex
+- (void)setPixelAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex
            );
 - (void)redraw;
 
