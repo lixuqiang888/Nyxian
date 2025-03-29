@@ -114,6 +114,8 @@
 }
 
 /// Module check
+///
+/// In case someone tries to include the same module twice
 - (BOOL)isModuleImported:(NSString *)name
 {
     JSValue *module = [_Context objectForKeyedSubscript:name];

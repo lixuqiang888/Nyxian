@@ -88,27 +88,65 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    [[UIColor blackColor] setFill];
-    UIRectFill(rect);
+    // Set up the context for faster drawing
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+
+    // Fill the background with black color
+    CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+    CGContextFillRect(context, rect);
 
     CGFloat scaledPixelSize = ScaleFactor;
 
+    // Iterate through the screen's pixel data and draw in batches
     for (int x = 0; x < _screenWidth; x++) {
         for (int y = 0; y < _screenHeight; y++) {
             NSInteger colorIndex = pixelData[x][y];
             if (colorIndex != -1 && colorIndex < COLOR_COUNT) {
+                // Calculate the pixel's position and size
                 CGRect pixelRect = CGRectMake(x * scaledPixelSize, y * scaledPixelSize, scaledPixelSize, scaledPixelSize);
-                [colorPalette[colorIndex] setFill];
-                UIRectFill(pixelRect);
+
+                // Set the fill color from the palette
+                CGContextSetFillColorWithColor(context, colorPalette[colorIndex].CGColor);
+
+                // Fill the rectangle with the chosen color
+                CGContextFillRect(context, pixelRect);
             }
         }
     }
+
+    CGContextRestoreGState(context);
 }
 
 - (void)setPixelAtX:(NSInteger)x y:(NSInteger)y colorIndex:(NSUInteger)colorIndex {
     if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight && colorIndex < COLOR_COUNT) {
         pixelData[x][y] = colorIndex;
     }
+}
+
+- (void)fillBoxWithColorIndex:(NSInteger)xStart
+                        atY:(NSInteger)yStart
+                    withWidth:(NSInteger)width
+                   withHeight:(NSInteger)height
+                   colorIndex:(NSUInteger)colorIndex {
+    
+    if (colorIndex >= COLOR_COUNT) {
+        return; // Ensure color index is within valid range
+    }
+
+    // Ensure that the box does not go out of bounds
+    NSInteger xEnd = MIN(xStart + width, _screenWidth);
+    NSInteger yEnd = MIN(yStart + height, _screenHeight);
+
+    // Fill the box with the specified color index
+    for (NSInteger x = xStart; x < xEnd; x++) {
+        for (NSInteger y = yStart; y < yEnd; y++) {
+            pixelData[x][y] = colorIndex;
+        }
+    }
+    
+    // Redraw the area after filling
+    [self redraw];
 }
 
 - (UIColor *)colorAtPixelX:(NSInteger)x y:(NSInteger)y {
@@ -129,15 +167,9 @@
 }
 
 - (NSInteger)colorIndexAtPixelX:(NSInteger)x y:(NSInteger)y {
-    __block NSUInteger colorindex = 0;
-    
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight) {
-            colorindex = pixelData[x][y];
-        }
-    });
-    
-    return colorindex;
+    if (x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight)
+        return pixelData[x][y];
+    return 0;
 }
 
 - (NSNumber *)save2DArray:(NSArray<NSArray *> *)array {
@@ -180,7 +212,7 @@
             NSInteger x = [coordinate[0] integerValue];
             NSInteger y = [coordinate[1] integerValue];
             NSInteger colorIndex = [coordinate[2] integerValue];
-            int packedData = (x << 16) | (y << 8) | colorIndex;
+            NSInteger packedData = (x << 16) | (y << 8) | colorIndex;
             [flatArray addObject:@(packedData)];
         }
         
