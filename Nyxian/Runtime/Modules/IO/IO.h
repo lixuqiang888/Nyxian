@@ -43,9 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// They are for the purpose to communicate with with the stdin
 /// hook
 ///
-- (void)fflush;
+- (id)fync:(int)fd;
 - (id)getTermSize;
-- (id)readline:(NSString*)prompt;
 
 ///
 /// These are basically macro redirections so Nyxian Runtime can
