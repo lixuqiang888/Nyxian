@@ -137,6 +137,43 @@
     return pointer;
 }
 
+- (UInt64)calloc:(size_t)count size:(size_t)size
+{
+    UInt64 pointer = (UInt64)calloc(count, size);
+    
+    if(pointer == 0)
+        return 0;
+    
+    [self addPtr:pointer size:count * size];
+    
+    return pointer;
+}
+
+- (UInt64)realloc:(UInt64)pointer size:(size_t)size
+{
+    UInt64 newpointer = (UInt64)realloc((void*)pointer, size);
+    
+    if(newpointer == 0)
+        return 0;
+    
+    [self removePtr:pointer];
+    [self addPtr:newpointer size:size];
+    
+    return pointer;
+}
+
+- (UInt64)valloc:(size_t)size
+{
+    UInt64 pointer = (UInt64)valloc(size);
+    
+    if(pointer == 0)
+        return 0;
+    
+    [self addPtr:pointer size:size];
+    
+    return pointer;
+}
+
 - (id)free:(UInt64)pointer
 {
     if(![self isPtrThere:pointer])

@@ -251,7 +251,6 @@
     dispatch_sync(dispatch_get_main_queue(), ^{
         CGRect screenSize = [[UIScreen mainScreen] bounds];
         CGFloat screenWidth = screenSize.size.width;
-        CGFloat screenHeight = screenSize.size.height;
 
         _tracker = [[TouchTracker alloc] initWithView:self scale:(screenWidth / _screenWidth)];
         [_tracker startTracking];

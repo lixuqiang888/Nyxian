@@ -39,6 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Low level memory handling functions
 - (UInt64)malloc:(size_t)size;
+- (UInt64)calloc:(size_t)count size:(size_t)size;
+- (UInt64)realloc:(UInt64)pointer size:(size_t)size;
+- (UInt64)valloc:(size_t)size;
 - (id)free:(UInt64)pointer;
 
 /// Low level memory reading functions
