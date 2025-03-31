@@ -14,40 +14,8 @@
             filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "622"
-            endingLineNumber = "622"
-            landmarkName = "-fileno:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "07FB32AC-7571-4E68-8D2D-990D30551FF8"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "623"
-            endingLineNumber = "623"
-            landmarkName = "-fileno:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6D6ABCD4-37B4-4942-A4E2-1C6CA653D2E5"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "625"
-            endingLineNumber = "625"
+            startingLineNumber = "419"
+            endingLineNumber = "419"
             landmarkName = "-fileno:"
             landmarkType = "7">
          </BreakpointContent>
@@ -62,8 +30,8 @@
             filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "624"
-            endingLineNumber = "624"
+            startingLineNumber = "420"
+            endingLineNumber = "420"
             landmarkName = "-fileno:"
             landmarkType = "7">
          </BreakpointContent>
@@ -666,24 +634,8 @@
             filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "287"
-            endingLineNumber = "287"
-            landmarkName = "-read:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A26E21FC-EDCA-4555-AC46-124237596FC7"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "288"
-            endingLineNumber = "288"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
             landmarkName = "-read:size:"
             landmarkType = "7">
          </BreakpointContent>
@@ -698,8 +650,8 @@
             filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "289"
-            endingLineNumber = "289"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
             landmarkName = "-read:size:"
             landmarkType = "7">
          </BreakpointContent>
