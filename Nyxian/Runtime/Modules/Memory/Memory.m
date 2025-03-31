@@ -58,71 +58,78 @@
 /// Runtime Safety
 - (void)addPtr:(UInt64)pointer size:(UInt64)size
 {
-    if (NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
-    {
-        MemorySafetyArrayItem_t item;
-        item.pointer = pointer;
-        item.size = size;
-        NSValue *value = [NSValue valueWithBytes:&item objCType:@encode(MemorySafetyArrayItem_t)];
-        [_array addObject:value];
-    }
+    if (!NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
+        return;
+    
+    MemorySafetyArrayItem_t item;
+    item.pointer = pointer;
+    item.size = size;
+    NSValue *value = [NSValue valueWithBytes:&item objCType:@encode(MemorySafetyArrayItem_t)];
+    [_array addObject:value];
 }
 
 - (BOOL)isPtrThere:(UInt64)pointer
 {
-    if (NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
+    if (!NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
+        return YES;
+    
+    for (NSValue *value in _array)
     {
-        for (NSValue *value in _array)
-        {
-            MemorySafetyArrayItem_t item;
-            [value getValue:&item];
-            if (item.pointer == pointer)
-                return YES;
-        }
-        return NO;
+        MemorySafetyArrayItem_t item;
+        [value getValue:&item];
+        if (item.pointer == pointer)
+            return YES;
     }
     
-    return YES;
+    return NO;
 }
 
 - (void)removePtr:(UInt64)pointer
 {
-    if (NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
-    {
-        NSValue *objectToRemove = nil;
+    if (!NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
+        return;
+    
+    NSValue *objectToRemove = nil;
         
-        for (NSValue *value in _array)
-        {
-            MemorySafetyArrayItem_t item;
-            [value getValue:&item];
+    for (NSValue *value in _array)
+    {
+        MemorySafetyArrayItem_t item;
+        [value getValue:&item];
             
-            if (item.pointer == pointer)
-            {
-                objectToRemove = value;
-                break;
-            }
-        }
-        
-        if (objectToRemove)
-            [_array removeObject:objectToRemove];
-    }
-}
-
-- (UInt64)sizeForPtr:(UInt64)pointer
-{
-    if (NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
-    {
-        for (NSValue *value in _array)
+        if (item.pointer == pointer)
         {
-            MemorySafetyArrayItem_t item;
-            [value getValue:&item];
-            if (item.pointer == pointer)
-                return item.size;
+            objectToRemove = value;
+            break;
         }
     }
-    return UINT64_MAX;
+        
+    if (objectToRemove)
+        [_array removeObject:objectToRemove];
 }
 
+- (BOOL)inAllocationZone:(UInt64)pointer size:(UInt64)size
+{
+    if(!NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
+        return YES;
+    
+    if (pointer == 0)
+        return NO;
+    
+    if (pointer > UINT64_MAX - size)
+        return NO;
+    
+    for (NSValue *value in _array)
+    {
+        MemorySafetyArrayItem_t item;
+        [value getValue:&item];
+        UInt64 start = item.pointer;
+        UInt64 end = start + item.size;
+        if (pointer >= start && (pointer + size) <= end)
+            return YES;
+    }
+    
+    return NO;
+}
 
 /// Low level memory handling functions
 - (UInt64)malloc:(size_t)size
@@ -190,13 +197,8 @@
 /// Low level memory reading functions
 - (id)mread8:(UInt64)pointer
 {
-    if(![self isPtrThere:pointer])
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
-    
-    UInt16 pointer_size = [self sizeForPtr:pointer];
-    
-    if(pointer_size < 1)
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    if(![self inAllocationZone:pointer size:1])
+        return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint8_t *ptr = (uint8_t*)pointer;
     return [[NSNumber alloc] initWithUnsignedShort:*ptr];
@@ -204,12 +206,8 @@
 
 - (id)mread16:(UInt64)pointer
 {
-    if(![self isPtrThere:pointer])
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
-    
-    UInt16 pointer_size = [self sizeForPtr:pointer];
-    if(pointer_size < 2)
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    if(![self inAllocationZone:pointer size:2])
+        return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint16_t *ptr = (uint16_t*)pointer;
     return [[NSNumber alloc] initWithUnsignedInt:*ptr];
@@ -217,12 +215,8 @@
 
 - (id)mread32:(UInt64)pointer
 {
-    if(![self isPtrThere:pointer])
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
-    
-    UInt16 pointer_size = [self sizeForPtr:pointer];
-    if(pointer_size < 4)
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    if(![self inAllocationZone:pointer size:4])
+        return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint32_t *ptr = (uint32_t*)pointer;
     return [[NSNumber alloc] initWithUnsignedLong:*ptr];
@@ -230,12 +224,8 @@
 
 - (id)mread64:(UInt64)pointer
 {
-    if(![self isPtrThere:pointer])
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
-    
-    UInt16 pointer_size = [self sizeForPtr:pointer];
-    if(pointer_size < 8)
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    if(![self inAllocationZone:pointer size:8])
+        return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint64_t *ptr = (uint64_t*)pointer;
     return [[NSNumber alloc] initWithUnsignedLong:*ptr];
@@ -244,13 +234,8 @@
 /// Low level memory writing functions
 - (id)mwrite8:(UInt64)pointer value:(UInt8)value
 {
-    if(![self isPtrThere:pointer])
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
-    
-    UInt16 pointer_size = [self sizeForPtr:pointer];
-    
-    if(pointer_size < 1)
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    if(![self inAllocationZone:pointer size:1])
+        return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint8_t *ptr = (uint8_t*)pointer;
     *ptr = value;
@@ -260,13 +245,8 @@
 
 - (id)mwrite16:(UInt64)pointer value:(UInt16)value
 {
-    if(![self isPtrThere:pointer])
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
-    
-    UInt16 pointer_size = [self sizeForPtr:pointer];
-    
-    if(pointer_size < 2)
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    if(![self inAllocationZone:pointer size:2])
+        return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint16_t *ptr = (uint16_t*)pointer;
     *ptr = value;
@@ -276,12 +256,8 @@
 
 - (id)mwrite32:(UInt64)pointer value:(UInt32)value
 {
-    if(![self isPtrThere:pointer])
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
-    
-    UInt16 pointer_size = [self sizeForPtr:pointer];
-    if(pointer_size < 4)
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    if(![self inAllocationZone:pointer size:4])
+        return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint32_t *ptr = (uint32_t*)pointer;
     *ptr = value;
@@ -291,13 +267,8 @@
 
 - (id)mwrite64:(UInt64)pointer value:(UInt64)value
 {
-    if(![self isPtrThere:pointer])
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
-    
-    UInt16 pointer_size = [self sizeForPtr:pointer];
-    
-    if(pointer_size < 8)
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    if(![self inAllocationZone:pointer size:8])
+        return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint64_t *ptr = (uint64_t*)pointer;
     *ptr = value;
@@ -306,26 +277,17 @@
 }
 
 /// Memory buffering functions
-- (id)mread_buf_str:(UInt64)pointer start:(UInt64)start end:(UInt64)end
+- (id)mread_buf_str:(UInt64)pointer size:(UInt64)size
 {
-    if (![self isPtrThere:pointer])
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
-    
-    UInt64 pointer_size = [self sizeForPtr:pointer];
-    
-    if (start < 0 || start >= pointer_size || end > pointer_size || start > end)
+    if(![self inAllocationZone:pointer size:size])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
-    size_t buffer_size = end - start;
-    
-    char *rw_buffer = malloc(buffer_size + 1);
+    char *rw_buffer = malloc(size);
     
     if (rw_buffer == NULL)
-        return JS_THROW_ERROR(EW_NULL_POINTER);
+            return JS_THROW_ERROR(EW_NULL_POINTER);
     
-    memcpy(rw_buffer, (void *)(pointer + start), buffer_size);
-    
-    rw_buffer[buffer_size] = '\0';
+    memcpy(rw_buffer, (void *)(pointer), size);
     
     NSString *nsbuffer = [NSString stringWithUTF8String:rw_buffer];
     
@@ -334,22 +296,15 @@
     return nsbuffer;
 }
 
-- (id)mwrite_buf_str:(UInt64)pointer start:(UInt64)start end:(UInt64)end data:(NSString *)data
+- (id)mwrite_buf_str:(UInt64)pointer size:(UInt64)size data:(NSString *)data
 {
-    if (![self isPtrThere:pointer])
-        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
-
-    UInt64 pointer_size = [self sizeForPtr:pointer];
-
-    if (start < 0 || start >= pointer_size || end > pointer_size || start > end)
+    if(![self inAllocationZone:pointer size:size])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
-    NSUInteger dataLength = [data lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
-    
-    if (dataLength > (end - start))
+    if([data lengthOfBytesUsingEncoding:NSUTF8StringEncoding] > size)
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
-    memcpy((void *)(pointer + start), [data UTF8String], dataLength);
+    memcpy((void *)(pointer), [data UTF8String], size);
     
     return NULL;
 }

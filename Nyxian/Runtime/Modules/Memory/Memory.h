@@ -57,8 +57,8 @@ JSExportAs(mwrite32,         - (id)mwrite32:(UInt64)pointer value:(UInt32)value 
 JSExportAs(mwrite64,         - (id)mwrite64:(UInt64)pointer value:(UInt64)value                                                      );
 
 /// Memory buffering functions
-JSExportAs(mread_buf_str,    - (id)mread_buf_str:(UInt64)pointer start:(UInt64)start end:(UInt64)end                                 );
-JSExportAs(mwrite_buf_str,   - (id)mwrite_buf_str:(UInt64)pointer start:(UInt64)start end:(UInt64)end data:(NSString *)data          );
+JSExportAs(mread_buf_str,    - (id)mread_buf_str:(UInt64)pointer size:(UInt64)size                                                   );
+JSExportAs(mwrite_buf_str,   - (id)mwrite_buf_str:(UInt64)pointer size:(UInt64)size data:(NSString *)data                            );
 @end
 
 /// Structure to make our lives easier
