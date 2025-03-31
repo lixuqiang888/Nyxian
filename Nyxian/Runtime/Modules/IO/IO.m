@@ -201,7 +201,7 @@ char* readline(const char *prompt);
     return NULL;
 }
 
-- (id)write:(int)fd text:(NSString*)text size:(UInt16)size
+- (id)write:(int)fd text:(NSString*)text size:(UInt64)size
 {
     if(size == 0)
         return JS_THROW_ERROR(EW_INVALID_INPUT);
@@ -219,7 +219,7 @@ char* readline(const char *prompt);
     return @(bytesWritten);
 }
 
-- (id)read:(int)fd size:(UInt16)size
+- (id)read:(int)fd size:(UInt64)size
 {
     if(size == 0)
         return JS_THROW_ERROR(EW_INVALID_INPUT);
@@ -560,7 +560,7 @@ char* readline(const char *prompt);
 }
 
 // TODO: get arbitary cwd directory sizes
-- (id)getcwd:(UInt16)size
+- (id)getcwd:(UInt64)size
 {
     if(size == 0)
         size = 2048;

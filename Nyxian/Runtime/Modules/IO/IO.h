@@ -67,8 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)rmdir:(NSString*)path;
 - (id)chdir:(NSString*)path;
 JSExportAs(open,    - (id)open:(NSString *)path withFlags:(int)flags perms:(UInt16)perms                );
-JSExportAs(write,   - (id)write:(int)fd text:(NSString*)text size:(UInt16)size                          );
-JSExportAs(read,    - (id)read:(int)fd size:(UInt16)size                                                );
+JSExportAs(write,   - (id)write:(int)fd text:(NSString*)text size:(UInt64)size                          );
+JSExportAs(read,    - (id)read:(int)fd size:(UInt64)size                                                );
 JSExportAs(seek,    - (id)seek:(int)fd position:(UInt16)position flags:(int)flags                       );
 JSExportAs(access,  - (id)access:(NSString*)path flags:(int)flags                                       );
 JSExportAs(mkdir,   - (id)mkdir:(NSString*)path perms:(UInt16)perms                                     );
@@ -97,7 +97,7 @@ JSExportAs(freopen, - (id)freopen:(NSString*)path mode:(NSString*)mode fileObjec
 ///
 - (id)getenv:(NSString*)env;
 - (id)unsetenv:(NSString*)env;
-- (id)getcwd:(UInt16)size;
+- (id)getcwd:(UInt64)size;
 JSExportAs(setenv,  - (id)setenv:(NSString*)env value:(NSString*)value overwrite:(UInt32)overwrite      );
 
 @end
