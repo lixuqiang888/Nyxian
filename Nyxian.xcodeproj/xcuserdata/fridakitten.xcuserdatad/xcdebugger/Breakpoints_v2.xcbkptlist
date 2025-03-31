@@ -14,8 +14,8 @@
             filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "619"
-            endingLineNumber = "619"
+            startingLineNumber = "622"
+            endingLineNumber = "622"
             landmarkName = "-fileno:"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "620"
-            endingLineNumber = "620"
+            startingLineNumber = "623"
+            endingLineNumber = "623"
             landmarkName = "-fileno:"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "622"
-            endingLineNumber = "622"
+            startingLineNumber = "625"
+            endingLineNumber = "625"
             landmarkName = "-fileno:"
             landmarkType = "7">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "621"
-            endingLineNumber = "621"
+            startingLineNumber = "624"
+            endingLineNumber = "624"
             landmarkName = "-fileno:"
             landmarkType = "7">
          </BreakpointContent>
@@ -434,36 +434,6 @@
             endingLineNumber = "335"
             landmarkName = "-mwrite_buf_str:start:end:data:"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "A85D7E3A-FD4B-43C4-9783-7394A7DD958A - cf7b5214449e5f14"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule mwrite_buf_str:start:end:data:]"
-                  moduleName = "Nyxian"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "329"
-                  endingLineNumber = "329">
-               </Location>
-               <Location
-                  uuid = "A85D7E3A-FD4B-43C4-9783-7394A7DD958A - cf7b5214449e5c6b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule mwrite_buf_str:start:end:data:]"
-                  moduleName = "Nyxian"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "336"
-                  endingLineNumber = "336">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -480,36 +450,6 @@
             endingLineNumber = "336"
             landmarkName = "-mwrite_buf_str:start:end:data:"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "D3FDE817-D11B-48A9-8557-B82C6121360B - cf7b5214449e5f14"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule mwrite_buf_str:start:end:data:]"
-                  moduleName = "Nyxian"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "329"
-                  endingLineNumber = "329">
-               </Location>
-               <Location
-                  uuid = "D3FDE817-D11B-48A9-8557-B82C6121360B - cf7b5214449e5c6b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule mwrite_buf_str:start:end:data:]"
-                  moduleName = "Nyxian"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "336"
-                  endingLineNumber = "336">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -526,36 +466,6 @@
             endingLineNumber = "337"
             landmarkName = "-mwrite_buf_str:start:end:data:"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "88BD42AB-C554-4C82-BD39-B5137CB6C615 - cf7b5214449e5fd6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule mwrite_buf_str:start:end:data:]"
-                  moduleName = "Nyxian"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "331"
-                  endingLineNumber = "331">
-               </Location>
-               <Location
-                  uuid = "88BD42AB-C554-4C82-BD39-B5137CB6C615 - cf7b5214449e5c2d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule mwrite_buf_str:start:end:data:]"
-                  moduleName = "Nyxian"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "338"
-                  endingLineNumber = "338">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -572,36 +482,6 @@
             endingLineNumber = "339"
             landmarkName = "-mwrite_buf_str:start:end:data:"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "8DEE2513-F03A-4084-BE8F-2A31CB6CA2D7 - cf7b5214449e5fa9"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule mwrite_buf_str:start:end:data:]"
-                  moduleName = "Nyxian"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "334"
-                  endingLineNumber = "334">
-               </Location>
-               <Location
-                  uuid = "8DEE2513-F03A-4084-BE8F-2A31CB6CA2D7 - cf7b5214449e5c80"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule mwrite_buf_str:start:end:data:]"
-                  moduleName = "Nyxian"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "341"
-                  endingLineNumber = "341">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -618,36 +498,6 @@
             endingLineNumber = "338"
             landmarkName = "-mwrite_buf_str:start:end:data:"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "CBC869DA-9E35-4C3C-8861-F0078175AD11 - cf7b5214449e5fd6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule mwrite_buf_str:start:end:data:]"
-                  moduleName = "Nyxian"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "331"
-                  endingLineNumber = "331">
-               </Location>
-               <Location
-                  uuid = "CBC869DA-9E35-4C3C-8861-F0078175AD11 - cf7b5214449e5c2d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule mwrite_buf_str:start:end:data:]"
-                  moduleName = "Nyxian"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "338"
-                  endingLineNumber = "338">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -698,12 +548,12 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "B1CDE883-38F6-4779-A97B-744FEEEE6EFE - 5dde9cd4c5225370"
+                  uuid = "B1CDE883-38F6-4779-A97B-744FEEEE6EFE - 34844722aa667bcd"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "-[MemoryModule isPtrThere:]"
-                  moduleName = "Nyxian"
+                  moduleName = "Nyxian.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
                   startingColumnNumber = "9223372036854775807"
@@ -712,12 +562,12 @@
                   endingLineNumber = "75">
                </Location>
                <Location
-                  uuid = "B1CDE883-38F6-4779-A97B-744FEEEE6EFE - 5dde9cd4c5225370"
+                  uuid = "B1CDE883-38F6-4779-A97B-744FEEEE6EFE - 34844722aa667bcd"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "-[MemoryModule isPtrThere:]"
-                  moduleName = "Nyxian"
+                  moduleName = "Nyxian.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
                   startingColumnNumber = "9223372036854775807"
@@ -776,12 +626,12 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "7023223A-65F5-4342-B830-62385EED39D4 - 5dde9cd4c5225370"
+                  uuid = "7023223A-65F5-4342-B830-62385EED39D4 - 34844722aa667bcd"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "-[MemoryModule isPtrThere:]"
-                  moduleName = "Nyxian"
+                  moduleName = "Nyxian.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
                   startingColumnNumber = "9223372036854775807"
@@ -790,12 +640,12 @@
                   endingLineNumber = "75">
                </Location>
                <Location
-                  uuid = "7023223A-65F5-4342-B830-62385EED39D4 - 5dde9cd4c5225370"
+                  uuid = "7023223A-65F5-4342-B830-62385EED39D4 - 34844722aa667bcd"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "-[MemoryModule isPtrThere:]"
-                  moduleName = "Nyxian"
+                  moduleName = "Nyxian.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
                   startingColumnNumber = "9223372036854775807"
@@ -804,6 +654,54 @@
                   endingLineNumber = "75">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E59D8E46-8C20-4576-B91D-BFDFCBF7338F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "287"
+            endingLineNumber = "287"
+            landmarkName = "-read:size:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A26E21FC-EDCA-4555-AC46-124237596FC7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "288"
+            endingLineNumber = "288"
+            landmarkName = "-read:size:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D6325BC0-A40C-41AB-A5C2-6310E6A57002"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "289"
+            endingLineNumber = "289"
+            landmarkName = "-read:size:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

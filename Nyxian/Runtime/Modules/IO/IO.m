@@ -324,6 +324,9 @@ char* readline(const char *prompt);
     // Now we convert NSData to the resulting data the user wants to have
     NSString *resultString = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
     
+    if(resultString == nil)
+        return JS_THROW_ERROR(EW_NULL_POINTER);
+    
     // We return a object with the necessary properties
     return ReturnObjectBuilder(@{
         @"bytesRead": @(bytesRead),

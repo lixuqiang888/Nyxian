@@ -551,8 +551,6 @@ static int incomplete (lua_State *L, int status) {
   return 0;  /* else... */
 }
 
-char *fgetsnyxian(char *buffer, int size);
-
 /*
 ** Prompt the user, read a line, and push it into the Lua stack.
 */
@@ -563,7 +561,7 @@ static int pushline (lua_State *L, int firstline) {
   //char *b = lua_readline(buffer, prmt);
   printf("%s", prmt);
   char *base = malloc(256);
-  char *b = fgetsnyxian(base, 256);
+    char *b;// = fgetsnyxian(base, 256);
   lua_pop(L, 1);  /* remove prompt */
   if (b == NULL)
     return 0;  /* no input */
