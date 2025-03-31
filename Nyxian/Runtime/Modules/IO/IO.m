@@ -567,6 +567,9 @@ char* readline(const char *prompt);
     
     char *rw_buffer = malloc(size);
     
+    if(rw_buffer == NULL)
+        return JS_THROW_ERROR(EW_NULL_POINTER);
+    
     if(getcwd(rw_buffer, size) == NULL)
     {
         free(rw_buffer);
