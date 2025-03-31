@@ -1,5 +1,5 @@
 {
-  "originHash" : "46a746db605a211619978bbfa2d3bc5f8d07d9904d9814c1241fe4aabaa4770f",
+  "originHash" : "353eb30aac1c2fab742ddc4d416c7b4babaf4ad631261590c24fc3de71ef3379",
   "pins" : [
     {
       "identity" : "fluidgradient",
@@ -80,6 +80,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "db16e76558122e834ee214c8dc755b4a3edc82a9"
+      }
+    },
+    {
+      "identity" : "tree-sitter-objc",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tree-sitter-grammars/tree-sitter-objc.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "181a81b8f23a2d593e7ab4259981f50122909fda"
       }
     },
     {

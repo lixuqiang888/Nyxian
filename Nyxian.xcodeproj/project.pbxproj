@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AF1015D52D92EEB6009F362F /* TreeSitterLua in Frameworks */ = {isa = PBXBuildFile; productRef = AF1015D42D92EEB6009F362F /* TreeSitterLua */; };
 		AF14830E2D8DE2700006B509 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = AF14830D2D8DE2700006B509 /* FluidGradient */; };
+		AF1C222D2D99CBB1003D83A9 /* TreeSitterObjc in Frameworks */ = {isa = PBXBuildFile; productRef = AF1C222C2D99CBB1003D83A9 /* TreeSitterObjc */; };
 		AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */ = {isa = PBXBuildFile; productRef = AF4836262D8AF4AA00830CED /* SwiftTerm */; };
 		AF504BD72D956849005FA8D2 /* TreeSitterXML in Frameworks */ = {isa = PBXBuildFile; productRef = AF504BD62D956849005FA8D2 /* TreeSitterXML */; };
 		AF504BEA2D9579E1005FA8D2 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = AF504BE92D9579E1005FA8D2 /* Swifter */; };
@@ -39,6 +40,7 @@
 				AF504BEA2D9579E1005FA8D2 /* Swifter in Frameworks */,
 				AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */,
 				AF504BED2D957A72005FA8D2 /* TreeSitterHTML in Frameworks */,
+				AF1C222D2D99CBB1003D83A9 /* TreeSitterObjc in Frameworks */,
 				AF504BD72D956849005FA8D2 /* TreeSitterXML in Frameworks */,
 				AFB1651D2D91A36300872EDB /* Runestone in Frameworks */,
 				AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */,
@@ -52,10 +54,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AF1C22362D99D674003D83A9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AFBE416C2D85E4B500315155 = {
 			isa = PBXGroup;
 			children = (
 				AFBE41772D85E4B500315155 /* Nyxian */,
+				AF1C22362D99D674003D83A9 /* Frameworks */,
 				AFBE41762D85E4B500315155 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -98,6 +108,7 @@
 				AF504BD62D956849005FA8D2 /* TreeSitterXML */,
 				AF504BE92D9579E1005FA8D2 /* Swifter */,
 				AF504BEC2D957A72005FA8D2 /* TreeSitterHTML */,
+				AF1C222C2D99CBB1003D83A9 /* TreeSitterObjc */,
 			);
 			productName = FJS;
 			productReference = AFBE41752D85E4B500315155 /* Nyxian.app */;
@@ -139,6 +150,7 @@
 				AF504BD52D956849005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-xml" */,
 				AF504BE82D9579E1005FA8D2 /* XCRemoteSwiftPackageReference "swifter" */,
 				AF504BEB2D957A72005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-html" */,
+				AF1C222B2D99CBB1003D83A9 /* XCRemoteSwiftPackageReference "tree-sitter-objc" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AFBE41762D85E4B500315155 /* Products */;
@@ -323,6 +335,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Nyxian/libffi-iphoneos",
+					"$(PROJECT_DIR)/Nyxian/Runtime/FFI",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.nyxian;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -362,6 +379,11 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Nyxian/libffi-iphoneos",
+					"$(PROJECT_DIR)/Nyxian/Runtime/FFI",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.nyxian;
@@ -411,6 +433,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.0;
+			};
+		};
+		AF1C222B2D99CBB1003D83A9 /* XCRemoteSwiftPackageReference "tree-sitter-objc" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tree-sitter-grammars/tree-sitter-objc.git";
+			requirement = {
+				branch = master;
+				kind = branch;
 			};
 		};
 		AF4836252D8AF4AA00830CED /* XCRemoteSwiftPackageReference "SwiftTerm" */ = {
@@ -489,6 +519,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AF14830C2D8DE2700006B509 /* XCRemoteSwiftPackageReference "FluidGradient" */;
 			productName = FluidGradient;
+		};
+		AF1C222C2D99CBB1003D83A9 /* TreeSitterObjc */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF1C222B2D99CBB1003D83A9 /* XCRemoteSwiftPackageReference "tree-sitter-objc" */;
+			productName = TreeSitterObjc;
 		};
 		AF4836262D8AF4AA00830CED /* SwiftTerm */ = {
 			isa = XCSwiftPackageProductDependency;

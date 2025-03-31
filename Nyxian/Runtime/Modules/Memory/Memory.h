@@ -60,8 +60,8 @@ JSExportAs(mwrite_buf_str,   - (id)mwrite_buf_str:(UInt64)pointer start:(UInt64)
 
 /// Structure to make our lives easier
 typedef struct {
-    NSNumber *pointer;
-    NSNumber *size;
+    UInt64 pointer;
+    UInt64 size;
 } MemorySafetyArrayItem_t;
 typedef void (^MemorySafetyArrayItemHandler)(MemorySafetyArrayItem_t item);
 

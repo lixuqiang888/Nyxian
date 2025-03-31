@@ -50,19 +50,19 @@
         for (id item in _array) {
             MemorySafetyArrayItem_t mitem;
             [item getValue:&mitem];
-            free((void*)[mitem.pointer unsignedLongLongValue]);
+            free((void*)mitem.pointer);
         }
     }
 }
 
 /// Runtime Safety
-- (void)addPtr:(UInt64)pointer size:(UInt16)size
+- (void)addPtr:(UInt64)pointer size:(UInt64)size
 {
     if (NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
     {
         MemorySafetyArrayItem_t item;
-        item.pointer = @(pointer);
-        item.size = @(size);
+        item.pointer = pointer;
+        item.size = size;
         NSValue *value = [NSValue valueWithBytes:&item objCType:@encode(MemorySafetyArrayItem_t)];
         [_array addObject:value];
     }
@@ -76,7 +76,7 @@
         {
             MemorySafetyArrayItem_t item;
             [value getValue:&item];
-            if ([item.pointer unsignedLongLongValue] == pointer) {
+            if (item.pointer == pointer) {
                 return YES;
             }
         }
@@ -93,7 +93,7 @@
         {
             MemorySafetyArrayItem_t item;
             [value getValue:&item];
-            if ([item.pointer unsignedLongLongValue] == pointer)
+            if (item.pointer == pointer)
             {
                 [_array removeObject:value];
                 break;
@@ -102,7 +102,7 @@
     }
 }
 
-- (UInt16)sizeForPtr:(UInt64)pointer
+- (UInt64)sizeForPtr:(UInt64)pointer
 {
     if (NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
     {
@@ -110,23 +110,30 @@
         {
             MemorySafetyArrayItem_t item;
             [value getValue:&item];
-            if ([item.pointer unsignedLongLongValue] == pointer)
+            if (item.pointer == pointer)
             {
-                return [item.size unsignedShortValue]; // Return the associated size
+                return item.size; // Return the associated size
             }
         }
     }
-    return UINT16_MAX;
+    return UINT64_MAX;
 }
 
 
 /// Low level memory handling functions
 - (UInt64)malloc:(size_t)size
 {
-    UInt64 pointer;
-    void *ptr = malloc(size);
-    pointer = (UInt64)ptr;
+    // Allocating memory
+    UInt64 pointer = (UInt64)malloc(size);
+    
+    // Check if the pointer provided by malloc is even valid
+    if(pointer == 0)
+        return 0;
+    
+    // Adding the pointer
     [self addPtr:pointer size:size];
+    
+    // Returning the pointer
     return pointer;
 }
 
@@ -299,7 +306,7 @@
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
     
-    UInt16 pointer_size = [self sizeForPtr:pointer];
+    UInt64 pointer_size = [self sizeForPtr:pointer];
     
     if (start < 0 || start >= pointer_size || end > pointer_size || start > end)
     {
@@ -331,7 +338,7 @@
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     }
 
-    UInt16 pointer_size = [self sizeForPtr:pointer];
+    UInt64 pointer_size = [self sizeForPtr:pointer];
 
     if (start < 0 || start >= pointer_size || end > pointer_size || start > end)
     {
