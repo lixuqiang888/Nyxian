@@ -64,6 +64,7 @@ JSExportAs(mwrite_buf_str,   - (id)mwrite_buf_str:(UInt64)pointer size:(UInt64)s
 /// Memory mapping functions
 JSExportAs(mmap,             - (id)mmap:(UInt64)size prot:(int)prot flags:(int)flags fd:(int)fd offset:(UInt64)offset                );
 JSExportAs(munmap,           - (id)munmap:(UInt64)pointer size:(UInt64)size                                                          );
+JSExportAs(mprotect,         - (id)mprotect:(UInt64)pointer size:(UInt64)size prot:(int)prot                                         );
 @end
 
 /// Structure to make our lives easier

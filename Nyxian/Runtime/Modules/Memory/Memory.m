@@ -365,4 +365,18 @@
     return NULL;
 }
 
+- (id)mprotect:(UInt64)pointer size:(UInt64)size prot:(int)prot
+{
+    if(![self isPtrThere:pointer])
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    
+    if(![self doesPtrHaveSignature:pointer signature:MEMORY_MAP])
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    
+    if(mprotect((void*)pointer, size, prot) == -1)
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    
+    return NULL;
+}
+
 @end
