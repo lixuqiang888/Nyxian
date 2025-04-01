@@ -158,6 +158,9 @@
 
 - (UInt64)realloc:(UInt64)pointer size:(size_t)size
 {
+    if(![self inAllocationZone:pointer size:0])
+        return 0;
+    
     UInt64 newpointer = (UInt64)realloc((void*)pointer, size);
     
     if(newpointer == 0)
