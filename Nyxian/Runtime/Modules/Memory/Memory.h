@@ -39,10 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Low level memory handling functions
 - (UInt64)malloc:(size_t)size;
-- (UInt64)calloc:(size_t)count size:(size_t)size;
-- (UInt64)realloc:(UInt64)pointer size:(size_t)size;
 - (UInt64)valloc:(size_t)size;
 - (id)free:(UInt64)pointer;
+JSExportAs(calloc,          - (UInt64)calloc:(size_t)count size:(size_t)size                                                         );
+JSExportAs(realloc,         - (UInt64)realloc:(UInt64)pointer size:(size_t)size                                                      );
 
 /// Low level memory reading functions
 - (id)mread8:(UInt64)pointer;
