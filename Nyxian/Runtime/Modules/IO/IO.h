@@ -43,7 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// They are for the purpose to communicate with with the stdin
 /// hook
 ///
-- (id)fync:(int)fd;
+- (NSString*)perror;
+- (id)fsync:(int)fd;
 - (id)getTermSize;
 
 ///

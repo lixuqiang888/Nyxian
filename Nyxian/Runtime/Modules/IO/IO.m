@@ -112,7 +112,12 @@ char* readline(const char *prompt);
 /// They are for the purpose to communicate with with the stdin
 /// hook
 ///
-- (id)fync:(int)fd
+- (NSString*)perror
+{
+    return @(strerror(errno));
+}
+
+- (id)fsync:(int)fd
 {
     if(![self isFDThere:fd critical:YES])
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);

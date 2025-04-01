@@ -28,6 +28,7 @@
 #import <Runtime/Modules/Module.h>
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
+#import <Runtime/Modules/Memory/Macro.h>
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -59,14 +60,23 @@ JSExportAs(mwrite64,         - (id)mwrite64:(UInt64)pointer value:(UInt64)value 
 /// Memory buffering functions
 JSExportAs(mread_buf_str,    - (id)mread_buf_str:(UInt64)pointer size:(UInt64)size                                                   );
 JSExportAs(mwrite_buf_str,   - (id)mwrite_buf_str:(UInt64)pointer size:(UInt64)size data:(NSString *)data                            );
+
+/// Memory mapping functions
+JSExportAs(mmap,             - (id)mmap:(UInt64)size prot:(int)prot flags:(int)flags fd:(int)fd offset:(UInt64)offset                );
+JSExportAs(munmap,           - (id)munmap:(UInt64)pointer size:(UInt64)size                                                          );
 @end
 
 /// Structure to make our lives easier
 typedef struct {
     UInt64 pointer;
     UInt64 size;
+    UInt8 signature;
 } MemorySafetyArrayItem_t;
 typedef void (^MemorySafetyArrayItemHandler)(MemorySafetyArrayItem_t item);
+
+/// memory type signatures
+#define MEMORY_BLOCK    0x00
+#define MEMORY_MAP      0x01
 
 /*
  @Brief Memory Module Interface

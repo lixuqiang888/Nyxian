@@ -74,6 +74,8 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         [Runtime.Context setObject:stringModule forKeyedSubscript:@"string"];
         return NULL;
     } else if ([LibName isEqualToString:@"memory"]) {
+        MEMORY_MACRO_MAP()
+        
         MemoryModule *memoryModule = [[MemoryModule alloc] init];
         [Runtime.Context setObject:memoryModule forKeyedSubscript:@"memory"];
         [Runtime handoffModule:memoryModule];

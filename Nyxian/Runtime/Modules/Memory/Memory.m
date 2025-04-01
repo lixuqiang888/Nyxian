@@ -49,14 +49,17 @@
         for (id item in _array) {
             MemorySafetyArrayItem_t mitem;
             [item getValue:&mitem];
-            free((void*)mitem.pointer);
+            if(mitem.signature == MEMORY_BLOCK)
+                free((void*)mitem.pointer);
+            else if(mitem.signature == MEMORY_MAP)
+                munmap((void*)mitem.pointer, mitem.size);
         }
     
     [_array removeAllObjects];
 }
 
 /// Runtime Safety
-- (void)addPtr:(UInt64)pointer size:(UInt64)size
+- (void)addPtr:(UInt64)pointer size:(UInt64)size signature:(UInt8)signature
 {
     if (!NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
         return;
@@ -64,6 +67,7 @@
     MemorySafetyArrayItem_t item;
     item.pointer = pointer;
     item.size = size;
+    item.signature = signature;
     NSValue *value = [NSValue valueWithBytes:&item objCType:@encode(MemorySafetyArrayItem_t)];
     [_array addObject:value];
 }
@@ -79,6 +83,23 @@
         [value getValue:&item];
         if (item.pointer == pointer)
             return YES;
+    }
+    
+    return NO;
+}
+
+- (BOOL)doesPtrHaveSignature:(UInt64)pointer signature:(UInt8)signature
+{
+    if (!NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
+        return YES;
+    
+    for (NSValue *value in _array)
+    {
+        MemorySafetyArrayItem_t item;
+        [value getValue:&item];
+        if (item.pointer == pointer)
+            if (item.signature == signature)
+                return YES;
     }
     
     return NO;
@@ -139,7 +160,7 @@
     if(pointer == 0)
         return 0;
     
-    [self addPtr:pointer size:size];
+    [self addPtr:pointer size:size signature:MEMORY_BLOCK];
     
     return pointer;
 }
@@ -151,7 +172,7 @@
     if(pointer == 0)
         return 0;
     
-    [self addPtr:pointer size:count * size];
+    [self addPtr:pointer size:count * size signature:MEMORY_BLOCK];
     
     return pointer;
 }
@@ -167,7 +188,7 @@
         return 0;
     
     [self removePtr:pointer];
-    [self addPtr:newpointer size:size];
+    [self addPtr:newpointer size:size signature:MEMORY_BLOCK];
     
     return pointer;
 }
@@ -179,7 +200,7 @@
     if(pointer == 0)
         return 0;
     
-    [self addPtr:pointer size:size];
+    [self addPtr:pointer size:size signature:MEMORY_BLOCK];
     
     return pointer;
 }
@@ -188,6 +209,9 @@
 {
     if(![self isPtrThere:pointer])
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    
+    if(![self doesPtrHaveSignature:pointer signature:MEMORY_BLOCK])
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     
     void *ptr = (void*)pointer;
     free(ptr);
@@ -308,6 +332,35 @@
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     memcpy((void *)(pointer), [data UTF8String], size);
+    
+    return NULL;
+}
+
+/// Memory map handling functions
+- (id)mmap:(UInt64)size prot:(int)prot flags:(int)flags fd:(int)fd offset:(UInt64)offset
+{
+    UInt64 pointer = (UInt64)mmap(NULL, size, prot, flags, fd, offset);
+    
+    if(pointer == 0)
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    
+    [self addPtr:pointer size:size signature:MEMORY_MAP];
+    
+    return @(pointer);
+}
+
+- (id)munmap:(UInt64)pointer size:(UInt64)size
+{
+    if(![self isPtrThere:pointer])
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    
+    if(![self doesPtrHaveSignature:pointer signature:MEMORY_MAP])
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    
+    if(munmap((void*)pointer, size) != 0)
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    
+    [self removePtr:pointer];
     
     return NULL;
 }
