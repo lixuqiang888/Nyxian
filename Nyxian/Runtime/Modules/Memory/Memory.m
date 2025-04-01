@@ -341,9 +341,6 @@
 {
     UInt64 pointer = (UInt64)mmap(NULL, size, prot, flags, fd, offset);
     
-    if(pointer == 0)
-        return JS_THROW_ERROR(EW_UNEXPECTED);
-    
     if(pointer == (UInt64)MAP_FAILED)
         return JS_THROW_ERROR(EW_UNEXPECTED);
     
