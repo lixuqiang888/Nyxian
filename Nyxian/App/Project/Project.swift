@@ -8,11 +8,7 @@
 import SwiftUI
 
 struct ProjectView: View {
-    @State private var project: [Project] = []
-    @State private var create_project_popup: Bool = false
-    @State private var settings_project_popup: Bool = false
-    @State private var name: String = ""
-    @State private var type: Int = 1
+    @Binding var project: [Project]
     
     @State private var actpath: String = ""
     @State private var action: Int = 0
@@ -54,71 +50,12 @@ struct ProjectView: View {
             }
             .navigationTitle("Nyxian")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Menu {
-                        Section {
-                            Button( action: {
-                                create_project_popup = true
-                            }) {
-                                Label("Create", systemImage: "plus")
-                            }
-                        }
-                        Section {
-                            Menu {
-                                Button( action: {
-                                    path = "command.c_repl999"
-                                    sheet = true
-                                }) {
-                                    Text("C")
-                                }
-                                Button( action: {
-                                    path = "command.lua_repl999"
-                                    sheet = true
-                                }) {
-                                    Text("Lua")
-                                }
-                            } label: {
-                                Label("REPL", systemImage: "apple.terminal.fill")
-                            }
-                            Button( action: {
-                                settings_project_popup = true
-                            }) {
-                                Label("Settings", systemImage: "gear")
-                            }
-                        }
-                    } label: {
-                        Label("", systemImage: "ellipsis.circle")
-                    }
-                }
-            }
             .onAppear {
                 GetProjectsBind(Projects: $project)
             }
         }
         .navigationViewStyle(.stack)
         .accentColor(.primary)
-        .fullScreenCover(isPresented: $sheet) {
-            //HeadTerminalView(sheet: $sheet, path: path, title: "Terminal")
-        }
-        .sheet(isPresented: $create_project_popup) {
-            BottomPopupView {
-                POHeader(title: "Create Project")
-                POTextField(title: "Name", content: $name)
-                POPicker(function: create_project, title: "Schemes", arrays: [PickerArrays(title: "Scripting", items: [PickerItems(id: 1, name: "Nyxian"), PickerItems(id: 2, name: "C"), PickerItems(id: 3, name: "Lua")]), PickerArrays(title: "Miscellaneous", items: [PickerItems(id: 4, name: "WebServer")])], type: $type)
-            }
-            .background(BackgroundClearView())
-            .edgesIgnoringSafeArea([.bottom])
-        }
-        .sheet(isPresented: $settings_project_popup) {
-            SettingsView()
-        }
-    }
-    
-    private func create_project() -> Void {
-        _ = MakeMiniProject(Name: name, type: type)
-        GetProjectsBind(Projects: $project)
-        create_project_popup = false
     }
 }
 

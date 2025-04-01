@@ -278,7 +278,6 @@ struct NavigationBarViewControllerRepresentable: UIViewControllerRepresentable {
         navigationBar.scrollEdgeAppearance = appearance
 
         let saveButton = ClosureBarButtonItem(title: "Save", style: .plain) {
-            textView.endEditing(true)
             let fileURL = URL(fileURLWithPath: filepath)
             do {
                 try textView.text.write(to: fileURL, atomically: true, encoding: .utf8)

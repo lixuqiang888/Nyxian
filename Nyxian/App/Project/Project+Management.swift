@@ -43,7 +43,7 @@ func MakeMiniProject(Name: String, type: Int) -> Int {
 
         switch(type) {
         case 1: // Nyxian
-            FileManager.default.createFile(atPath: "\(ProjectPath)/main.nx", contents: Data("\(authorgen(file: "main.nx"))include(\"io\");\n\nfunction print(msg) {\n  let len = msg.length;\n  for(let i = 0; i < len; i++) {\n    io.putchar(msg.codePointAt(i));\n  }\n}\n\nprint(\"Hello, World!\\n\");".utf8))
+            FileManager.default.createFile(atPath: "\(ProjectPath)/main.nx", contents: Data("\(authorgen(file: "main.nx"))include(\"io\");\n\nfunction print(msg) {\n  io.write(STDOUT_FILENO, msg, msg.length)\n}\n\nprint(\"Hello, World!\\n\");".utf8))
             break
         case 2: // C
             FileManager.default.createFile(atPath: "\(ProjectPath)/main.c", contents: Data("\(authorgen(file: "main.c"))#include <stdio.h>\n \nint main(void) {\n    printf(\"Hello, World!\\n\");\n    return 0;\n}".utf8))

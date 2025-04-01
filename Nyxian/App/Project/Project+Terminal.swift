@@ -267,7 +267,7 @@ struct HeadTerminalView: View {
                     }
                 }
                 .onDisappear {
-                    UIInit(type: 1)
+                    UIInit(type: 0)
                 }
         }
         .navigationViewStyle(.stack)

@@ -30,11 +30,44 @@ let RootPath: String = "\(NSHomeDirectory())/Documents"
 struct FJSApp: App {
     init() {
         fake_stdin_init()
-        UIInit(type: 1)
+        UIInit(type: 0)
     }
+    
+    @State private var rotateNow: Bool = false
+    
+    @State private var selectedTab = 0
+    
     var body: some Scene {
         WindowGroup {
-            ProjectView()
+            RootView()
         }
+    }
+}
+
+struct RootView: View {
+    @State private var project_list_id: UUID = UUID()
+    @State private var projects: [Project] = []
+    
+    var body: some View {
+        TabView() {
+            Home()
+                .tabItem {
+                    Label("Home", systemImage: "house.fill")
+                }
+            ProjectView(project: $projects)
+                .tabItem {
+                    Label("Projects", systemImage: "folder.fill")
+                }
+            Text("Eta S0n")
+                .tabItem {
+                    Label("Libraries", systemImage: "book")
+                }
+            SettingsView()
+                .tabItem {
+                        Label("Settings", systemImage: "gear")
+                }
+                
+        }
+        .accentColor(.primary)
     }
 }

@@ -35,5 +35,6 @@ struct POTextField: View {
             .cornerRadius(10)
             .disableAutocorrection(true)
             .autocapitalization(.none)
+            .keyboardType(.asciiCapable)
     }
 }
