@@ -7,205 +7,61 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "977838CC-AEBA-4635-9734-153167F9556B"
+            uuid = "3A5B5072-9ECE-4321-9FAF-823F55CBCC7E"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
-            landmarkName = "-write:text:size:"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
+            landmarkName = "-read:size:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D4449343-7A1C-4020-9875-C4478D46D213"
+            uuid = "2077B029-0DE5-46D6-9F8B-9D5DC1583D63"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "206"
-            endingLineNumber = "206"
-            landmarkName = "-write:text:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "1010C76A-06AB-44CF-A1AE-6FA405CA8FFC"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
-            landmarkName = "-write:text:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "BFEA53BB-7390-4B7D-B85C-CB2ED7514DBE"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "285"
-            endingLineNumber = "285"
-            landmarkName = "-mread_buf_str:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "710619CB-BD8B-4FEE-9F6B-96071475A84E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "239"
-            endingLineNumber = "239"
-            landmarkName = "-mwrite8:value:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2638F3C0-663A-4CCE-A76D-5D92A716B5A5"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
-            landmarkName = "-inAllocationZone:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0D5B9395-5351-4BD4-83C5-3FF7208999E9"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
-            landmarkName = "-inAllocationZone:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "BF04B55D-7D62-401F-B8C3-607365887D9D"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "113"
-            endingLineNumber = "113"
-            landmarkName = "-inAllocationZone:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A2BE7CB2-BEB2-4AAF-9B64-B6F7FBBB1BBF"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "114"
-            endingLineNumber = "114"
-            landmarkName = "-inAllocationZone:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "E15D3750-941A-4864-BF05-AF5657C344AE"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "122"
-            endingLineNumber = "122"
-            landmarkName = "-inAllocationZone:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B9B309AA-E93E-4BF5-B502-4550D576E79A"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "121"
-            endingLineNumber = "121"
-            landmarkName = "-inAllocationZone:size:"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
+            landmarkName = "-read:size:"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "B9B309AA-E93E-4BF5-B502-4550D576E79A - 9471c2d768748d4e"
+                  uuid = "2077B029-0DE5-46D6-9F8B-9D5DC1583D63 - c8a66044119ed565"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule inAllocationZone:size:]"
+                  symbolName = "-[IOModule read:size:]"
                   moduleName = "Nyxian.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
+                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/IO/IO.m"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "121"
-                  endingLineNumber = "121">
+                  startingLineNumber = "232"
+                  endingLineNumber = "232">
                </Location>
                <Location
-                  uuid = "B9B309AA-E93E-4BF5-B502-4550D576E79A - 9471c2d768748d4e"
+                  uuid = "2077B029-0DE5-46D6-9F8B-9D5DC1583D63 - c8a66044119ed500"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule inAllocationZone:size:]"
+                  symbolName = "-[IOModule read:size:]"
                   moduleName = "Nyxian.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
+                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/IO/IO.m"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "121"
-                  endingLineNumber = "121">
+                  startingLineNumber = "235"
+                  endingLineNumber = "235">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -213,316 +69,112 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "70CFFBC4-9C7E-42D4-ACDB-AC19CF0A9658"
+            uuid = "BA95CBB8-2DE6-4027-AAF1-3395AB4CF04D"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
+            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
-            landmarkName = "-inAllocationZone:size:"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
+            landmarkName = "-read:size:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A1188062-DDD8-4E51-A058-55F35E7617CF"
+            uuid = "FAD22736-4D20-47BD-854C-6588F81133E2"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
+            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
-            landmarkName = "-inAllocationZone:size:"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
+            landmarkName = "-read:size:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "DB5B0277-AE85-4747-AAE3-2F256744AFB5"
+            uuid = "8B4060AD-28B5-4E3A-A8C8-9173E7519DB2"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
+            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "125"
-            endingLineNumber = "125"
-            landmarkName = "-inAllocationZone:size:"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
+            landmarkName = "-read:size:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0FCC6D53-A7B1-4BD1-937B-1FEE18DA872C"
+            uuid = "2921CDB5-5AF3-4EC2-B9D0-09D24A364AD1"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
+            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
-            landmarkName = "-inAllocationZone:size:"
+            startingLineNumber = "233"
+            endingLineNumber = "233"
+            landmarkName = "-read:size:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "DD44E930-AEFC-47B0-B99D-CC903285639E"
+            uuid = "F9895681-918F-4CAF-9D95-83B3D17F0452"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
+            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
-            landmarkName = "-inAllocationZone:size:"
+            startingLineNumber = "241"
+            endingLineNumber = "241"
+            landmarkName = "-read:size:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C69840F0-88CD-4852-9684-43C93D45F5FC"
+            uuid = "D9569564-0B9A-4FFC-9120-D4E4D629C485"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
+            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
-            landmarkName = "-inAllocationZone:size:"
+            startingLineNumber = "242"
+            endingLineNumber = "242"
+            landmarkName = "-read:size:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0B7397AD-D9DF-48D0-B5F6-7072D4FCEAC3"
+            uuid = "8477901D-EA60-468B-952A-14CD04D04831"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
+            filePath = "Nyxian/Runtime/Modules/IO/IO.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "129"
-            endingLineNumber = "129"
-            landmarkName = "-inAllocationZone:size:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "0B7397AD-D9DF-48D0-B5F6-7072D4FCEAC3 - 9471c2d768748cb6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule inAllocationZone:size:]"
-                  moduleName = "Nyxian.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "129"
-                  endingLineNumber = "129">
-               </Location>
-               <Location
-                  uuid = "0B7397AD-D9DF-48D0-B5F6-7072D4FCEAC3 - 9471c2d768748cb6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule inAllocationZone:size:]"
-                  moduleName = "Nyxian.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "129"
-                  endingLineNumber = "129">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "42C2C816-5D63-4374-B87D-637F4A4B956E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
-            landmarkName = "-inAllocationZone:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "CC4718EF-3F18-493A-8C49-02FC0628DF22"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119"
-            landmarkName = "-inAllocationZone:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "EC6E2EC5-E4A4-4C41-9E12-6B792952A049"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
-            landmarkName = "-inAllocationZone:size:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "EC6E2EC5-E4A4-4C41-9E12-6B792952A049 - 9471c2d768748d4e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule inAllocationZone:size:]"
-                  moduleName = "Nyxian.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "121"
-                  endingLineNumber = "121">
-               </Location>
-               <Location
-                  uuid = "EC6E2EC5-E4A4-4C41-9E12-6B792952A049 - 9471c2d768748d4e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[MemoryModule inAllocationZone:size:]"
-                  moduleName = "Nyxian.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/fridakitten/Documents/GitHub/FridaScript/Nyxian/Runtime/Modules/Memory/Memory.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "121"
-                  endingLineNumber = "121">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "227694F1-C52A-4BA3-8A88-B55E637C5A7E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
-            landmarkName = "-realloc:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D5D3771D-8A8A-46CF-8505-192CB1087FD5"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
-            landmarkName = "-realloc:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "E5EE55FA-EFC1-4A0B-AC65-04D87DC145CC"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
-            landmarkName = "-realloc:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "8B27077A-D153-4CC5-9F3C-6375B00BE59D"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
-            landmarkName = "-realloc:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A16C7861-9B0E-415E-8B82-89F33A9B96A8"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
-            landmarkName = "-realloc:size:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5054DD5D-2136-44B7-BF98-A50384F11BE6"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nyxian/Runtime/Modules/Memory/Memory.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "162"
-            endingLineNumber = "162"
-            landmarkName = "-realloc:size:"
+            startingLineNumber = "243"
+            endingLineNumber = "243"
+            landmarkName = "-read:size:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -227,9 +227,12 @@ char* readline(const char *prompt);
     if(![self isFDThere:fd critical:NO])
         return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
     
-    NSMutableData *buffer = [NSMutableData dataWithLength:size];
+    char *rw_buffer = malloc(size);
     
-    ssize_t bytesRead = read(fd, buffer.mutableBytes, size);
+    if(rw_buffer == NULL)
+        return JS_THROW_ERROR(EW_NULL_POINTER);
+    
+    ssize_t bytesRead = read(fd, rw_buffer, size);
     
     if (bytesRead < 0)
         return JS_THROW_ERROR(EW_UNEXPECTED);
@@ -237,7 +240,7 @@ char* readline(const char *prompt);
     if (bytesRead == 0)
         return NULL;
     
-    NSData *resultData = [NSData dataWithBytes:buffer.bytes length:bytesRead];
+    NSData *resultData = [NSData dataWithBytes:rw_buffer length:bytesRead];
     
     NSString *resultString = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
     
