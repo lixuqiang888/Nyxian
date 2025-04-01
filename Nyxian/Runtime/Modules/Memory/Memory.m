@@ -344,6 +344,9 @@
     if(pointer == 0)
         return JS_THROW_ERROR(EW_UNEXPECTED);
     
+    if(pointer == (UInt64)MAP_FAILED)
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    
     [self addPtr:pointer size:size signature:MEMORY_MAP];
     
     return @(pointer);
