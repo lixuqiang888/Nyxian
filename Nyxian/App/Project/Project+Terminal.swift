@@ -237,7 +237,7 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
 
 struct HeadTerminalView: View {
     @Binding var sheet: Bool
-    @State var title: String = ""
+    @State var title: String = "Terminal"
     @State var project: Project
     
     init(sheet: Binding<Bool>, project: Project) {
