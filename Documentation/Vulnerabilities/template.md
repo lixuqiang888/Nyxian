@@ -7,6 +7,7 @@
 [How was it fixed and addressed?]
 
 Introduced in: [Commit of introduction]
+
 fixed in: [Commit of fix]
 
 Credit: [Who found it?]
