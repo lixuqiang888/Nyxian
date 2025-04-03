@@ -104,7 +104,7 @@
     
     dispatch_sync(dispatch_get_main_queue(), ^{
         for (UIView *subview in slave.subviews) {
-            if (![subview isKindOfClass:[FridaTerminalView class]]) {
+            if (![subview isKindOfClass:[NyxianTerminal class]]) {
                 [subview removeFromSuperview];
             }
         }

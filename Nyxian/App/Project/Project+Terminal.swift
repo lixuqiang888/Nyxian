@@ -22,52 +22,32 @@
  SOFTWARE.
  */
 
-import Swift
 import SwiftTerm
 import SwiftUI
 import UIKit
 
 // use always the same pipe
 let loggingPipe = Pipe()
-let inPipe = Pipe()
 
-var originalStdoutFD: Int32 = dup(STDOUT_FILENO)
-var originalStderrFD: Int32 = dup(STDERR_FILENO)
-
-var changeTerminalTitle: (String) -> Void = { _ in }
-
-// i love SwiftTerm
-class FridaTerminalView: TerminalView, TerminalViewDelegate {
-    public override init (
-        frame: CGRect
+class NyxianTerminal: TerminalView, TerminalViewDelegate {
+    @Binding var title: String
+    
+    public init (
+        frame: CGRect,
+        title: Binding<String>
     ){
-        super.init (frame: frame)
-        terminalDelegate = self
-        self.setTerminalTitle(source: self, title: "Nyxian")
+        self._title = title
+        
+        super.init(frame: frame)
+        
         self.keyboardAppearance = .dark
-        hookStdout()
         self.isOpaque = false;
-        tcom_set_size(Int32(self.getTerminal().rows), Int32(self.getTerminal().cols))
+        self.terminalDelegate = self
         _ = self.becomeFirstResponder()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func hookStdout() {
-        //fflush(stdout)
-        //fflush(stderr)
         
-        /*setvbuf(stdout, nil, _IOLBF, 0)
-        setvbuf(stderr, nil, _IOLBF, 0)
+        tcom_set_size(Int32(self.getTerminal().rows), Int32(self.getTerminal().cols))
         
-        let writeFD = loggingPipe.fileHandleForWriting.fileDescriptor
-        dup2(writeFD, STDOUT_FILENO)
-        dup2(writeFD, STDERR_FILENO)*/
-        
-        setFakeStdoutWriteFD(loggingPipe.fileHandleForWriting.fileDescriptor)
-        setFakeStderrWriteFD(loggingPipe.fileHandleForWriting.fileDescriptor)
+        set_std_fd(loggingPipe.fileHandleForWriting.fileDescriptor)
         
         loggingPipe.fileHandleForReading.readabilityHandler = { [weak self] fileHandle in
             let logData = fileHandle.availableData
@@ -96,13 +76,8 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
         }
     }
     
-    func cleanupStdout() {
-        /*loggingPipe.fileHandleForReading.readabilityHandler = nil
-        
-        if originalStdoutFD != -1 || originalStderrFD != -1 {
-            dup2(originalStdoutFD, STDOUT_FILENO)
-            dup2(originalStderrFD, STDERR_FILENO)
-        }*/
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     func clipboardCopy(source: SwiftTerm.TerminalView, content: Data) {
@@ -114,7 +89,7 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     }
     
     func setTerminalTitle(source: SwiftTerm.TerminalView, title: String) {
-        changeTerminalTitle(title)
+        self.title = title
     }
     
     func sizeChanged(source: SwiftTerm.TerminalView, newCols: Int, newRows: Int) {
@@ -127,7 +102,7 @@ class FridaTerminalView: TerminalView, TerminalViewDelegate {
     
     func send(source: SwiftTerm.TerminalView, data: ArraySlice<UInt8>) {
         var array = Array(data)
-        sendchar(&array, array.count)
+        stdin_write(&array, array.count)
     }
     
     func requestOpenLink(source: SwiftTerm.TerminalView, link: String, params: [String : String]) {
@@ -147,7 +122,7 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
     func printfake(_ message: String) {
         let data = message.data(using: .utf8)!
 
-        let fd: Int32 = getFakeStdoutWriteFD()
+        let fd: Int32 = get_std_fd()
 
         let bytesWritten = data.withUnsafeBytes { buffer in
             write(fd, buffer.baseAddress, buffer.count)
@@ -158,7 +133,7 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         }
     }
     
-    func didExit(tview: FridaTerminalView) {
+    func didExit(tview: NyxianTerminal) {
         printfake("\nPress any key to continue\n");
         DispatchQueue.main.sync {
             tview.isUserInteractionEnabled = true
@@ -167,49 +142,39 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         getchar()
         
         DispatchQueue.main.sync {
-            tview.cleanupStdout()
             sheet = false
         }
     }
     
     func makeUIView(context: Context) -> some UIView {
-        // mama view
         let view: UIView = UIView(frame: UIScreen.main.bounds)
         view.backgroundColor = UIColor.clear
         
-        // terminal view
-        let tview: FridaTerminalView = FridaTerminalView(frame: view.bounds) //TerminalView(frame: view.bounds)
+        let tview: NyxianTerminal = NyxianTerminal(frame: view.bounds, title: $title)
+        
         view.addSubview(tview)
+        tview.translatesAutoresizingMaskIntoConstraints = false
+        tview.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        tview.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        tview.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        tview.keyboardLayoutGuide.topAnchor.constraint(equalTo: tview.bottomAnchor).isActive = true
         
-        // setting up keyboard so it wont bother us
-        setupKeyboard(tv: tview, view: view)
-        
-        // now we execute
         let execution_queue: DispatchQueue = DispatchQueue(label: "\(UUID())")
         execution_queue.async {
             switch(project.type)
             {
             case "1": // Nyxian
-                // Hand off mamaview to UISurface
                 UISurface_Handoff_Slave(view)
-                
-                // allocate Nyxian Runtime
                 let runtime: NYXIAN_Runtime = NYXIAN_Runtime()
-                
-                // run code
                 runtime.run("\(NSHomeDirectory())/Documents/\(project.path)/main.nx")
-                
                 didExit(tview: tview)
                 break
             case "2": // C
-                let c_files: [String] = FindFilesStack("\(NSHomeDirectory())/Documents/\(project.path)", [".c"], [])
-                c_interpret(c_files.joined(separator: " "), "\(NSHomeDirectory())/Documents/\(project.path)")
-                
+                c_interpret(FindFilesStack("\(NSHomeDirectory())/Documents/\(project.path)", [".c"], []).joined(separator: " "), "\(NSHomeDirectory())/Documents/\(project.path)")
                 didExit(tview: tview)
                 break
             case "3": // Lua
                 o_lua("\(NSHomeDirectory())/Documents/\(project.path)/main.lua")
-                
                 didExit(tview: tview)
                 break
             default:
@@ -223,25 +188,17 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: UIViewType, context: Context) {
         
     }
-    
-    func setupKeyboard(tv: FridaTerminalView, view: UIView)
-    {
-        tv.translatesAutoresizingMaskIntoConstraints = false
-        tv.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        tv.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        tv.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        
-        tv.keyboardLayoutGuide.topAnchor.constraint(equalTo: tv.bottomAnchor).isActive = true
-    }
 }
 
 struct HeadTerminalView: View {
     @Binding var sheet: Bool
-    @State var title: String = "Terminal"
+    @State var title: String
     @State var project: Project
     
     init(sheet: Binding<Bool>, project: Project) {
         self._sheet = sheet
+        self.project = project
+        self.title = "Terminal"
 
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -251,8 +208,6 @@ struct HeadTerminalView: View {
         
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
-        
-        self.project = project
     }
     
     var body: some View {
@@ -261,15 +216,8 @@ struct HeadTerminalView: View {
                 .navigationTitle(title)
                 .navigationBarTitleDisplayMode(.inline)
                 .background(Color.black.edgesIgnoringSafeArea(.all))
-                .onAppear {
-                    changeTerminalTitle = { ntitle in
-                        _title.wrappedValue = ntitle
-                    }
-                }
-                .onDisappear {
-                    UIInit(type: 0)
-                }
         }
         .navigationViewStyle(.stack)
+        .onDisappear(perform: RevertUI)
     }
 }
