@@ -10,3 +10,4 @@
 - [VID 006: Reading a illegal size](006.md)
 - [VID 007: realloc memory blocks not belonging to u](007.md)
 - [VID 008: MapReallocFail](008.md)
+- [VID 009: MapProtFail](009.md)
