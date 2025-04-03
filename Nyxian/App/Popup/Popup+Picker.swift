@@ -24,7 +24,6 @@
 
 import SwiftUI
 
-let isiOS16: Bool = ProcessInfo.processInfo.isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 16, minorVersion: 0, patchVersion: 0))
 let isPad: Bool = {
     if UIDevice.current.userInterfaceIdiom == .pad {
         return true
@@ -60,26 +59,15 @@ struct POPicker: View {
                         .foregroundColor(.primary)
                     Spacer()
                     Picker("", selection: $type) {
-                        if isiOS16 {
-                            ForEach(arrays) { item in
-                                Section(header: Text(item.title)) {
-                                    ForEach(item.items) { subItem in
-                                        Text(subItem.name).tag(subItem.id)
-                                    }
-                                }
-                            }
-                        } else {
-                            ForEach(arrays.reversed()) { item in
-                                Section {
-                                    ForEach(item.items.reversed()) { subItem in
-                                        Text("\(subItem.name) (\(item.title))").tag(subItem.id)
-                                    }
+                        ForEach(arrays) { item in
+                            Section(header: Text(item.title)) {
+                                ForEach(item.items) { subItem in
+                                    Text(subItem.name).tag(subItem.id)
                                 }
                             }
                         }
                     }
                     .pickerStyle(MenuPickerStyle())
-                    Spacer()
                 }
             }
             .frame(height: 36)

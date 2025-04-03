@@ -28,8 +28,8 @@
 #import <Runtime/EnvRecover.h>
 #import <Nyxian-Swift.h>
 #import <Runtime/UISurface/UISurface.h>
-#import <Runtime/Modules/IO/Hook/stdout.h>
 #import <Runtime/Modules/UI/NyxianAlert.h>
+#import <Runtime/Hook/stdfd.h>
 #import <Runtime/Safety.h>
 
 /*
@@ -75,7 +75,7 @@
     
     // Setting up and running the code in the environment
     _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
-        dprintf(getFakeStdoutWriteFD(), "%s", [[NSString stringWithFormat:@"\nNyxian %@", exception] UTF8String]);
+        dprintf(get_std_fd(), "%s", [[NSString stringWithFormat:@"\nNyxian %@", exception] UTF8String]);
     };
     [_Context evaluateScript:code];
     
@@ -95,7 +95,7 @@
     [_array removeAllObjects];
     
     // And here we get fake stdout
-    dprintf(getFakeStdoutWriteFD(), "[EXIT]\n");
+    dprintf(get_std_fd(), "[EXIT]\n");
     
     // And we tell ARC that ARC can fuck them selves and release the Context
     _Context = nil;

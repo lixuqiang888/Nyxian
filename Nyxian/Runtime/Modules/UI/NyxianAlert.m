@@ -22,7 +22,7 @@ void spawnAlertv2(NSString *symbol, NSString *title, NSString *message, BOOL *ou
         //[root setUserInteractionEnabled:false];
         
         for (UIView *subview in root.subviews) {
-            if ([subview isKindOfClass:[FridaTerminalView class]]) {
+            if ([subview isKindOfClass:[NyxianTerminal class]]) {
                 if([subview isFirstResponder])
                 {
                     wasKeyBoardOpened = YES;
@@ -112,7 +112,7 @@ void spawnAlertv2(NSString *symbol, NSString *title, NSString *message, BOOL *ou
     
     dispatch_sync(dispatch_get_main_queue(), ^{
         for (UIView *subview in root.subviews) {
-            if ([subview isKindOfClass:[FridaTerminalView class]]) {
+            if ([subview isKindOfClass:[NyxianTerminal class]]) {
                 if(wasKeyBoardOpened)
                 {
                     [subview becomeFirstResponder];

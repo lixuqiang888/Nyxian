@@ -22,40 +22,11 @@
  SOFTWARE.
  */
 
-#include <Runtime/Modules/IO/Hook/stdin.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdint.h>
 #include <unistd.h>
-#include <pthread.h>
-#include <dispatch/dispatch.h>
 #include <fcntl.h>
 
-int fake_stdout[2];
+void stdin_init(void);
 
-void fake_stdout_init(void)
-{
-    if (pipe(fake_stdout) == -1) {
-        perror("pipe failed");
-        return;
-    }
-}
-
-int getFakeStdoutReadFD(void)
-{
-    return fake_stdout[0];
-}
-
-int getFakeStdoutWriteFD(void)
-{
-    return fake_stdout[1];
-}
-
-void setFakeStdoutReadFD(int fd)
-{
-    fake_stdout[0] = fd;
-}
-
-void setFakeStdoutWriteFD(int fd)
-{
-    fake_stdout[1] = fd;
-}
+void stdin_write(const uint8_t *ro_buffer, size_t len);

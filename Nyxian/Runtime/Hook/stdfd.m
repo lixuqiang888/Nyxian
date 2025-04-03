@@ -22,34 +22,38 @@
  SOFTWARE.
  */
 
-#include "stdin.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
-#include <pthread.h>
-#include <dispatch/dispatch.h>
-#include <fcntl.h>
+#include <Runtime/Hook/stdfd.h>
 
-int fake_stdin[2];
+int stdout_plus_err = 0;
+FILE *stdout_plus_err_file;
 
-///
-/// Here we create a fake stdin we then overwrite the old stdin with our fake one
-/// as they usually dont work on iOS because there is no PTY nor TTY
-///
-void fake_stdin_init(void)
+void set_std_fd(int fd)
 {
-    if (pipe(fake_stdin) == -1) {
-        perror("pipe failed");
+    // its already set, for security reasons, forbid overwrite
+    if(stdout_plus_err != 0)
         return;
-    }
     
-    dup2(fake_stdin[0], STDIN_FILENO);
+    // set file descriptor
+    stdout_plus_err = fd;
+    
+    // get flags from the OG
+    int flags = fcntl(STDOUT_FILENO, F_GETFL);
+    
+    // set flags to the made in china copy
+    fcntl(stdout_plus_err, F_SETFL, flags);
+    
+    // gettint its file structure
+    stdout_plus_err_file = fdopen(stdout_plus_err, "w");
 }
 
-///
-/// The function bridges the terminal input to our fake stdin
-///
-void sendchar(const uint8_t *ro_buffer, size_t len)
+int get_std_fd(void)
 {
-    write(fake_stdin[1], ro_buffer, len);
+    return stdout_plus_err;
+}
+
+FILE *get_std_file(void)
+{
+    return stdout_plus_err_file;
 }

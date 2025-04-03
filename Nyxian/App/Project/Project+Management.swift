@@ -72,7 +72,7 @@ func GetProjectsBind(Projects: Binding<[Project]>) -> Void {
             var foundProjectNames = Set<String>()
 
             for Item in try FileManager.default.contentsOfDirectory(atPath: "\(NSHomeDirectory())/Documents") {
-                if Item == "Inbox" || Item == "savedLayouts.json" || Item == ".sdk" || Item == ".cache" || Item == "virtualFS.dat" {
+                if Item == "Inbox" || Item == "lib" {
                     continue
                 }
 

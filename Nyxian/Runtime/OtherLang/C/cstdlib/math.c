@@ -142,8 +142,6 @@ void MathSqrt(struct ParseState *Parser, struct Value *ReturnValue,
 void MathRound(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    /* this awkward definition of "round()" due to it being inconsistently
-     * declared in math.h */
     ReturnValue->Val->FP = ceil(Param[0]->Val->FP - 0.5);
 }
 
@@ -159,7 +157,6 @@ void MathFloor(struct ParseState *Parser, struct Value *ReturnValue,
     ReturnValue->Val->FP = floor(Param[0]->Val->FP);
 }
 
-/* all math.h functions */
 struct LibraryFunction MathFunctions[] =
 {
      {MathAcos, "float acos(float);"},
@@ -188,7 +185,6 @@ struct LibraryFunction MathFunctions[] =
      {NULL,  NULL }
 };
 
-/* creates various system-dependent definitions */
 void MathSetupFunc(Picoc *pc)
 {
     VariableDefinePlatformVar(pc, NULL, "M_E", &pc->FPType,

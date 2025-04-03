@@ -24,9 +24,8 @@
 
 #import "Runtime.h"
 #import <Runtime/Hook/tcom.h>
-#import <Runtime/Modules/IO/Hook/stdin.h>
-#import <Runtime/Modules/IO/Hook/stdout.h>
-#import <Runtime/Modules/IO/Hook/stderr.h>
+#import <Runtime/Hook/stdin.h>
+#import <Runtime/Hook/stdfd.h>
 #import <Runtime/UISurface/UISurface.h>
 #import <Foundation/Foundation.h>
 

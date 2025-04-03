@@ -171,7 +171,7 @@
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
         for (UIView *subview in _view.subviews) {
-            if ([subview isKindOfClass:[FridaTerminalView class]]) {
+            if ([subview isKindOfClass:[NyxianTerminal class]]) {
                 [subview resignFirstResponder];
                 return;
             }
@@ -183,7 +183,7 @@
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
         for (UIView *subview in _view.subviews) {
-            if ([subview isKindOfClass:[FridaTerminalView class]]) {
+            if ([subview isKindOfClass:[NyxianTerminal class]]) {
                 [subview becomeFirstResponder];
                 return;
             }
@@ -195,7 +195,7 @@
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
         for (UIView *subview in _view.subviews) {
-            if ([subview isKindOfClass:[FridaTerminalView class]]) {
+            if ([subview isKindOfClass:[NyxianTerminal class]]) {
                 subview.userInteractionEnabled = NO;
                 return;
             }
@@ -207,7 +207,7 @@
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
         for (UIView *subview in _view.subviews) {
-            if ([subview isKindOfClass:[FridaTerminalView class]]) {
+            if ([subview isKindOfClass:[NyxianTerminal class]]) {
                 subview.userInteractionEnabled = YES;
                 return;
             }

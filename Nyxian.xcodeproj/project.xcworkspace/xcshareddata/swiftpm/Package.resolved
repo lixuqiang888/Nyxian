@@ -1,6 +1,15 @@
 {
-  "originHash" : "353eb30aac1c2fab742ddc4d416c7b4babaf4ad631261590c24fc3de71ef3379",
+  "originHash" : "6d85444bd1bd55982e9f66a0499b39fcdb24a99a0d0c33418fd12d94d013595c",
   "pins" : [
+    {
+      "identity" : "csqlite3",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alloyapple/CSqlite3.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "fe433d74268135019da44fc79c853d9253ecc615"
+      }
+    },
     {
       "identity" : "fluidgradient",
       "kind" : "remoteSourceControl",
@@ -8,6 +17,24 @@
       "state" : {
         "revision" : "9ddda4cf23671ef0228e88681ec6210cb3e0d7f7",
         "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "python-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kewlbear/Python-iOS.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d3ed91b16565ea599d0947fcbc3e6db0d0f9ae00"
+      }
+    },
+    {
+      "identity" : "pythonsupport",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kewlbear/PythonSupport.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "f51608051ed3cc917bfe6f4a11ee7c342ab5549b"
       }
     },
     {

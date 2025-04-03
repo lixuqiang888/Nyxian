@@ -7,48 +7,130 @@
 
 import SwiftUI
 
+struct ProjectFolder: View {
+    let type: Int
+    
+    var body: some View {
+        ZStack {
+            Image(systemName: "folder.fill")
+                .foregroundColor(getColor())
+            VStack {
+                Spacer().frame(height: 6)
+                Text(getName())
+                    .font(.system(size: getSize(), weight: .bold))
+                    .foregroundColor(Color(UIColor.systemBackground))
+            }
+        }
+    }
+    
+    func getColor() -> Color {
+        switch(type) {
+        case 1: // NX
+            return Color.purple
+        case 2: // C
+            return Color.gray
+        case 3: // Lua
+            return Color.orange
+        case 4: // Webserver
+            return Color.green
+        default:
+            return Color.primary
+        }
+    }
+    
+    func getName() -> String {
+        switch(type) {
+        case 1: // NX
+            return "nx"
+        case 2: // C
+            return "c"
+        case 3: // Lua
+            return "lua"
+        case 4: // Web
+            return "web"
+        default:
+            return "?"
+        }
+    }
+    
+    func getSize() -> CGFloat {
+        switch(type) {
+        case 1: // NX
+            return 8
+        case 2: // C
+            return 10
+        case 3: // Lua
+            return 6
+        case 4: // Web
+            return 6
+        default:
+            return 10
+        }
+    }
+}
+
+struct ProjectListing: View {
+    @Binding var project: [Project]
+    
+    @Binding var actpath: String
+    @Binding var action: Int
+    
+    var body: some View {
+        List {
+            ForEach($project) { $item in
+                NavigationLink(destination: CodeSpace(ProjectInfo: item, pathstate: $actpath, action: $action)) {
+                    HStack {
+                        switch Int(item.type) ?? 0 {
+                        case 1...4:
+                            ProjectFolder(type: Int(item.type) ?? 0)
+                        default:
+                            Image(systemName: "folder.fill")
+                        }
+                        Text(item.name)
+                    }
+                }
+                .contextMenu {
+                    Button(role: .destructive,  action: {
+                        rm("\(NSHomeDirectory())/Documents/\(item.path)")
+                        GetProjectsBind(Projects: $project)
+                    }) {
+                        Label("Remove", systemImage: "trash.fill")
+                    }
+                }
+            }
+        }
+        .navigationTitle("Projects")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
 struct ProjectView: View {
     @Binding var project: [Project]
     
     @State private var actpath: String = ""
     @State private var action: Int = 0
     
-    @State private var buildv: Bool = false
     @State private var sheet: Bool = false
     
     var body: some View {
         NavigationView {
             List {
-                ForEach($project) { $item in
-                    NavigationLink(destination: CodeSpace(ProjectInfo: item, pathstate: $actpath, action: $action)) {
-                        HStack {
-                            switch Int(item.type) ?? 0 {
-                            case 1:
-                                CodeBubble(title: "NX", titleColor: Color.white, bubbleColor: Color.purple)
-                            case 2:
-                                CodeBubble(title: "C", titleColor: Color.white, bubbleColor: Color(UIColor.darkGray))
-                            case 3:
-                                CodeBubble(title: "Lua", titleColor: Color.white, bubbleColor: Color.blue)
-                            case 4:
-                                CodeBubble(title: "HTML", titleColor: Color.white, bubbleColor: Color.red)
-                            default:
-                                CodeBubble(title: "?", titleColor: Color.white, bubbleColor: Color.gray)
-                            }
-                            Spacer().frame(width: 20)
-                            Text(item.name)
-                        }
+                NavigationLink(destination: ProjectListing(project: $project, actpath: $actpath, action: $action)) {
+                    HStack {
+                        Image(systemName: "folder.fill")
+                            .foregroundColor(.primary)
+                        Text("Projects")
                     }
-                    .contextMenu {
-                        Button(role: .destructive,  action: {
-                            rm("\(NSHomeDirectory())/Documents/\(item.path)")
-                            GetProjectsBind(Projects: $project)
-                        }) {
-                            Label("Remove", systemImage: "trash.fill")
-                        }
+                }
+                NavigationLink(destination: FileList(title: "Libraries", directoryPath: URL(fileURLWithPath: "\(NSHomeDirectory())/Documents/lib"), actpath: $actpath, action: $action)) {
+                    HStack {
+                        Image(systemName: "folder.fill")
+                            .foregroundColor(.primary)
+                        Text("Libraries")
                     }
                 }
             }
-            .navigationTitle("Nyxian")
+            .navigationTitle("Files")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 GetProjectsBind(Projects: $project)

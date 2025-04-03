@@ -70,7 +70,6 @@ void StdStrftime(struct ParseState *Parser, struct Value *ReturnValue,
         Param[1]->Val->Integer, Param[2]->Val->Pointer, Param[3]->Val->Pointer);
 }
 
-#ifndef WIN32
 void StdStrptime(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
@@ -92,7 +91,6 @@ void StdTimegm(struct ParseState *Parser, struct Value *ReturnValue,
 {
     ReturnValue->Val->Integer = (int)timegm(Param[0]->Val->Pointer);
 }
-#endif
 
 /* handy structure definitions */
 const char StdTimeDefs[] = "\
@@ -112,11 +110,9 @@ struct LibraryFunction StdTimeFunctions[] =
     {StdMktime, "int mktime(struct tm *ptm);"},
     {StdTime, "int time(int *);"},
     {StdStrftime, "int strftime(char *, int, char *, struct tm *);"},
-#ifndef WIN32
     {StdStrptime, "char *strptime(char *, char *, struct tm *);"},
 	{StdGmtime_r, "struct tm *gmtime_r(int *, struct tm *);"},
     {StdTimegm, "int timegm(struct tm *);"},
-#endif
     {NULL, NULL}
 };
 

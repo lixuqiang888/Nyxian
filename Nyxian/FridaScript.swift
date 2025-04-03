@@ -29,8 +29,7 @@ let RootPath: String = "\(NSHomeDirectory())/Documents"
 @main
 struct FJSApp: App {
     init() {
-        fake_stdin_init()
-        UIInit(type: 0)
+        RevertUI()
     }
     
     @State private var rotateNow: Bool = false
@@ -56,9 +55,9 @@ struct RootView: View {
                 }
             ProjectView(project: $projects)
                 .tabItem {
-                    Label("Projects", systemImage: "folder.fill")
+                    Label("Files", systemImage: "folder.fill")
                 }
-            Text("Eta S0n")
+            LibrariesView()
                 .tabItem {
                     Label("Libraries", systemImage: "book")
                 }

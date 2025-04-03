@@ -1,23 +1,7 @@
 #import <bridge.h>
-
-/* picoc main program - this varies depending on your operating system and
- * how you're using picoc */
-/* platform-dependent code for running programs is in this file */
-#if defined(UNIX_HOST) || defined(WIN32)
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#endif
-
-/* include only picoc.h here - should be able to use it with only the
-    external interfaces, no internals from interpreter.h */
 #include "picoc.h"
-
-
-#if defined(UNIX_HOST) || defined(WIN32)
 #include "LICENSE.h"
 
-/* Override via STACKSIZE environment variable */
 #define PICOC_STACK_SIZE (128000*4)
 
 int c_interpret(NSString *files, NSString *proot)
@@ -64,5 +48,3 @@ void c_repl(NSString *proot)
     
     PicocCleanup(&pc);
 }
-#endif
-

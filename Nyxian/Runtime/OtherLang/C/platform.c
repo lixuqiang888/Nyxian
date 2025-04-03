@@ -50,9 +50,6 @@ void PicocCleanup(Picoc *pc)
     PlatformCleanup(pc);
 }
 
-/* platform-dependent code for running programs */
-#if defined(UNIX_HOST) || defined(WIN32)
-
 #define CALL_MAIN_NO_ARGS_RETURN_VOID "main();"
 #define CALL_MAIN_WITH_ARGS_RETURN_VOID "main(__argc,__argv);"
 #define CALL_MAIN_NO_ARGS_RETURN_INT "__exit_value = main();"
@@ -101,7 +98,6 @@ void PicocCallMain(Picoc *pc, int argc, char **argv)
                 gEnableDebugger);
     }
 }
-#endif
 
 void PrintSourceTextErrorLine(IOFILE *Stream, const char *FileName,
     const char *SourceText, int Line, int CharacterPos)
@@ -215,6 +211,8 @@ void PlatformPrintf(IOFILE *Stream, const char *Format, ...)
     va_start(Args, Format);
     PlatformVPrintf(Stream, Format, Args);
     va_end(Args);
+    
+    fflush(Stream);
 }
 
 void PlatformVPrintf(IOFILE *Stream, const char *Format, va_list Args)

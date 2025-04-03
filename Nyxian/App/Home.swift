@@ -25,100 +25,81 @@
 import SwiftUI
 
 struct Home: View {
-   @State private var showProj = false
-   @State private var about = false
-   @Environment(\.presentationMode) private var presentationMode
-
-   @State var name: String = ""
-
-   @State private var type = 1
-
-   var body: some View {
-       NavigationView {
-           List {
-               //changelogSection
-               projectButtonsSection
-               aboutButton
-           }
-           .listStyle(InsetGroupedListStyle())
-           .navigationTitle("Nyxian")
-           .navigationBarTitleDisplayMode(.inline)
-           .sheet(isPresented: $showProj) {
-               BottomPopupView {
-                   POHeader(title: "Create Project")
-                   POTextField(title: "Name", content: $name)
-                   POPicker(function: createProject_trigger, title: "Schemes", arrays: [PickerArrays(title: "Scripting", items: [PickerItems(id: 1, name: "Nyxian"), PickerItems(id: 2, name: "C"), PickerItems(id: 3, name: "Lua")]), PickerArrays(title: "Miscellaneous", items: [PickerItems(id: 4, name: "WebServer")])], type: $type)
-               }
-               .background(BackgroundClearView())
-               .edgesIgnoringSafeArea([.bottom])
-           }
-       }
-       .navigationViewStyle(.stack)
-   }
-
-   private func createProject_trigger() -> Void {
-       _ = MakeMiniProject(Name: name, type: type)
-       showProj = false
-   }
-
-   private var changelogSection: some View {
-       Section(header: Text("Changelog")) {
-           VStack {
-               Spacer().frame(height: 10)
-               ScrollView {
-                   HStack {
-                       Text("""
-""")
-                           .font(.system(size: 11))
-                       Spacer()
-                   }
-               }
-               Spacer()
-           }
-           .frame(height: UIScreen.main.bounds.height / 4)
-       }
-   }
-
-   private var projectButtonsSection: some View {
-       Section {
-           Button(action: {
-               name = ""
-               showProj = true
-           }) {
-               listItem(label: "Create Project", systemImageName: "+", text: "Creates a FCM Project")
-           }
-       }
-   }
-
-   private var aboutButton: some View {
-       Button(action: {
-           about = true
-       }) {
-           listItem(label: "About", systemImageName: "i", text: "Shows Information about this App")
-       }
-       .sheet(isPresented: $about) {
-           Frida()
-       }
-   }
-
-   private func listItem(label: String, systemImageName: String, text: String) -> some View {
-       HStack {
-           VStack(alignment: .leading) {
-               Text(label).font(.headline)
-               Text(text).font(.subheadline).foregroundColor(.gray)
-           }
-           Spacer()
-           ZStack {
-               Rectangle()
-                   .foregroundColor(.secondary)
-                   .aspectRatio(contentMode: .fit)
-                   .frame(width: 30, height: 30)
-                   .cornerRadius(4)
-               Text(systemImageName)
-                   .foregroundColor(Color(.systemBackground))
-                   .frame(width: 20, height: 20)
-                   .font(Font.custom("Menlo", size: 16).bold())
-           }
-       }
-   }
+    @State private var showProj = false
+    @State private var about = false
+    @Environment(\.presentationMode) private var presentationMode
+    
+    @State var name: String = ""
+    
+    @State private var type = 1
+    
+    var body: some View {
+        NavigationView {
+            List {
+                projectButtonsSection
+                aboutButton
+            }
+            .listStyle(InsetGroupedListStyle())
+            .navigationTitle("Nyxian")
+            .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $showProj) {
+                BottomPopupView {
+                    POHeader(title: "Create Project")
+                    POTextField(title: "Name", content: $name)
+                    POPicker(function: createProject_trigger, title: "Schemes", arrays: [PickerArrays(title: "Scripting", items: [PickerItems(id: 1, name: "Nyxian"), PickerItems(id: 2, name: "C"), PickerItems(id: 3, name: "Lua")]), PickerArrays(title: "Miscellaneous", items: [PickerItems(id: 4, name: "WebServer")])], type: $type)
+                }
+                .background(BackgroundClearView())
+                .edgesIgnoringSafeArea([.bottom])
+            }
+        }
+        .navigationViewStyle(.stack)
+    }
+    
+    private func createProject_trigger() -> Void {
+        _ = MakeMiniProject(Name: name, type: type)
+        showProj = false
+    }
+    
+    private var projectButtonsSection: some View {
+        Section {
+            Button(action: {
+                name = ""
+                showProj = true
+            }) {
+                listItem(label: "Create Project", systemImageName: "+", text: "Creates a Nyxian Project")
+            }
+        }
+    }
+    
+    private var aboutButton: some View {
+        Button(action: {
+            about = true
+        }) {
+            listItem(label: "About", systemImageName: "i", text: "Shows Information about this App")
+        }
+        .sheet(isPresented: $about) {
+            Frida()
+        }
+    }
+    
+    private func listItem(label: String, systemImageName: String, text: String) -> some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text(label).font(.headline)
+                Text(text).font(.subheadline).foregroundColor(.gray)
+            }
+            Spacer()
+            ZStack {
+                Rectangle()
+                    .foregroundColor(.secondary)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 30, height: 30)
+                    .cornerRadius(4)
+                Text(systemImageName)
+                    .foregroundColor(Color(.systemBackground))
+                    .frame(width: 20, height: 20)
+                    .font(Font.custom("Menlo", size: 16).bold())
+            }
+        }
+    }
 }

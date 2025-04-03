@@ -3,9 +3,6 @@
 #include <errno.h>
 #include <inttypes.h>
 
-#include <Runtime/Modules/IO/Hook/stdout.h>
-#include <Runtime/Modules/IO/Hook/stderr.h>
-
 #include "../interpreter.h"
 
 #define MAX_FORMAT (80)
@@ -23,6 +20,8 @@ static int _IOLBFValue = _IOLBF;
 static int _IONBFValue = _IONBF;
 static int L_tmpnamValue = L_tmpnam;
 static int GETS_MAXValue = 255;  /* arbitrary maximum size of a gets() file */
+
+extern FILE *stdout_plus_err_file;
 
 static FILE *stdinValue;
 static FILE *stdoutValue;
@@ -49,13 +48,10 @@ struct StdVararg
 /* initializes the I/O system so error reporting works */
 void BasicIOInit(Picoc *pc)
 {
-    FILE *fakeStdout = fdopen(getFakeStdoutWriteFD(), "a");
-    FILE *fakeStderr = fdopen(getFakeStderrWriteFD(), "a");
-    
-    pc->CStdOut = fakeStdout;
+    pc->CStdOut = stdout_plus_err_file;
     stdinValue = stdin;
-    stdoutValue = fakeStdout;
-    stderrValue = fakeStderr;
+    stdoutValue = stdout_plus_err_file;
+    stderrValue = stdout_plus_err_file;
 }
 
 /* output a single character to either a FILE * or a string */
@@ -107,13 +103,8 @@ void StdioFprintfWord(StdOutStream *Stream, const char *Format, unsigned int Val
     if (Stream->FilePtr != NULL)
         Stream->CharCount += fprintf(Stream->FilePtr, Format, Value);
     else if (Stream->StrOutLen >= 0) {
-#ifndef WIN32
 		int CCount = snprintf(Stream->StrOutPtr, Stream->StrOutLen,
             Format, Value);
-#else
-		int CCount = _snprintf(Stream->StrOutPtr, Stream->StrOutLen,
-            Format, Value);
-#endif
 		Stream->StrOutPtr += CCount;
         Stream->StrOutLen -= CCount;
         Stream->CharCount += CCount;
@@ -167,11 +158,7 @@ void StdioFprintfLong(StdOutStream *Stream, const char *Format, uint64_t Value) 
     if (Stream->FilePtr != NULL)
         Stream->CharCount += fprintf(Stream->FilePtr, PlatformFormat, Value);
     else if (Stream->StrOutLen >= 0) {
-#ifndef WIN32
         int CCount = snprintf(Stream->StrOutPtr, Stream->StrOutLen, PlatformFormat, Value);
-#else
-        int CCount = _snprintf(Stream->StrOutPtr, Stream->StrOutLen, PlatformFormat, Value);
-#endif
         Stream->StrOutPtr += CCount;
         Stream->StrOutLen -= CCount;
         Stream->CharCount += CCount;
@@ -188,13 +175,8 @@ void StdioFprintfFP(StdOutStream *Stream, const char *Format, double Value)
     if (Stream->FilePtr != NULL)
         Stream->CharCount += fprintf(Stream->FilePtr, Format, Value);
     else if (Stream->StrOutLen >= 0) {
-#ifndef WIN32
         int CCount = snprintf(Stream->StrOutPtr, Stream->StrOutLen,
             Format, Value);
-#else
-        int CCount = _snprintf(Stream->StrOutPtr, Stream->StrOutLen,
-            Format, Value);
-#endif
 		Stream->StrOutPtr += CCount;
         Stream->StrOutLen -= CCount;
         Stream->CharCount += CCount;
@@ -211,13 +193,8 @@ void StdioFprintfPointer(StdOutStream *Stream, const char *Format, void *Value)
     if (Stream->FilePtr != NULL)
         Stream->CharCount += fprintf(Stream->FilePtr, Format, Value);
     else if (Stream->StrOutLen >= 0) {
-#ifndef WIN32
         int CCount = snprintf(Stream->StrOutPtr, Stream->StrOutLen,
             Format, Value);
-#else
-		int CCount = _snprintf(Stream->StrOutPtr, Stream->StrOutLen,
-            Format, Value);
-#endif
         Stream->StrOutPtr += CCount;
         Stream->StrOutLen -= CCount;
         Stream->CharCount += CCount;
@@ -561,11 +538,7 @@ void StdioFerror(struct ParseState *Parser, struct Value *ReturnValue,
 void StdioFileno(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-#ifndef WIN32
     ReturnValue->Val->Integer = fileno(Param[0]->Val->Pointer);
-#else
-    ReturnValue->Val->Integer = _fileno(Param[0]->Val->Pointer);
-#endif
 }
 
 void StdioFflush(struct ParseState *Parser, struct Value *ReturnValue,
@@ -631,7 +604,7 @@ void StdioPutc(struct ParseState *Parser, struct Value *ReturnValue,
 void StdioPutchar(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Integer = putchar(Param[0]->Val->Integer);
+    ReturnValue->Val->Integer = fputc(Param[0]->Val->Integer, stdoutValue) /*putchar(Param[0]->Val->Integer)*/;
 }
 
 void StdioSetbuf(struct ParseState *Parser, struct Value *ReturnValue,
@@ -685,14 +658,16 @@ void StdioPrintf(struct ParseState *Parser, struct Value *ReturnValue,
 
     PrintfArgs.Param = Param;
     PrintfArgs.NumArgs = NumArgs - 1;
-    ReturnValue->Val->Integer = StdioBasePrintf(Parser, stdout, NULL, 0,
+    ReturnValue->Val->Integer = StdioBasePrintf(Parser, stdoutValue, NULL, 0,
         Param[0]->Val->Pointer, &PrintfArgs);
+    
+    fflush(stdout_plus_err_file);
 }
 
 void StdioVprintf(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Integer = StdioBasePrintf(Parser, stdout, NULL, 0,
+    ReturnValue->Val->Integer = StdioBasePrintf(Parser, stdoutValue, NULL, 0,
         Param[0]->Val->Pointer, Param[1]->Val->Pointer);
 }
 

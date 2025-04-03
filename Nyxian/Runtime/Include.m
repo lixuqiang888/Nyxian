@@ -27,9 +27,8 @@
 #import <Runtime/ErrorThrow.h>
 #import <Runtime/Safety.h>
 #import <Runtime/Modules/UI/Alert.h>
-#import <Runtime/Modules/IO/Hook/stdin.h>
-#import <Runtime/Modules/IO/Hook/stdout.h>
-#import <Runtime/Modules/IO/Hook/stderr.h>
+#import <Runtime/Hook/stdin.h>
+#import <Runtime/Hook/stdfd.h>
 
 #import <UIKit/UIKit.h>
 
@@ -45,13 +44,13 @@
 #import <Runtime/Modules/LangBridge/LangBridge.h>   // UNDER TEST!!!
 #import <Runtime/Modules/Consent/Consent.h>
 
-#import <Runtime/ObjCSurface/objcsurface.h>
-
 /// UI Headers
 #import <Nyxian-Swift.h>
 
 id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
 {
+    libnyxianInterface *extinclude = [[libnyxianInterface alloc] init];
+    
     // Checking if module with that name is already imported
     if([Runtime isModuleImported:LibName])
     {
@@ -61,9 +60,9 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
     if ([LibName isEqualToString:@"io"]) {
         IO_MACRO_MAP();
         
-        // fake stdout for iOS
-        Runtime.Context[@"STDOUT_FILENO"] = @(getFakeStdoutWriteFD());
-        Runtime.Context[@"STDERR_FILENO"] = @(getFakeStderrWriteFD());
+        int stdfd = get_std_fd();
+        Runtime.Context[@"STDOUT_FILENO"] = @(stdfd);
+        Runtime.Context[@"STDERR_FILENO"] = @(stdfd);
         
         IOModule *ioModule = [[IOModule alloc] init];
         [Runtime.Context setObject:ioModule forKeyedSubscript:@"io"];
@@ -109,32 +108,33 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         ConsentModule *consentModule = [[ConsentModule alloc] init];
         [Runtime.Context setObject:consentModule forKeyedSubscript:@"consent"];
         return NULL;
-    } else {
-        NSString *path = [NSString stringWithFormat:@"%@.nxm", LibName];
-        NSURL *url = [[NSURL fileURLWithPath:path] URLByDeletingLastPathComponent];
-        NSString *code = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
-        NSString *currentPath = [[NSFileManager defaultManager] currentDirectoryPath];
-        
-        chdir([[url path] UTF8String]);
-        
-        NSString *realLibName = [[NSURL fileURLWithPath:LibName] lastPathComponent];
-        
-        if (!code) {
-            return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_FILE_NOT_FOUND]);
-        }
-        
-        [Runtime.Context evaluateScript:[NSString stringWithFormat:@"var %@ = (function() {\n%@}\n)();", realLibName, code]];
-        
-        JSValue *exception = Runtime.Context.exception;
-        if (exception && !exception.isUndefined && !exception.isNull) {
-            jsDoThrowError([NSString stringWithFormat:@"include: %@\n", [exception toString]]);
-            Runtime.Context.exception = nil;
-        }
-        
-        chdir([currentPath UTF8String]);
-        
+    } else if ([extinclude includeWithContext:Runtime.Context library:LibName]) {
         return NULL;
     }
+    
+    NSString *path = [NSString stringWithFormat:@"%@.nxm", LibName];
+    NSURL *url = [[NSURL fileURLWithPath:path] URLByDeletingLastPathComponent];
+    NSString *code = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
+    NSString *currentPath = [[NSFileManager defaultManager] currentDirectoryPath];
+    
+    chdir([[url path] UTF8String]);
+    
+    NSString *realLibName = [[NSURL fileURLWithPath:LibName] lastPathComponent];
+    
+    if (!code) {
+        return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_FILE_NOT_FOUND]);
+    }
+    
+    [Runtime.Context evaluateScript:[NSString stringWithFormat:@"var %@ = (function() {\n%@}\n)();", realLibName, code]];
+    
+    JSValue *exception = Runtime.Context.exception;
+    if (exception && !exception.isUndefined && !exception.isNull) {
+        jsDoThrowError([NSString stringWithFormat:@"include: %@\n", [exception toString]]);
+        Runtime.Context.exception = nil;
+    }
+    
+    chdir([currentPath UTF8String]);
+    
     return NULL;
 }
 

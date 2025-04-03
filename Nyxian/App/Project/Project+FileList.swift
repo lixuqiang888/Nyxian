@@ -75,20 +75,13 @@ struct FileList: View {
     @State private var files: [URL] = []
     @State private var quar: Bool = false
     @State private var selpath: String = ""
-    @State private var fbool: Bool = false
-    @State private var sbool: Bool = false
-    @Binding var actpath: String
-    @Binding var action: Int
-    var buildv: Binding<Bool>?
-    
     @State private var poheader: String = ""
     @State private var potextfield: String = ""
     @State private var type: Int = 0
     
-    @State private var macros: [String] = []
-    @State private var cmacro: String = ""
-    
-    @State private var sheet: Bool = false
+    @Binding var actpath: String
+    @Binding var action: Int
+    var buildv: Binding<Bool>?
     var body: some View {
         List {
             Section {
@@ -105,11 +98,7 @@ struct FileList: View {
                         } else {
                             Button(action: {
                                 selpath = item.path
-                                if !gtypo(item: item.lastPathComponent) {
-                                    quar = true
-                                } else {
-                                    fbool = true
-                                }
+                                quar = true
                             }) {
                                 FileObject(properties: gProperty(item), item: item)
                             }
@@ -201,7 +190,6 @@ struct FileList: View {
                                     _ = mv(actpath, "\(directoryPath.path)/\(URL(fileURLWithPath: actpath).lastPathComponent)")
                                     action = 0
                                 }
-                                //haptfeedback(1)
                                 bindLoadFiles(directoryPath: directoryPath, files: $files)
                             }) {
                                 Label("Paste", systemImage: "doc.on.clipboard")
@@ -245,9 +233,6 @@ struct FileList: View {
         .fullScreenCover(isPresented: $quar) {
             NeoEditorHelper(isPresented: $quar, filepath: $selpath)
                 .ignoresSafeArea(.all)
-        }
-        .fullScreenCover(isPresented: $fbool) {
-            ImageView(imagePath: $selpath, fbool: $fbool)
         }
     }
     
@@ -302,47 +287,6 @@ struct FileList: View {
             return false
         }
     }
-}
-
-struct ImageView: View {
-   @Binding var imagePath: String
-   @Binding var fbool: Bool
-
-   init(imagePath: Binding<String>, fbool: Binding<Bool>) {
-       _imagePath = imagePath
-       _fbool = fbool
-   }
-
-   var body: some View {
-       NavigationView {
-           ZStack {
-               Color(UIColor.systemGray6)
-                   .ignoresSafeArea()
-               VStack {
-                   Image(uiImage: loadImage())
-                       .resizable()
-                       .scaledToFit()
-                       .aspectRatio(contentMode: .fit)
-                       .frame(width: UIScreen.main.bounds.width)
-               }
-               .navigationBarTitle("Image Viewer", displayMode: .inline)
-               .navigationBarItems(leading:
-                   Button(action: {
-                       fbool = false
-                   }) {
-                       Text("Close")
-                   }
-               )
-           }
-       }
-   }
-
-   private func loadImage() -> UIImage {
-       guard let image = UIImage(contentsOfFile: imagePath) else {
-           return UIImage(systemName: "photo")!
-       }
-       return image
-   }
 }
 
 private func gfilesize(atPath filePath: String) -> String {
@@ -410,62 +354,51 @@ private func gProperty(_ fileURL: URL) -> FileProperty {
 }
 
 private func bindLoadFiles(directoryPath: URL, files: Binding<[URL]>) -> Void {
-   DispatchQueue.global(qos: .background).async {
-       do {
-           let items = try FileManager.default.contentsOfDirectory(at: directoryPath, includingPropertiesForKeys: nil)
-
-           var fileGroups: [String: [URL]] = [:]
-
-           for item in items {
-               let fileExtension = item.pathExtension.lowercased()
-               if !isDirectory(item) {
-                   if fileGroups[fileExtension] == nil {
-                       fileGroups[fileExtension] = []
-                   }
-                   fileGroups[fileExtension]?.append(item)
-               }
-           }
-
-           DispatchQueue.main.async {
-               withAnimation {
-                   files.wrappedValue.removeAll { file in
-                       !FileManager.default.fileExists(atPath: file.path)
-                   }
-               }
-           }
-
-           for item in items {
-               if isDirectory(item) {
-                   DispatchQueue.main.async {
-                       if !files.wrappedValue.contains(item) {
-                           withAnimation {
-                               files.wrappedValue.append(item)
-                           }
-                       }
-                   }
-                   usleep(500)
-               }
-           }
-
-           for (_, groupedFiles) in fileGroups.sorted(by: { $0.key < $1.key }) {
-               for file in groupedFiles {
-                   DispatchQueue.main.async {
-                       if !files.wrappedValue.contains(file) {
-                           withAnimation {
-                               files.wrappedValue.append(file)
-                           }
-                       }
-                   }
-                   usleep(500)
-               }
-           }
-
-       } catch {
-           DispatchQueue.main.async {
-               print("Error loading files: \(error.localizedDescription)")
-           }
-       }
-   }
+    DispatchQueue.global(qos: .background).async {
+        do {
+            let items = try FileManager.default.contentsOfDirectory(at: directoryPath, includingPropertiesForKeys: nil)
+            
+            var directories: [URL] = []
+            var fileGroups: [String: [URL]] = [:]
+            
+            for item in items {
+                if isDirectory(item) {
+                    directories.append(item)
+                } else {
+                    let fileExtension = item.pathExtension.lowercased()
+                    if fileGroups[fileExtension] == nil {
+                        fileGroups[fileExtension] = []
+                    }
+                    fileGroups[fileExtension]?.append(item)
+                }
+            }
+            
+            DispatchQueue.main.async {
+                withAnimation {
+                    files.wrappedValue.removeAll { file in
+                        !FileManager.default.fileExists(atPath: file.path)
+                    }
+                }
+            }
+            
+            var sortedFiles: [URL] = []
+            sortedFiles.append(contentsOf: directories.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }))
+            
+            for (_, groupedFiles) in fileGroups.sorted(by: { $0.key < $1.key }) {
+                sortedFiles.append(contentsOf: groupedFiles.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }))
+            }
+            
+            DispatchQueue.main.async {
+                withAnimation {
+                    files.wrappedValue = sortedFiles
+                }
+            }
+        } catch {
+            DispatchQueue.main.async {
+                print("Error loading files: \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
 func share(url: URL, remove: Bool = false) -> Void {

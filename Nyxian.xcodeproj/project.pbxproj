@@ -20,13 +20,39 @@
 		AFB1653D2D91BBEB00872EDB /* TreeSitterC in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1653C2D91BBEB00872EDB /* TreeSitterC */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		AF0D03512D9ED5DC0091495A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		AFBE41752D85E4B500315155 /* Nyxian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nyxian.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AF0DF6562D9EB3AF0091495A /* Exceptions for "Nyxian" folder in "Nyxian" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Runtime/OtherLang/Lua/onelua.ch,
+			);
+			target = AFBE41742D85E4B500315155 /* Nyxian */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AFBE41772D85E4B500315155 /* Nyxian */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AF0DF6562D9EB3AF0091495A /* Exceptions for "Nyxian" folder in "Nyxian" target */,
+			);
 			path = Nyxian;
 			sourceTree = "<group>";
 		};
@@ -54,18 +80,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		AF1C22362D99D674003D83A9 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		AFBE416C2D85E4B500315155 = {
 			isa = PBXGroup;
 			children = (
 				AFBE41772D85E4B500315155 /* Nyxian */,
-				AF1C22362D99D674003D83A9 /* Frameworks */,
 				AFBE41762D85E4B500315155 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +106,7 @@
 				AFBE41712D85E4B500315155 /* Sources */,
 				AFBE41722D85E4B500315155 /* Frameworks */,
 				AFBE41732D85E4B500315155 /* Resources */,
+				AF0D03512D9ED5DC0091495A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -317,7 +336,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = L4A6CKH3TV;
+				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Nyxian",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					Nyxian,
@@ -339,6 +363,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Nyxian/libffi-iphoneos",
 					"$(PROJECT_DIR)/Nyxian/Runtime/FFI",
+					"$(PROJECT_DIR)/Nyxian/LLVM-iOS/lib",
+					"$(PROJECT_DIR)/Nyxian/LLVM.xcframework/ios-arm64-simulator",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.nyxian;
@@ -362,7 +388,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = L4A6CKH3TV;
+				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Nyxian",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					Nyxian,
@@ -384,6 +415,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Nyxian/libffi-iphoneos",
 					"$(PROJECT_DIR)/Nyxian/Runtime/FFI",
+					"$(PROJECT_DIR)/Nyxian/LLVM-iOS/lib",
+					"$(PROJECT_DIR)/Nyxian/LLVM.xcframework/ios-arm64-simulator",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.nyxian;

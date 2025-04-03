@@ -22,15 +22,8 @@
  SOFTWARE.
  */
 
-#import <Foundation/Foundation.h>
+#include <fcntl.h>
 
-///
-/// Here we create a fake stdin we then overwrite the old stdin with our fake one
-/// as they usually dont work on iOS because there is no PTY nor TTY
-///
-void fake_stdin_init(void);
-
-///
-/// The function bridges the terminal input to our fake stdin
-///
-void sendchar(const uint8_t *ro_buffer, size_t len);
+void set_std_fd(int fd);
+int get_std_fd(void);
+FILE *get_std_file(void);

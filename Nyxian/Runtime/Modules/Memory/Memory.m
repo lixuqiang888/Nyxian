@@ -128,7 +128,7 @@
         [_array removeObject:objectToRemove];
 }
 
-- (BOOL)inAllocationZone:(UInt64)pointer size:(UInt64)size
+- (BOOL)inAllocationZone:(UInt64)pointer size:(UInt64)size signature:(UInt8)signature
 {
     if(!NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
         return YES;
@@ -146,7 +146,11 @@
         UInt64 start = item.pointer;
         UInt64 end = start + item.size;
         if (pointer >= start && (pointer + size) <= end)
-            return YES;
+            if(signature == MEMORY_ANY)
+                return YES;
+            if(item.signature == signature)
+                return YES;
+            return NO;
     }
     
     return NO;
@@ -177,20 +181,20 @@
     return pointer;
 }
 
-- (UInt64)realloc:(UInt64)pointer size:(size_t)size
+- (id)realloc:(UInt64)pointer size:(size_t)size
 {
-    if(![self inAllocationZone:pointer size:0])
-        return 0;
+    if(![self inAllocationZone:pointer size:0 signature:MEMORY_BLOCK])
+        return JS_THROW_ERROR(EW_PERMISSION);
     
     UInt64 newpointer = (UInt64)realloc((void*)pointer, size);
     
     if(newpointer == 0)
-        return 0;
+        return JS_THROW_ERROR(EW_NULL_POINTER);
     
     [self removePtr:pointer];
     [self addPtr:newpointer size:size signature:MEMORY_BLOCK];
     
-    return pointer;
+    return @(pointer);
 }
 
 - (UInt64)valloc:(size_t)size
@@ -224,7 +228,7 @@
 /// Low level memory reading functions
 - (id)mread8:(UInt64)pointer
 {
-    if(![self inAllocationZone:pointer size:1])
+    if(![self inAllocationZone:pointer size:1 signature:MEMORY_ANY])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint8_t *ptr = (uint8_t*)pointer;
@@ -233,7 +237,7 @@
 
 - (id)mread16:(UInt64)pointer
 {
-    if(![self inAllocationZone:pointer size:2])
+    if(![self inAllocationZone:pointer size:2 signature:MEMORY_ANY])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint16_t *ptr = (uint16_t*)pointer;
@@ -242,7 +246,7 @@
 
 - (id)mread32:(UInt64)pointer
 {
-    if(![self inAllocationZone:pointer size:4])
+    if(![self inAllocationZone:pointer size:4 signature:MEMORY_ANY])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint32_t *ptr = (uint32_t*)pointer;
@@ -251,7 +255,7 @@
 
 - (id)mread64:(UInt64)pointer
 {
-    if(![self inAllocationZone:pointer size:8])
+    if(![self inAllocationZone:pointer size:8 signature:MEMORY_ANY])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint64_t *ptr = (uint64_t*)pointer;
@@ -261,7 +265,7 @@
 /// Low level memory writing functions
 - (id)mwrite8:(UInt64)pointer value:(UInt8)value
 {
-    if(![self inAllocationZone:pointer size:1])
+    if(![self inAllocationZone:pointer size:1 signature:MEMORY_ANY])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint8_t *ptr = (uint8_t*)pointer;
@@ -272,7 +276,7 @@
 
 - (id)mwrite16:(UInt64)pointer value:(UInt16)value
 {
-    if(![self inAllocationZone:pointer size:2])
+    if(![self inAllocationZone:pointer size:2 signature:MEMORY_ANY])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint16_t *ptr = (uint16_t*)pointer;
@@ -283,7 +287,7 @@
 
 - (id)mwrite32:(UInt64)pointer value:(UInt32)value
 {
-    if(![self inAllocationZone:pointer size:4])
+    if(![self inAllocationZone:pointer size:4 signature:MEMORY_ANY])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint32_t *ptr = (uint32_t*)pointer;
@@ -294,7 +298,7 @@
 
 - (id)mwrite64:(UInt64)pointer value:(UInt64)value
 {
-    if(![self inAllocationZone:pointer size:8])
+    if(![self inAllocationZone:pointer size:8 signature:MEMORY_ANY])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     uint64_t *ptr = (uint64_t*)pointer;
@@ -306,7 +310,7 @@
 /// Memory buffering functions
 - (id)mread_buf_str:(UInt64)pointer size:(UInt64)size
 {
-    if(![self inAllocationZone:pointer size:size])
+    if(![self inAllocationZone:pointer size:size signature:MEMORY_ANY])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     char *rw_buffer = malloc(size);
@@ -325,7 +329,7 @@
 
 - (id)mwrite_buf_str:(UInt64)pointer size:(UInt64)size data:(NSString *)data
 {
-    if(![self inAllocationZone:pointer size:size])
+    if(![self inAllocationZone:pointer size:size signature:MEMORY_ANY])
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     if([data lengthOfBytesUsingEncoding:NSUTF8StringEncoding] > size)

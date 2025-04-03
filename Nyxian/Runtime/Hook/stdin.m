@@ -22,20 +22,20 @@
  SOFTWARE.
  */
 
-///
-/// Here we forge a none existing stdout file descriptor
-///
-void fake_stderr_init(void);
+#include "stdin.h"
 
-///
-/// As we dont want that other printf and OSLOG calls are being captured by stdout
-/// there is basically no hook
-///
-int getFakeStderrReadFD(void);
-int getFakeStderrWriteFD(void);
+int stdinfd[2];
 
-///
-/// As we also have logpipes we can also just handoff the logpipe writefd
-///
-void setFakeStderrReadFD(int fd);
-void setFakeStderrWriteFD(int fd);
+void stdin_write(const uint8_t *ro_buffer, size_t len)
+{
+    write(stdinfd[1], ro_buffer, len);
+}
+
+__attribute__((constructor))
+void stdin_init(void)
+{
+    if (pipe(stdinfd) == -1)
+        return;
+    
+    dup2(stdinfd[0], STDIN_FILENO);
+}

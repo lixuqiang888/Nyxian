@@ -24,9 +24,6 @@
 
 /// Nyxian Runtime headers
 #import <Runtime/Modules/IO/IO.h>
-#import <Runtime/Modules/IO/Hook/stdin.h>
-#import <Runtime/Modules/IO/Hook/stdout.h>
-#import <Runtime/Modules/IO/Hook/stderr.h>
 #import <Runtime/Modules/IO/Types/Stat.h>
 #import <Runtime/Modules/IO/Types/DIR.h>
 #import <Runtime/Modules/IO/Types/FILE.h>
@@ -34,6 +31,7 @@
 #import <Runtime/ReturnObjBuilder.h>
 #import <Runtime/ErrorThrow.h>
 #import <Runtime/Hook/tcom.h>
+#import <Runtime/Hook/stdfd.h>
 #import <Runtime/Safety.h>
 
 /// Some standard headers we need
@@ -91,7 +89,7 @@ char* readline(const char *prompt);
         return YES;
     
     if(!critical)
-        if(fd == STDIN_FILENO || fd == getFakeStdoutWriteFD() || fd == getFakeStderrWriteFD())
+        if(fd == STDIN_FILENO || fd == get_std_fd() || fd == get_std_fd())
             return YES;
 
     return [_array containsObject:[[NSNumber alloc] initWithUnsignedLongLong:fd]];

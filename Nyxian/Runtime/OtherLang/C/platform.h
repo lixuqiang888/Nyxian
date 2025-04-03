@@ -14,30 +14,9 @@
 #include <math.h>
 #include <stdbool.h>
 
-/* host platform includes */
-#define UNIX_HOST true
-#ifdef UNIX_HOST
 # include <stdint.h>
 # include <unistd.h>
-#elif defined(WIN32) /*(predefined on MSVC)*/
-#else
-# error ***** A platform must be explicitly defined! *****
-#endif
 
-
-/* configurable options */
-/* select your host type (or do it in the Makefile):
- #define UNIX_HOST
- #define DEBUGGER
- #define USE_READLINE (defined by default for UNIX_HOST)
- */
-#define USE_READLINE false
-
-#if defined(WIN32) /*(predefined on MSVC)*/
-#undef USE_READLINE
-#endif
-
-/* undocumented, but probably useful */
 #undef DEBUG_HEAP
 #undef DEBUG_EXPRESSIONS
 #undef FANCY_ERROR_MESSAGES
@@ -47,10 +26,8 @@
 
 
 #if defined(__hppa__) || defined(__sparc__)
-/* the default data type to use for alignment */
 #define ALIGN_TYPE double
 #else
-/* the default data type to use for alignment */
 #define ALIGN_TYPE void*
 #endif
 

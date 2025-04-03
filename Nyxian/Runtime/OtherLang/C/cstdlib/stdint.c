@@ -1,8 +1,5 @@
-/* stdint.h implementation for PicoC */
-
 #include "../interpreter.h"
 
-/* Standard integer types and their size definitions */
 typedef signed char int8_t;
 typedef short int int16_t;
 typedef int int32_t;
@@ -13,7 +10,6 @@ typedef unsigned short int uint16_t;
 typedef unsigned int uint32_t;
 typedef unsigned long long int uint64_t;
 
-/* Limits of integer types */
 static const int8_t INT8_MINValue = -128;
 static const int8_t INT8_MAXValue = 127;
 static const uint8_t UINT8_MAXValue = 255;
@@ -30,7 +26,6 @@ static const int64_t INT64_MINValue = -9223372036854775807LL - 1;
 static const int64_t INT64_MAXValue = 9223372036854775807LL;
 static const uint64_t UINT64_MAXValue = 18446744073709551615ULL;
 
-/* Structure definitions for StdInt */
 const char StdIntDefs[] = "\
 typedef signed char int8_t; \
 typedef unsigned char uint8_t; \
@@ -43,7 +38,6 @@ typedef unsigned long uint64_t; \
 typedef unsigned long uintptr_t; \
 ";
 
-/* Variable definitions for integer limits */
 void StdIntSetupFunc(Picoc *pc)
 {
     VariableDefinePlatformVar(pc, NULL, "INT8_MIN", &pc->IntType,

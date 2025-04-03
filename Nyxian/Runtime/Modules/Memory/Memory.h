@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (UInt64)valloc:(size_t)size;
 - (id)free:(UInt64)pointer;
 JSExportAs(calloc,          - (UInt64)calloc:(size_t)count size:(size_t)size                                                         );
-JSExportAs(realloc,         - (UInt64)realloc:(UInt64)pointer size:(size_t)size                                                      );
+JSExportAs(realloc,         - (id)realloc:(UInt64)pointer size:(size_t)size                                                          );
 
 /// Low level memory reading functions
 - (id)mread8:(UInt64)pointer;
@@ -76,8 +76,9 @@ typedef struct {
 typedef void (^MemorySafetyArrayItemHandler)(MemorySafetyArrayItem_t item);
 
 /// memory type signatures
-#define MEMORY_BLOCK    0x00
-#define MEMORY_MAP      0x01
+#define MEMORY_ANY      0x00
+#define MEMORY_BLOCK    0x01
+#define MEMORY_MAP      0x02
 
 /*
  @Brief Memory Module Interface
