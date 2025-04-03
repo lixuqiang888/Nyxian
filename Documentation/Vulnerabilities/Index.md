@@ -9,3 +9,4 @@
 - [VID 005: getcwd NULL pointer dereference](005.md)
 - [VID 006: Reading a illegal size](006.md)
 - [VID 007: realloc memory blocks not belonging to u](007.md)
+- [VID 008: MapReallocFail](008.md)
