@@ -194,7 +194,7 @@
     [self removePtr:pointer];
     [self addPtr:newpointer size:size signature:MEMORY_BLOCK];
     
-    return @(pointer);
+    return @(newpointer);
 }
 
 - (UInt64)valloc:(size_t)size
