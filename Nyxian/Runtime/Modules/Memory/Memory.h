@@ -72,6 +72,7 @@ typedef struct {
     UInt64 pointer;
     UInt64 size;
     UInt8 signature;
+    UInt32 permission;
 } MemorySafetyArrayItem_t;
 typedef void (^MemorySafetyArrayItemHandler)(MemorySafetyArrayItem_t item);
 
