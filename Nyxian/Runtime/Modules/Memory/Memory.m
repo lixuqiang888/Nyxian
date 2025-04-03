@@ -147,6 +147,7 @@
         UInt64 start = item.pointer;
         UInt64 end = start + item.size;
         if (pointer >= start && (pointer + size) <= end)
+        {
             if(signature == MEMORY_ANY)
                 if((item.permission & permission) == permission)
                     return YES;
@@ -154,6 +155,7 @@
                 if((item.permission & permission) == permission)
                     return YES;
             return NO;
+        }
     }
     
     return NO;
