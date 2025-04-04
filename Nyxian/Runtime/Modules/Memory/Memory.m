@@ -355,7 +355,7 @@
     if(![self inAllocationZone:pointer size:size signature:MEMORY_ANY permission:PROT_WRITE])
         return JS_THROW_ERROR(EW_PERMISSION);
     
-    if([data lengthOfBytesUsingEncoding:NSUTF8StringEncoding] > size)
+    if([data lengthOfBytesUsingEncoding:NSUTF8StringEncoding] < size)
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     memcpy((void *)(pointer), [data UTF8String], size);
