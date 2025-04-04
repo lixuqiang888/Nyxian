@@ -26,12 +26,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-extern bool NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED;
-extern bool NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED;
-extern bool NYXIAN_RUNTIME_SAFETY_IO_ENABLED;
-extern bool NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED;
-extern bool NYXIAN_RUNTIME_SAFETY_PROCESS;
+extern bool *NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED;
+extern bool *NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED;
+extern bool *NYXIAN_RUNTIME_SAFETY_IO_ENABLED;
+extern bool *NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED;
+extern bool *NYXIAN_RUNTIME_SAFETY_PROCESS;
 
-void reset_runtime_safety_to_default(void);
+bool guard_sensitive_map(void);
+bool unguard_sensitive_map(void);
+
 void set_guarded_bool(bool *ptr, bool value);
 
+void reset_runtime_safety_to_default(void);

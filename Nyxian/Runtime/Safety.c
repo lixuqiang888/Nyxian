@@ -28,44 +28,51 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-bool guard_sensitive_ptr(void *ptr, size_t size) {
-    return mprotect(ptr, size, PROT_READ) == 0;
+bool *map_base_addr;
+bool *NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED;
+bool *NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED;
+bool *NYXIAN_RUNTIME_SAFETY_IO_ENABLED;
+bool *NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED;
+bool *NYXIAN_RUNTIME_SAFETY_PROCESS;
+
+bool guard_sensitive_map(void) {
+    return mprotect(map_base_addr, 5, PROT_READ) == 0;
 }
 
-bool unguard_sensitive_ptr(void *ptr, size_t size) {
-    return mprotect(ptr, size, PROT_READ | PROT_WRITE) == 0;
+bool unguard_sensitive_map(void) {
+    return mprotect(map_base_addr, 5, PROT_READ | PROT_WRITE) == 0;
 }
 
 void set_guarded_bool(bool *ptr, bool value) {
-    if (*ptr != value) { // If the bool already is value, we don't need to unguard/reguard it
-        if (!unguard_sensitive_ptr((void*)ptr, sizeof(bool))) {
+    if (*ptr != value) {
+        if (!unguard_sensitive_map()) {
             // TODO: Handle error
             fprintf(stderr, "unable to unguard sensetive pointer\n");
             return;
         }
         *ptr = value;
-        guard_sensitive_ptr((void*)ptr, sizeof(bool));
+        guard_sensitive_map();
     }
 }
 
-// Store variables in a separate section... untested, tbh I may just want to keep them in __DATA and guardSensitivePtr() them, should have the same affect
-#if defined(__APPLE__) || defined(__linux__)
-    #define READONLY_SECTION __attribute__((section(".rodata")))
-#else
-    #define READONLY_SECTION
-#endif
-
-READONLY_SECTION volatile bool NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED = true;
-READONLY_SECTION volatile bool NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED = true;
-READONLY_SECTION volatile bool NYXIAN_RUNTIME_SAFETY_IO_ENABLED = true;
-READONLY_SECTION volatile bool NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED = true;
-READONLY_SECTION volatile bool NYXIAN_RUNTIME_SAFETY_PROCESS = true;
-
 void reset_runtime_safety_to_default(void)
 {
-    set_guarded_bool(&NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED, true);
-    set_guarded_bool(&NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED, true);
-    set_guarded_bool(&NYXIAN_RUNTIME_SAFETY_IO_ENABLED, true);
-    set_guarded_bool(&NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED, true);
-    set_guarded_bool(&NYXIAN_RUNTIME_SAFETY_PROCESS, true);
+    set_guarded_bool(NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED, true);
+    set_guarded_bool(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED, true);
+    set_guarded_bool(NYXIAN_RUNTIME_SAFETY_IO_ENABLED, true);
+    set_guarded_bool(NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED, true);
+    set_guarded_bool(NYXIAN_RUNTIME_SAFETY_PROCESS, true);
+}
+
+__attribute__((constructor))
+void SafetyInit(void)
+{
+    map_base_addr = mmap(NULL, sizeof(bool) * 5, PROT_READ, MAP_ANONYMOUS | MAP_PRIVATE, 0, 0);
+    
+    NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED = &map_base_addr[0];
+    NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED = &map_base_addr[1];
+    NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED = &map_base_addr[2];
+    NYXIAN_RUNTIME_SAFETY_IO_ENABLED = &map_base_addr[3];
+    NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED = &map_base_addr[4];
+    NYXIAN_RUNTIME_SAFETY_PROCESS = &map_base_addr[5];
 }

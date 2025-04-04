@@ -41,7 +41,7 @@
     
     BOOL didConsent = NO;
     spawnAlertv2(@"memorychip.fill", @"Memory Safety", @"Nyxian script requested the memory safety checks to be disabled, which could lead the app to be crashed or malicious exploitation due to not supervisable memory manipulation.", &didConsent);
-    set_guarded_bool(&NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED, (bool) !didConsent);
+    set_guarded_bool(NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED, (bool) !didConsent);
     return didConsent;
 }
 
@@ -52,7 +52,7 @@
     
     BOOL didConsent = NO;
     spawnAlertv2(@"pc", @"Arbcall Safety", @"Nyxian script requested the arbitary calling that is usually disabled to be enabled, which could lead the app to be crashed or malicious exploitation due to the not supervisable act to call arbitary symbols.", &didConsent);
-    set_guarded_bool(&NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED, (bool) !didConsent);
+    set_guarded_bool(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED, (bool) !didConsent);
     return didConsent;
 }
 
@@ -63,7 +63,7 @@
     
     BOOL didConsent = NO;
     spawnAlertv2(@"internaldrive.fill", @"I/O Safety", @"Nyxian script requested the I/O safety checks to be disabled which could lead to the app crashing or malicious exploitation due to not supervisible handling of file descriptors for example.", &didConsent);
-    set_guarded_bool(&NYXIAN_RUNTIME_SAFETY_IO_ENABLED, (bool) !didConsent);
+    set_guarded_bool(NYXIAN_RUNTIME_SAFETY_IO_ENABLED, (bool) !didConsent);
     return didConsent;
 }
 
@@ -74,7 +74,7 @@
     
     BOOL didConsent = NO;
     spawnAlertv2(@"cable.coaxial", @"Langbridge Safety", @"Nyxian script requested to get access to the Langbridge, which could lead to exploitive behaviour. Langbridge is currently one of the biggest attack surfaces in Nyxian.", &didConsent);
-    set_guarded_bool(&NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED, (bool) !didConsent);
+    set_guarded_bool(NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED, (bool) !didConsent);
     return didConsent;
 }
 
