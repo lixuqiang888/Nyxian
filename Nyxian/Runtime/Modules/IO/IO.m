@@ -572,24 +572,19 @@ char* readline(const char *prompt);
 - (id)getcwd:(UInt64)size
 {
     if(size == 0)
-        size = 2048;
+        size = 2048; //TODO: In future use PATH_MAX instead of just assuming it is 2048, not too much of an issue though since getcwd() already checks for us
     
-    char *rw_buffer = malloc(size);
+    char rw_buffer[2048];
     
     if(rw_buffer == NULL)
         return JS_THROW_ERROR(EW_NULL_POINTER);
     
     if(getcwd(rw_buffer, size) == NULL)
     {
-        free(rw_buffer);
         return JS_THROW_ERROR(EW_NULL_POINTER);
     }
     
-    NSString *buffer = @(rw_buffer);
-    
-    free(rw_buffer);
-    
-    return buffer;
+    return @(rw_buffer);
 }
 
 @end
