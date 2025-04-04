@@ -239,12 +239,12 @@ char* readline(const char *prompt);
         return JS_THROW_ERROR(EW_NULL_POINTER);
     
     ssize_t bytesRead = read(fd, rw_buffer, size);
-    
-    if (bytesRead < 0)
-        return JS_THROW_ERROR(EW_UNEXPECTED);
-    
+
     if (bytesRead == 0)
         return NULL;
+        
+    if (bytesRead < size)
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     
     NSData *resultData = [NSData dataWithBytes:rw_buffer length:bytesRead];
     
