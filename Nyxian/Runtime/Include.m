@@ -146,5 +146,33 @@ void add_include_symbols(NYXIAN_Runtime *Runtime)
         [Runtime.Context setObject:^id(NSString *LibName) {
             return NYXIAN_include(BlockRuntime, LibName);
         } forKeyedSubscript:@"include"];
+        
+        ///
+        /// DEBUG! FOR RACE COND TESTING WITH THREADS BEFORE WE REALLY START TO DEPLOY THREADING
+        ///
+        [Runtime.Context setObject:^id(JSValue *threadfunction, JSValue *object, NSString *callname, NSString *objregname) {
+            if(NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED)
+                return NULL;
+            
+            // get necessary things
+            NSString *functionString = [threadfunction toString];
+            id nsobject = [object toObject];
+            
+            // forge new context
+            JSContext *new = [[JSContext alloc] init];
+            
+            // now we add our stuff
+            [new setObject:nsobject forKeyedSubscript:objregname];
+            
+            // and now we evaluate on background thread
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                new.exceptionHandler = ^(JSContext *context, JSValue *exception) {
+                    dprintf(get_std_fd(), "%s", [[NSString stringWithFormat:@"\nNyxian %@", exception] UTF8String]);
+                };
+                [new evaluateScript:[NSString stringWithFormat:@"%@\n\n%@()", functionString, callname]];
+            });
+            
+            return NULL;
+        } forKeyedSubscript:@"debug_thread"];
     }
 }
