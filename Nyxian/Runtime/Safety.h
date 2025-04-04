@@ -22,10 +22,16 @@
  SOFTWARE.
  */
 
-extern BOOL NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED;
-extern BOOL NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED;
-extern BOOL NYXIAN_RUNTIME_SAFETY_IO_ENABLED;
-extern BOOL NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED;
-extern BOOL NYXIAN_RUNTIME_SAFETY_PROCESS;
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+extern bool NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED;
+extern bool NYXIAN_RUNTIME_SAFETY_ARBCALL_ENABLED;
+extern bool NYXIAN_RUNTIME_SAFETY_IO_ENABLED;
+extern bool NYXIAN_RUNTIME_SAFETY_LANGBRIDGE_ENABLED;
+extern bool NYXIAN_RUNTIME_SAFETY_PROCESS;
 
 void reset_runtime_safety_to_default(void);
+void set_guarded_bool(bool *ptr, bool value);
+
