@@ -214,7 +214,7 @@ char* readline(const char *prompt);
     
     const char *buffer = [text UTF8String];
     
-    if(strlen(buffer) < size)
+    if(text.length < size)
         return JS_THROW_ERROR(EW_OUT_OF_BOUNDS);
     
     ssize_t bytesWritten = write(fd, buffer, size);
