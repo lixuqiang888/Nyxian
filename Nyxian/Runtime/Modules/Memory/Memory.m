@@ -89,6 +89,22 @@
     return NO;
 }
 
+- (UInt64)sizeOfPtr:(UInt64)pointer
+{
+    if (!NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
+        return UINT64_MAX;
+    
+    for (NSValue *value in _array)
+    {
+        MemorySafetyArrayItem_t item;
+        [value getValue:&item];
+        if (item.pointer == pointer)
+            return item.size;
+    }
+    
+    return 0;
+}
+
 - (BOOL)doesPtrHaveSignature:(UInt64)pointer signature:(UInt8)signature
 {
     if (!NYXIAN_RUNTIME_SAFETY_MEMORY_ENABLED)
@@ -376,7 +392,7 @@
     return @(pointer);
 }
 
-- (id)munmap:(UInt64)pointer size:(UInt64)size
+- (id)munmap:(UInt64)pointer
 {
     if(![self isPtrThere:pointer])
         return JS_THROW_ERROR(EW_PERMISSION);
@@ -384,7 +400,7 @@
     if(![self doesPtrHaveSignature:pointer signature:MEMORY_MAP])
         return JS_THROW_ERROR(EW_UNEXPECTED);
     
-    if(munmap((void*)pointer, size) != 0)
+    if(munmap((void*)pointer, [self sizeOfPtr:pointer]) != 0)
         return JS_THROW_ERROR(EW_UNEXPECTED);
     
     [self removePtr:pointer];
@@ -392,7 +408,7 @@
     return NULL;
 }
 
-- (id)mprotect:(UInt64)pointer size:(UInt64)size prot:(int)prot
+- (id)mprotect:(UInt64)pointer prot:(int)prot
 {
     if(![self isPtrThere:pointer])
         return JS_THROW_ERROR(EW_PERMISSION);
@@ -400,10 +416,24 @@
     if(![self doesPtrHaveSignature:pointer signature:MEMORY_MAP])
         return JS_THROW_ERROR(EW_UNEXPECTED);
     
-    if(mprotect((void*)pointer, size, prot) == -1)
+    if(mprotect((void*)pointer, [self sizeOfPtr:pointer], prot) == -1)
         return JS_THROW_ERROR(EW_UNEXPECTED);
     
     [self updatePermAllocationZone:pointer permission:prot];
+    
+    return NULL;
+}
+
+- (id)msync:(UInt64)pointer flags:(int)flags
+{
+    if(![self isPtrThere:pointer])
+        return JS_THROW_ERROR(EW_PERMISSION);
+    
+    if(![self doesPtrHaveSignature:pointer signature:MEMORY_MAP])
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    
+    if(msync((void*)pointer, [self sizeOfPtr:pointer], flags))
+        return JS_THROW_ERROR(EW_UNEXPECTED);
     
     return NULL;
 }

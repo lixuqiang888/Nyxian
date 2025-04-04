@@ -126,6 +126,17 @@ char* readline(const char *prompt);
     return NULL;
 }
 
+- (id)ftruncate:(int)fd offset:(UInt64)offset
+{
+    if(![self isFDThere:fd critical:YES])
+        return JS_THROW_ERROR(EW_RUNTIME_SAFETY);
+    
+    if(ftruncate(fd, offset) == -1)
+        return JS_THROW_ERROR(EW_UNEXPECTED);
+    
+    return NULL;
+}
+
 - (id)getTermSize
 {
     // Returns a JSValue object with two properties "rows" and "columns" both

@@ -46,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString*)perror;
 - (id)fsync:(int)fd;
 - (id)getTermSize;
+JSExportAs(ftruncate, - (id)ftruncate:(int)fd offset:(UInt64)offset                                     );
 
 ///
 /// These are basically macro redirections so Nyxian Runtime can
