@@ -33,6 +33,8 @@ struct ProjectFolder: View {
             return Color.orange
         case 4: // Webserver
             return Color.green
+        case 5: // CPP
+            return Color.indigo
         default:
             return Color.primary
         }
@@ -48,6 +50,8 @@ struct ProjectFolder: View {
             return "lua"
         case 4: // Web
             return "web"
+        case 5: // Cpp
+            return "cpp"
         default:
             return "?"
         }
@@ -62,6 +66,8 @@ struct ProjectFolder: View {
         case 3: // Lua
             return 6
         case 4: // Web
+            return 6
+        case 5: // Cpp
             return 6
         default:
             return 10
@@ -81,7 +87,7 @@ struct ProjectListing: View {
                 NavigationLink(destination: CodeSpace(ProjectInfo: item, pathstate: $actpath, action: $action)) {
                     HStack {
                         switch Int(item.type) ?? 0 {
-                        case 1...4:
+                        case 1...5:
                             ProjectFolder(type: Int(item.type) ?? 0)
                         default:
                             Image(systemName: "folder.fill")
