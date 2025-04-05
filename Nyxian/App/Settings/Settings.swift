@@ -54,5 +54,6 @@ struct SettingsView: View {
             .accentColor(.primary)
             .tint(.primary)
         }
+        .navigationViewStyle(.stack)
     }
 }

@@ -59,6 +59,7 @@ struct LibrariesView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
     
     func cancelAppend() {
