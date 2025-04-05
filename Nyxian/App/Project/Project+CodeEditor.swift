@@ -431,9 +431,26 @@ struct NeoEditor: UIViewRepresentable {
             textView.setLanguageMode(languageMode)
             break
         case "cpp":
-            let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/cpp.scm"))
-            let injectionsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/cpp_inj.scm"))
-            let language = TreeSitterLanguage(tree_sitter_cpp(), highlightsQuery: highlightsQuery, injectionsQuery: injectionsQuery)
+            let cHighlightsURL = URL(fileURLWithPath: "\(Bundle.main.bundlePath)/c.scm")
+            let cppHighlightsURL = URL(fileURLWithPath: "\(Bundle.main.bundlePath)/cpp.scm")
+            
+            let oHighlightsQueryString = try? String(contentsOf: cHighlightsURL)
+            let cppHighlightsQueryString = try? String(contentsOf: cppHighlightsURL)
+            
+            let combinedHighlightsQueryString = (oHighlightsQueryString ?? "") + "\n" + (cppHighlightsQueryString ?? "")
+            
+            let combinedHighlightsQuery = TreeSitterLanguage.Query(string: combinedHighlightsQueryString)
+            
+            let cInjectionUrl = URL(fileURLWithPath: "\(Bundle.main.bundlePath)/c_inj.scm")
+            let cppInjectionUrl = URL(fileURLWithPath: "\(Bundle.main.bundlePath)/cpp_inj.scm")
+            
+            let cInjectionQueryString = try? String(contentsOf: cInjectionUrl)
+            let cppInjectionQueryString = try? String(contentsOf: cppInjectionUrl)
+            
+            let combinedInjectionsQueryString = (cInjectionQueryString ?? "") + "\n" + (cppInjectionQueryString ?? "")
+            let combinedInjectionsQuery = TreeSitterLanguage.Query(string: combinedInjectionsQueryString)
+            
+            let language = TreeSitterLanguage(tree_sitter_cpp(), highlightsQuery: combinedHighlightsQuery, injectionsQuery: combinedInjectionsQuery)
             let languageMode = TreeSitterLanguageMode(language: language)
             textView.setLanguageMode(languageMode)
             break
