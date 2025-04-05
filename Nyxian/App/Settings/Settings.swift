@@ -48,6 +48,11 @@ struct SettingsView: View {
                         Label("Code Editor", systemImage: "text.page.fill")
                     }
                 }
+                Section(header: Text("Advanced")) {
+                    NavigationLink(destination: CodeExecution()) {
+                        Label("Code Execution", systemImage: "pc")
+                    }
+                }
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
