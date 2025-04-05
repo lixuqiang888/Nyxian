@@ -117,6 +117,8 @@ class NyxianTerminal: TerminalView, TerminalViewDelegate {
 }
 
 struct TerminalViewUIViewRepresentable: UIViewRepresentable {
+    @AppStorage("C_EXC") var C_EXC: Int = 0
+    
     @Binding var sheet: Bool
     @State var project: Project
     @Binding var title: String
@@ -167,24 +169,30 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
                 UISurface_Handoff_Slave(view)
                 let runtime: NYXIAN_Runtime = NYXIAN_Runtime()
                 runtime.run("\(NSHomeDirectory())/Documents/\(project.path)/main.nx")
-                didExit(tview: tview)
                 break
             case "2": // C
-                //c_interpret(FindFilesStack("\(NSHomeDirectory())/Documents/\(project.path)", [".c"], []).joined(separator: " "), "\(NSHomeDirectory())/Documents/\(project.path)")
-                runCppAtPath("\(NSHomeDirectory())/Documents/\(project.path)/main.c")
-                didExit(tview: tview)
+                switch(C_EXC) {
+                case 0: // PICOC
+                    c_interpret(FindFilesStack("\(NSHomeDirectory())/Documents/\(project.path)", [".c"], []).joined(separator: " "), "\(NSHomeDirectory())/Documents/\(project.path)")
+                    break
+                case 1: // LLVM
+                    runCppAtPath("\(NSHomeDirectory())/Documents/\(project.path)/main.c")
+                    break
+                default:
+                    break
+                }
                 break
             case "3": // Lua
                 o_lua("\(NSHomeDirectory())/Documents/\(project.path)/main.lua")
-                didExit(tview: tview)
                 break
             case "5": // CPP
                 runCppAtPath("\(NSHomeDirectory())/Documents/\(project.path)/main.cpp")
-                didExit(tview: tview)
                 break
             default:
                 break
             }
+            
+            didExit(tview: tview)
         }
         
         return view
