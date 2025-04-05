@@ -29,22 +29,101 @@
 #include "llvm/ExecutionEngine/SectionMemoryManager.h"
 #include "llvm/ExecutionEngine/Interpreter.h"
 #include "llvm/ExecutionEngine/GenericValue.h"
+#include "llvm/ExecutionEngine/Orc/CompileUtils.h"
+#include "llvm/ExecutionEngine/Orc/ExecutionUtils.h"
+#include "llvm/ExecutionEngine/Orc/IRCompileLayer.h"
+#include "llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h"
 #include "llvm/IR/Verifier.h"
+#include "llvm/ExecutionEngine/Orc/LLJIT.h"
+#include "llvm/IR/DataLayout.h"
+#include "llvm/IR/Mangler.h"
+#include "llvm/IR/Module.h"
 #include <Runtime/Hook/stdfd.h>
 #include <Runtime/LLI/ErrorHandler.h>
 #include <Runtime/LLI/Linker.h>
+#include <Runtime/LLI/JustInTimeHelper.h>
 #include <stdio.h>
 
 const char* getIncludePath(void);
 
 using namespace clang;
 using namespace clang::driver;
+using namespace llvm::orc;
 
 std::string GetExecutablePath(const char *Argv0, void *MainAddr) {
   return llvm::sys::fs::getMainExecutable(Argv0, MainAddr);
 }
 
 llvm::ExitOnError ExitOnErr;
+
+namespace llvm {
+namespace orc {
+
+class SimpleJIT {
+private:
+    ExecutionSession ES { std::move(*SelfExecutorProcessControl::Create()) };
+    std::unique_ptr<TargetMachine> TM;
+    const DataLayout DL;
+    MangleAndInterner Mangle{ES, DL};
+    JITDylib &MainJD{ES.createBareJITDylib("<main>")};
+    RTDyldObjectLinkingLayer ObjectLayer{ES, createMemMgr};
+    IRCompileLayer CompileLayer{ES, ObjectLayer,
+        std::make_unique<SimpleCompiler>(*TM)};
+    
+    static std::unique_ptr<SectionMemoryManager> createMemMgr() {
+        return std::make_unique<SectionMemoryManager>();
+    }
+    
+    SimpleJIT(
+              std::unique_ptr<TargetMachine> TM, DataLayout DL,
+              std::unique_ptr<DynamicLibrarySearchGenerator> ProcessSymbolsGenerator)
+    : TM(std::move(TM)), DL(std::move(DL)) {
+        llvm::sys::DynamicLibrary::LoadLibraryPermanently(nullptr);
+        MainJD.addGenerator(std::move(ProcessSymbolsGenerator));
+    }
+    
+public:
+    static Expected<std::unique_ptr<SimpleJIT>> Create() {
+        
+        auto JTMB = std::make_unique<JITTargetMachineBuilder>(Triple("arm64-apple-darwin"));
+        
+        auto TM = JTMB->createTargetMachine();
+        if (!TM)
+            return TM.takeError();
+        
+        auto DL = (*TM)->createDataLayout();
+        
+        auto ProcessSymbolsGenerator =
+        DynamicLibrarySearchGenerator::GetForCurrentProcess(
+                                                            DL.getGlobalPrefix());
+        
+        if (!ProcessSymbolsGenerator)
+            return ProcessSymbolsGenerator.takeError();
+        
+        return std::unique_ptr<SimpleJIT>(new SimpleJIT(
+                                                        std::move(*TM), std::move(DL), std::move(*ProcessSymbolsGenerator)));
+    }
+    
+    const TargetMachine &getTargetMachine() const { return *TM; }
+    
+    Error addModule(ThreadSafeModule M) {
+        return CompileLayer.add(MainJD, std::move(M));
+    }
+    
+    Expected<JITEvaluatedSymbol> findSymbol(const StringRef &Name) {
+        return ES.lookup({&MainJD}, Mangle(Name));
+    }
+    
+    Expected<JITTargetAddress> getSymbolAddress(const StringRef &Name) {
+        auto Sym = findSymbol(Name);
+        if (!Sym)
+            return Sym.takeError();
+        return Sym->getAddress();
+    }
+};
+
+}
+}
 
 int clangInterpret(int argc, const char **argv/*, llvm::raw_ostream &errorOutputStream*/) {
     std::string errorString;
@@ -151,29 +230,43 @@ int clangInterpret(int argc, const char **argv/*, llvm::raw_ostream &errorOutput
     if (Module) {
         llvm::Function *MainFunc = Module->getFunction("main");
         
-        llvm::ExecutionEngine *Interpreter = llvm::EngineBuilder(std::move(Module))
-            .setEngineKind(llvm::EngineKind::Interpreter)
-            .create();
+        llvm::ExecutionEngine *Interpreter;
         
-        if (!Interpreter) {
-            fprintf(stdfd_out_fp, "Failed to create the LLVM Interpreter.\n");
-            fflush(stdfd_out_fp);
-            return 1;
+        if(isJITEnabled(true))
+        {
+            if (Module) {
+                auto J = ExitOnErr(llvm::orc::SimpleJIT::Create());
+
+                ExitOnErr(J->addModule(
+                    llvm::orc::ThreadSafeModule(std::move(Module), std::move(Ctx))));
+                auto Main = (int (*)(...))ExitOnErr(J->getSymbolAddress("main"));
+                Res = Main();
+            }
+        } else {
+            Interpreter = llvm::EngineBuilder(std::move(Module))
+                .setEngineKind(llvm::EngineKind::Interpreter)
+                .create();
+            
+            if (!Interpreter) {
+                fprintf(stdfd_out_fp, "Failed to create the LLVM Interpreter.\n");
+                fflush(stdfd_out_fp);
+                return 1;
+            }
+            
+            if (!MainFunc) {
+                fprintf(stdfd_out_fp, "No main function found in the LLVM IR.\n");
+                fflush(stdfd_out_fp);
+                return 1;
+            }
+            
+            if(!NyxianLLVMLinker(Interpreter, module, llvm::errs()))
+                return 1;
+            
+            std::vector<llvm::GenericValue> Args;
+            
+            /// Womp Womp Womp
+            llvm::GenericValue Result = Interpreter->runFunction(MainFunc, Args);
         }
-        
-        if (!MainFunc) {
-            fprintf(stdfd_out_fp, "No main function found in the LLVM IR.\n");
-            fflush(stdfd_out_fp);
-            return 1;
-        }
-        
-        if(!NyxianLLVMLinker(Interpreter, module, llvm::errs()))
-            return 1;
-        
-        std::vector<llvm::GenericValue> Args;
-        
-        /// Womp Womp Womp
-        llvm::GenericValue Result = Interpreter->runFunction(MainFunc, Args);
     }
     
     llvm::remove_fatal_error_handler();

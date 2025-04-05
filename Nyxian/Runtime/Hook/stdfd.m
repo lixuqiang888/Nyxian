@@ -39,6 +39,16 @@ FILE *stdfd_out_fp = NULL;
 FILE *stdfd_in_fp = NULL;
 
 ///
+/// function to update stdfd
+///
+void stdfd_update(void)
+{
+    // reprepare the file pointers
+    stdfd_in_fp = fdopen(stdfd_in[1], "w");
+    stdfd_out_fp = fdopen(stdfd_out[1], "w");
+}
+
+///
 /// Initilizer for the entire stdfd system
 ///
 __attribute__((constructor))
