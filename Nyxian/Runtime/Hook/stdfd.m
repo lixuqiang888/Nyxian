@@ -26,34 +26,41 @@
 #include <unistd.h>
 #include <Runtime/Hook/stdfd.h>
 
-int stdout_plus_err = 0;
-FILE *stdout_plus_err_file;
+///
+/// stdfd pipes
+///
+int stdfd_out[2] = {-1, -1};
+int stdfd_in[2] = {-1, -1};;
 
-void set_std_fd(int fd)
-{
-    // its already set, for security reasons, forbid overwrite
-    if(stdout_plus_err != 0)
-        return;
-    
-    // set file descriptor
-    stdout_plus_err = fd;
-    
-    // get flags from the OG
-    int flags = fcntl(STDOUT_FILENO, F_GETFL);
-    
-    // set flags to the made in china copy
-    fcntl(stdout_plus_err, F_SETFL, flags);
-    
-    // gettint its file structure
-    stdout_plus_err_file = fdopen(stdout_plus_err, "w");
-}
+///
+/// stdfd file pointers (write end only)
+///
+FILE *stdfd_out_fp = NULL;
+FILE *stdfd_in_fp = NULL;
 
-int get_std_fd(void)
+///
+/// Initilizer for the entire stdfd system
+///
+__attribute__((constructor))
+void stdfd_init(void)
 {
-    return stdout_plus_err;
-}
-
-FILE *get_std_file(void)
-{
-    return stdout_plus_err_file;
+    // open both stdfds
+    // on failure instead of just returning we just hook them to their original file descriptor
+    if(pipe(stdfd_in) == -1)
+    {
+        stdfd_in[0] = STDIN_FILENO;
+    } else {
+        // if it didnt fail for stdin.. then we gonna go to the next round with hooking it
+        dup2(stdfd_in[0], STDIN_FILENO);
+    }
+    
+    if(pipe(stdfd_out) == -1)
+        stdfd_out[1] = STDOUT_FILENO;
+    
+    // prepare the file pointers
+    stdfd_in_fp = fdopen(stdfd_in[1], "w");
+    stdfd_out_fp = fdopen(stdfd_out[1], "w");
+    
+    // so we are still here...
+    // now ur on ur own
 }

@@ -842,10 +842,9 @@ LUAMOD_API int luaopen_io (lua_State *L) {
   createmeta(L);
     
   /* create (and set) default files */
-  FILE *stdfd = fdopen(get_std_fd(), "w+");
     
   createstdfile(L, stdin, IO_INPUT, "stdin");
-  createstdfile(L, stdfd, IO_OUTPUT, "stdout");
-  createstdfile(L, stdfd, NULL, "stderr");
+  createstdfile(L, stdfd_out_fp, IO_OUTPUT, "stdout");
+  createstdfile(L, stdfd_out_fp, NULL, "stderr");
   return 1;
 }

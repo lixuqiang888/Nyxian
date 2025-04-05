@@ -75,7 +75,8 @@
     
     // Setting up and running the code in the environment
     _Context.exceptionHandler = ^(JSContext *context, JSValue *exception) {
-        dprintf(get_std_fd(), "%s", [[NSString stringWithFormat:@"\nNyxian %@", exception] UTF8String]);
+        fprintf(stdfd_out_fp, "%s", [[NSString stringWithFormat:@"\nNyxian %@", exception] UTF8String]);
+        fflush(stdfd_out_fp);
     };
     [_Context evaluateScript:code];
     
@@ -95,7 +96,7 @@
     [_array removeAllObjects];
     
     // And here we get fake stdout
-    dprintf(get_std_fd(), "[EXIT]\n");
+    fprintf(stdfd_out_fp, "[EXIT]\n");
     
     // And we tell ARC that ARC can fuck them selves and release the Context
     _Context = nil;

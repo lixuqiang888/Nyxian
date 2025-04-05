@@ -33,6 +33,7 @@ import TreeSitterPython
 import TreeSitterLua
 import TreeSitterXML
 import TreeSitterHTML
+import TreeSitterCPP
 
 enum HighlightName: String {
     case comment
@@ -425,6 +426,13 @@ struct NeoEditor: UIViewRepresentable {
             let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/html.scm"))
             let injectionsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/html_inj.scm"))
             let language = TreeSitterLanguage(tree_sitter_html(), highlightsQuery: highlightsQuery, injectionsQuery: injectionsQuery)
+            let languageMode = TreeSitterLanguageMode(language: language)
+            textView.setLanguageMode(languageMode)
+            break
+        case "cpp":
+            let highlightsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/cpp.scm"))
+            let injectionsQuery = TreeSitterLanguage.Query(contentsOf: URL(fileURLWithPath: "\(Bundle.main.bundlePath)/cpp_inj.scm"))
+            let language = TreeSitterLanguage(tree_sitter_cpp(), highlightsQuery: highlightsQuery, injectionsQuery: injectionsQuery)
             let languageMode = TreeSitterLanguageMode(language: language)
             textView.setLanguageMode(languageMode)
             break

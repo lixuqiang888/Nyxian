@@ -89,7 +89,7 @@ char* readline(const char *prompt);
         return YES;
     
     if(!critical)
-        if(fd == STDIN_FILENO || fd == get_std_fd() || fd == get_std_fd())
+        if(fd == stdfd_in[0] || fd == stdfd_out[1])
             return YES;
 
     return [_array containsObject:[[NSNumber alloc] initWithUnsignedLongLong:fd]];
@@ -253,9 +253,6 @@ char* readline(const char *prompt);
 
     if (bytesRead == 0)
         return NULL;
-        
-    if (bytesRead < size)
-        return JS_THROW_ERROR(EW_UNEXPECTED);
     
     NSData *resultData = [NSData dataWithBytes:rw_buffer length:bytesRead];
     

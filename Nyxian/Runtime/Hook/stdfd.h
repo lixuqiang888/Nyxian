@@ -22,8 +22,17 @@
  SOFTWARE.
  */
 
+#include <stdio.h>
 #include <fcntl.h>
 
-void set_std_fd(int fd);
-int get_std_fd(void);
-FILE *get_std_file(void);
+///
+/// stdfd pipes
+///
+extern int stdfd_out[2];
+extern int stdfd_in[2];
+
+///
+/// stdfd file pointers (write end only)
+///
+extern FILE *stdfd_out_fp;
+extern FILE *stdfd_in_fp;

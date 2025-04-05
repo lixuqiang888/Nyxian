@@ -27,7 +27,6 @@
 #import <Runtime/ErrorThrow.h>
 #import <Runtime/Safety.h>
 #import <Runtime/Modules/UI/Alert.h>
-#import <Runtime/Hook/stdin.h>
 #import <Runtime/Hook/stdfd.h>
 
 #import <UIKit/UIKit.h>
@@ -60,9 +59,9 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
     if ([LibName isEqualToString:@"io"]) {
         IO_MACRO_MAP();
         
-        int stdfd = get_std_fd();
-        Runtime.Context[@"STDOUT_FILENO"] = @(stdfd);
-        Runtime.Context[@"STDERR_FILENO"] = @(stdfd);
+        Runtime.Context[@"STDIN_FILENO"] = @(stdfd_in[0]);
+        Runtime.Context[@"STDOUT_FILENO"] = @(stdfd_out[1]);
+        Runtime.Context[@"STDERR_FILENO"] = @(stdfd_out[1]);
         
         IOModule *ioModule = [[IOModule alloc] init];
         [Runtime.Context setObject:ioModule forKeyedSubscript:@"io"];

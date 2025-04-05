@@ -5,8 +5,6 @@
 jmp_buf PicocExitBuf;
 jmp_buf PicocExitRBuf;
 
-extern FILE *stdout_plus_err_file;
-
 void PlatformInit(Picoc *pc) {
     // do nothing
 }
@@ -20,13 +18,13 @@ char *PlatformGetLine(char *Buf, int MaxLen, const char *Prompt)
     if (Prompt != NULL)
         printf("%s", Prompt);
 
-    fflush(stdout_plus_err_file);
+    fflush(stdfd_out_fp);
     return fgets(Buf, MaxLen, stdin);
 }
 
 int PlatformGetCharacter(void)
 {
-    fflush(stdout_plus_err_file);
+    fflush(stdfd_out_fp);
     return getchar();
 }
 

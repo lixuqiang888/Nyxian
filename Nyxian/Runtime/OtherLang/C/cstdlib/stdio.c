@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <inttypes.h>
+#include <Runtime/Hook/stdfd.h>
 
 #include "../interpreter.h"
 
@@ -20,8 +21,6 @@ static int _IOLBFValue = _IOLBF;
 static int _IONBFValue = _IONBF;
 static int L_tmpnamValue = L_tmpnam;
 static int GETS_MAXValue = 255;  /* arbitrary maximum size of a gets() file */
-
-extern FILE *stdout_plus_err_file;
 
 static FILE *stdinValue;
 static FILE *stdoutValue;
@@ -48,10 +47,10 @@ struct StdVararg
 /* initializes the I/O system so error reporting works */
 void BasicIOInit(Picoc *pc)
 {
-    pc->CStdOut = stdout_plus_err_file;
-    stdinValue = stdin;
-    stdoutValue = stdout_plus_err_file;
-    stderrValue = stdout_plus_err_file;
+    pc->CStdOut = stdfd_out_fp;
+    stdinValue = stdfd_in_fp;
+    stdoutValue = stdfd_out_fp;
+    stderrValue = stdfd_out_fp;
 }
 
 /* output a single character to either a FILE * or a string */
@@ -661,7 +660,7 @@ void StdioPrintf(struct ParseState *Parser, struct Value *ReturnValue,
     ReturnValue->Val->Integer = StdioBasePrintf(Parser, stdoutValue, NULL, 0,
         Param[0]->Val->Pointer, &PrintfArgs);
     
-    fflush(stdout_plus_err_file);
+    fflush(stdfd_out_fp);
 }
 
 void StdioVprintf(struct ParseState *Parser, struct Value *ReturnValue,

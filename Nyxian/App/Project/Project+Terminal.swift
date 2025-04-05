@@ -47,7 +47,9 @@ class NyxianTerminal: TerminalView, TerminalViewDelegate {
         
         tcom_set_size(Int32(self.getTerminal().rows), Int32(self.getTerminal().cols))
         
-        set_std_fd(loggingPipe.fileHandleForWriting.fileDescriptor)
+        //set_std_fd(loggingPipe.fileHandleForWriting.fileDescriptor)
+        dup2(loggingPipe.fileHandleForReading.fileDescriptor, stdfd_out.0)
+        dup2(loggingPipe.fileHandleForWriting.fileDescriptor, stdfd_out.1)
         
         loggingPipe.fileHandleForReading.readabilityHandler = { [weak self] fileHandle in
             let logData = fileHandle.availableData
@@ -102,7 +104,7 @@ class NyxianTerminal: TerminalView, TerminalViewDelegate {
     
     func send(source: SwiftTerm.TerminalView, data: ArraySlice<UInt8>) {
         var array = Array(data)
-        stdin_write(&array, array.count)
+        write(stdfd_in.1, &array, array.count)
     }
     
     func requestOpenLink(source: SwiftTerm.TerminalView, link: String, params: [String : String]) {
@@ -122,10 +124,8 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
     func printfake(_ message: String) {
         let data = message.data(using: .utf8)!
 
-        let fd: Int32 = get_std_fd()
-
         let bytesWritten = data.withUnsafeBytes { buffer in
-            write(fd, buffer.baseAddress, buffer.count)
+            write(stdfd_out.1, buffer.baseAddress, buffer.count)
         }
 
         if bytesWritten < 0 {
@@ -170,11 +170,16 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
                 didExit(tview: tview)
                 break
             case "2": // C
-                c_interpret(FindFilesStack("\(NSHomeDirectory())/Documents/\(project.path)", [".c"], []).joined(separator: " "), "\(NSHomeDirectory())/Documents/\(project.path)")
+                //c_interpret(FindFilesStack("\(NSHomeDirectory())/Documents/\(project.path)", [".c"], []).joined(separator: " "), "\(NSHomeDirectory())/Documents/\(project.path)")
+                runCppAtPath("\(NSHomeDirectory())/Documents/\(project.path)/main.c")
                 didExit(tview: tview)
                 break
             case "3": // Lua
                 o_lua("\(NSHomeDirectory())/Documents/\(project.path)/main.lua")
+                didExit(tview: tview)
+                break
+            case "5": // CPP
+                runCppAtPath("\(NSHomeDirectory())/Documents/\(project.path)/main.cpp")
                 didExit(tview: tview)
                 break
             default:

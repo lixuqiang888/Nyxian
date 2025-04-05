@@ -43,6 +43,14 @@ struct FJSApp: App {
     }
 }
 
+let applicationSupportURL = try! FileManager.default.url(for: .applicationSupportDirectory,
+                                            in: .userDomainMask,
+                                            appropriateFor: nil,
+                                            create: true)
+
+// Global instance of LLVMBridge
+let llvm: LLVMBridge = LLVMBridge()
+
 struct RootView: View {
     @State private var project_list_id: UUID = UUID()
     @State private var projects: [Project] = []
