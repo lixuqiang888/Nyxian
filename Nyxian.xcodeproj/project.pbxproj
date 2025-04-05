@@ -18,6 +18,7 @@
 		AFB1651D2D91A36300872EDB /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1651C2D91A36300872EDB /* Runestone */; };
 		AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */ = {isa = PBXBuildFile; productRef = AFB165232D91A4AB00872EDB /* TreeSitterJavaScript */; };
 		AFB1653D2D91BBEB00872EDB /* TreeSitterC in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1653C2D91BBEB00872EDB /* TreeSitterC */; };
+		AFCF8EF12DA1572D006ECF22 /* TreeSitterCPP in Frameworks */ = {isa = PBXBuildFile; productRef = AFCF8EF02DA1572D006ECF22 /* TreeSitterCPP */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -65,6 +66,7 @@
 			files = (
 				AF504BEA2D9579E1005FA8D2 /* Swifter in Frameworks */,
 				AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */,
+				AFCF8EF12DA1572D006ECF22 /* TreeSitterCPP in Frameworks */,
 				AF504BED2D957A72005FA8D2 /* TreeSitterHTML in Frameworks */,
 				AF1C222D2D99CBB1003D83A9 /* TreeSitterObjc in Frameworks */,
 				AF504BD72D956849005FA8D2 /* TreeSitterXML in Frameworks */,
@@ -128,6 +130,7 @@
 				AF504BE92D9579E1005FA8D2 /* Swifter */,
 				AF504BEC2D957A72005FA8D2 /* TreeSitterHTML */,
 				AF1C222C2D99CBB1003D83A9 /* TreeSitterObjc */,
+				AFCF8EF02DA1572D006ECF22 /* TreeSitterCPP */,
 			);
 			productName = FJS;
 			productReference = AFBE41752D85E4B500315155 /* Nyxian.app */;
@@ -170,6 +173,7 @@
 				AF504BE82D9579E1005FA8D2 /* XCRemoteSwiftPackageReference "swifter" */,
 				AF504BEB2D957A72005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-html" */,
 				AF1C222B2D99CBB1003D83A9 /* XCRemoteSwiftPackageReference "tree-sitter-objc" */,
+				AFCF8EEF2DA1572D006ECF22 /* XCRemoteSwiftPackageReference "tree-sitter-cpp" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AFBE41762D85E4B500315155 /* Products */;
@@ -540,6 +544,14 @@
 				minimumVersion = 0.16.1;
 			};
 		};
+		AFCF8EEF2DA1572D006ECF22 /* XCRemoteSwiftPackageReference "tree-sitter-cpp" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tree-sitter/tree-sitter-cpp";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -597,6 +609,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AFB1653B2D91BBEB00872EDB /* XCRemoteSwiftPackageReference "tree-sitter-c" */;
 			productName = TreeSitterC;
+		};
+		AFCF8EF02DA1572D006ECF22 /* TreeSitterCPP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AFCF8EEF2DA1572D006ECF22 /* XCRemoteSwiftPackageReference "tree-sitter-cpp" */;
+			productName = TreeSitterCPP;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

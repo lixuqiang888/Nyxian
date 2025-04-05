@@ -34,6 +34,7 @@ import TreeSitterLua
 import TreeSitterXML
 import TreeSitterHTML
 import TreeSitterCPP
+import TreeSitterObjc
 
 enum HighlightName: String {
     case comment
@@ -436,6 +437,31 @@ struct NeoEditor: UIViewRepresentable {
             let languageMode = TreeSitterLanguageMode(language: language)
             textView.setLanguageMode(languageMode)
             break
+        case "m":
+            let objcHighlightsURL = URL(fileURLWithPath: "\(Bundle.main.bundlePath)/objc.scm")
+            let cHighlightsURL = URL(fileURLWithPath: "\(Bundle.main.bundlePath)/c.scm")
+            
+            let objcHighlightsQueryString = try? String(contentsOf: objcHighlightsURL)
+            let cHighlightsQueryString = try? String(contentsOf: cHighlightsURL)
+            
+            let combinedHighlightsQueryString = (objcHighlightsQueryString ?? "") + "\n" + (cHighlightsQueryString ?? "")
+            
+            let combinedHighlightsQuery = TreeSitterLanguage.Query(string: combinedHighlightsQueryString)
+            
+            let objcInjectionURL = URL(fileURLWithPath: "\(Bundle.main.bundlePath)/objc_inj.scm")
+            let cInjectionURL = URL(fileURLWithPath: "\(Bundle.main.bundlePath)/c_inj.scm")
+            
+            let objcInjectionQueryString = try? String(contentsOf: objcInjectionURL)
+            let cInjectionQueryString = try? String(contentsOf: cInjectionURL)
+            
+            let combinedInjectionsQueryString = (objcInjectionQueryString ?? "") + "\n" + (cInjectionQueryString ?? "")
+            let combinedInjectionsQuery = TreeSitterLanguage.Query(string: combinedInjectionsQueryString)
+            
+            let language = TreeSitterLanguage(tree_sitter_objc(), highlightsQuery: combinedHighlightsQuery, injectionsQuery: combinedInjectionsQuery)
+            let languageMode = TreeSitterLanguageMode(language: language)
+            textView.setLanguageMode(languageMode)
+            break
+
         default:
             break
         }
