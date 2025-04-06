@@ -39,8 +39,8 @@ NSString* NSStringFromCString(const char *text);
     output_file_path[fileName.length] = '\0';
 
     // Invoke the interpreter
-    const char* argv[] = { "clang", "-isysroot", [[NSString stringWithFormat:@"%@/iPhoneOS16.5.sdk", [[NSBundle mainBundle] bundlePath]] UTF8String], input_file_path, "-o", output_file_path};
-    CompileObject(6, argv, output_file_path);
+    const char* argv[] = { "clang", "-isysroot", [[NSString stringWithFormat:@"%@/iPhoneOS16.5.sdk",  [[NSBundle mainBundle] bundlePath]] UTF8String], [[NSString stringWithFormat:@"-I%@/include",  [[NSBundle mainBundle] bundlePath]] UTF8String], input_file_path, "-o", output_file_path};
+    CompileObject(7, argv, output_file_path);
 }
 
 @end /* implementation LLVMBridge */
