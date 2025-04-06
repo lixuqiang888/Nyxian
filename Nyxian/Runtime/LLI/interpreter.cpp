@@ -44,8 +44,6 @@
 #include <Runtime/LLI/JustInTimeHelper.h>
 #include <stdio.h>
 
-const char* getIncludePath(void);
-
 using namespace clang;
 using namespace clang::driver;
 using namespace llvm::orc;
@@ -155,7 +153,6 @@ int clangInterpret(int argc, const char **argv/*, llvm::raw_ostream &errorOutput
     // recognize. We need to extend the driver library to support this use model
     // (basically, exactly one input, and the operation mode is hard wired).
     SmallVector<const char *, 16> Args(argv, argv + argc);
-    Args.push_back(getIncludePath());
     Args.push_back("-fsyntax-only");
     Args.push_back("-Wno-nullability-completeness");
     Args.push_back("-Wno-nullability");
