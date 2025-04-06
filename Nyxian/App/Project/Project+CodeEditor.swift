@@ -36,6 +36,11 @@ import TreeSitterHTML
 import TreeSitterCPP
 import TreeSitterObjc
 
+func gibColor(_ tag: String) -> UIColor? {
+    guard let encodedColor: String = UserDefaults.standard.string(forKey: tag) else { return nil }
+    return UIColor(decodeColor(encodedColor))
+}
+
 enum HighlightName: String {
     case comment
     case constantBuiltin = "constant.builtin"
@@ -113,62 +118,65 @@ class NyxianTheme: Theme {
         
         if userInterfaceStyle == .light {
             // Light Mode Colors (VSCode Light+ Pro inspired)
-            backgroundColor = neoRGB(250, 250, 250)
-            textColor = neoRGB(30, 30, 30)
+            backgroundColor = gibColor("CEBGCol") ?? neoRGB(250, 250, 250)
+            textColor = gibColor("CETCol") ?? neoRGB(30, 30, 30)
             
-            gutterBackgroundColor = neoRGB(240, 240, 240)
-            gutterHairlineColor = neoRGB(220, 220, 220)
-            lineNumberColor = neoRGB(180, 180, 180)
+            gutterBackgroundColor = gibColor("CEGBGCol") ?? neoRGB(240, 240, 240)
+            gutterHairlineColor = gibColor("CEGHCol") ?? neoRGB(220, 220, 220)
+            lineNumberColor = gibColor("CEGLNCol") ?? neoRGB(180, 180, 180)
             
-            selectedLineBackgroundColor = neoRGB(220, 230, 250)
-            selectedLinesLineNumberColor = neoRGB(80, 120, 180)
-            selectedLinesGutterBackgroundColor = neoRGB(235, 235, 240)
+            selectedLineBackgroundColor = gibColor("CESLCol") ?? neoRGB(220, 230, 250)
+            selectedLinesLineNumberColor = gibColor("CESLLCol") ?? neoRGB(80, 120, 180)
+            selectedLinesGutterBackgroundColor = gibColor("CESLGBGCol") ?? neoRGB(235, 235, 240)
             
+            // Technically not in Nyxian
             pageGuideHairlineColor = neoRGB(220, 220, 230)
             pageGuideBackgroundColor = neoRGB(245, 245, 250)
-            markedTextBackgroundColor = neoRGB(230, 240, 250)
             
-            colorKeyword = neoRGB(0, 0, 192)         // Deep blue
-            colorComment = neoRGB(0, 128, 0)         // Green
-            colorString = neoRGB(163, 21, 21)        // Red
-            colorNumber = neoRGB(128, 0, 128)        // Purple
-            colorRegex = neoRGB(255, 140, 0)         // Orange
-            colorFunction = neoRGB(43, 145, 175)     // Teal-blue
-            colorOperator = neoRGB(0, 0, 0)          // Black
-            colorProperty = neoRGB(0, 0, 128)        // Navy blue
-            colorPunctuation = neoRGB(50, 50, 50)    // Dark gray for punctuation
-            colorDirective = neoRGB(60, 60, 60)      // Dark gray directive
-            colorType = neoRGB(43, 43, 150)          // Type
-            colorConstantBuiltin = neoRGB(75, 0, 130)
+            markedTextBackgroundColor = gibColor("CEMTCol") ?? neoRGB(230, 240, 250)
+            
+            colorKeyword = gibColor("CEKeywordCol") ?? neoRGB(0, 0, 192)         // Deep blue
+            colorComment = gibColor("CECommentCol") ?? neoRGB(0, 128, 0)         // Green
+            colorString = gibColor("CEStringCol") ?? neoRGB(163, 21, 21)        // Red
+            colorNumber = gibColor("CENumberCol") ?? neoRGB(128, 0, 128)        // Purple
+            colorRegex = gibColor("CERegexCol") ?? neoRGB(255, 140, 0)         // Orange
+            colorFunction = gibColor("CEFunctionCol") ?? neoRGB(43, 145, 175)     // Teal-blue
+            colorOperator = gibColor("CEOperatorCol") ?? neoRGB(0, 0, 0)          // Black
+            colorProperty = gibColor("CEPropertyCol") ?? neoRGB(0, 0, 128)        // Navy blue
+            colorPunctuation = gibColor("CEPunctuationCol") ?? neoRGB(50, 50, 50)    // Dark gray for punctuation
+            colorDirective = gibColor("CEDirectiveCol") ?? neoRGB(60, 60, 60)      // Dark gray directive
+            colorType = gibColor("CETypeCol") ?? neoRGB(43, 43, 150)          // Type
+            colorConstantBuiltin = gibColor("CEConstantBuiltinCol") ?? neoRGB(75, 0, 130)
         } else {
             // Dark Mode Colors (VSCode Dark+ Pro inspired)
-            backgroundColor = neoRGB(30, 30, 30)
-            textColor = neoRGB(232, 242, 255)
+            backgroundColor = gibColor("CEBGColDark") ?? neoRGB(30, 30, 30)
+            textColor = gibColor("CETColDark") ?? neoRGB(232, 242, 255)
             
-            gutterBackgroundColor = neoRGB(25, 25, 25)
-            gutterHairlineColor = neoRGB(50, 50, 50)
-            lineNumberColor = neoRGB(90, 90, 90)
+            gutterBackgroundColor = gibColor("CEGBGColDark") ?? neoRGB(25, 25, 25)
+            gutterHairlineColor = gibColor("CEGHColDark") ?? neoRGB(50, 50, 50)
+            lineNumberColor = gibColor("CEGLNColDark") ?? neoRGB(90, 90, 90)
             
-            selectedLineBackgroundColor = neoRGB(40, 44, 52)
-            selectedLinesLineNumberColor = neoRGB(130, 180, 255)
-            selectedLinesGutterBackgroundColor = neoRGB(20, 20, 25)
+            selectedLineBackgroundColor = gibColor("CESLColDark") ?? neoRGB(40, 44, 52)
+            selectedLinesLineNumberColor = gibColor("CESLLColDark") ?? neoRGB(130, 180, 255)
+            selectedLinesGutterBackgroundColor = gibColor("CESLGBGColDark") ?? neoRGB(20, 20, 25)
             
             pageGuideHairlineColor = neoRGB(45, 45, 50)
             pageGuideBackgroundColor = neoRGB(30, 30, 35)
-            markedTextBackgroundColor = neoRGB(60, 60, 70)
             
-            colorKeyword = neoRGB(86, 156, 214)      // Blue
-            colorComment = neoRGB(106, 153, 85)      // Green
-            colorString = neoRGB(206, 145, 120)      // Orange
-            colorNumber = neoRGB(181, 206, 168)      // Soft green
-            colorRegex = neoRGB(255, 198, 109)       // Yellow-orange
-            colorFunction = neoRGB(220, 220, 170)    // Pale yellow
-            colorOperator = neoRGB(212, 212, 212)    // Light gray
-            colorProperty = neoRGB(156, 220, 254)    // Cyan
-            colorPunctuation = neoRGB(200, 200, 200)
-            colorDirective = neoRGB(255, 165, 0)     // Orange directive
-            colorType = neoRGB(78, 201, 176)         // Type
-            colorConstantBuiltin = neoRGB(0, 255, 255)
+            markedTextBackgroundColor = gibColor("CEMTColDark") ?? neoRGB(60, 60, 70)
+            
+            colorKeyword = gibColor("CEKeywordColDark") ?? neoRGB(86, 156, 214)      // Blue
+            colorComment = gibColor("CECommentColDark") ?? neoRGB(106, 153, 85)      // Green
+            colorString = gibColor("CEStringColDark") ?? neoRGB(206, 145, 120)      // Orange
+            colorNumber = gibColor("CENumberColDark") ?? neoRGB(181, 206, 168)      // Soft green
+            colorRegex = gibColor("CERegexColDark") ?? neoRGB(255, 198, 109)       // Yellow-orange
+            colorFunction = gibColor("CEFunctionColDark") ?? neoRGB(220, 220, 170)    // Pale yellow
+            colorOperator = gibColor("CEOperatorColDark") ?? neoRGB(212, 212, 212)    // Light gray
+            colorProperty = gibColor("CEPropertyColDark") ?? neoRGB(156, 220, 254)    // Cyan
+            colorPunctuation = gibColor("CEPunctuationColDark") ?? neoRGB(200, 200, 200)
+            colorDirective = gibColor("CEDirectiveColDark") ?? neoRGB(255, 165, 0)     // Orange directive
+            colorType = gibColor("CETypeColDark") ?? neoRGB(78, 201, 176)         // Type
+            colorConstantBuiltin = gibColor("CEConstantBuiltinColDark") ?? neoRGB(0, 255, 255)
         }
         
         invisibleCharactersColor = textColor.withAlphaComponent(0.25)
@@ -341,13 +349,10 @@ struct NeoEditor: UIViewRepresentable {
         }()
         textView.text = text
         
-        let userInterfaceStyle = UIScreen.main.traitCollection.userInterfaceStyle
-        
-        if userInterfaceStyle == .light {
-            textView.backgroundColor = neoRGB(255, 255, 255)
-        } else {
-            textView.backgroundColor = neoRGB(31, 31, 36)
-        }
+        let theme = NyxianTheme()
+        textView.theme = theme
+
+        textView.backgroundColor = theme.backgroundColor
         
         textView.showLineNumbers = showlines
         textView.lineSelectionDisplayType = .line
@@ -482,8 +487,6 @@ struct NeoEditor: UIViewRepresentable {
         default:
             break
         }
-        
-        textView.theme = NyxianTheme()
         
         if(toolbarenabled)
         {
