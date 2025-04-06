@@ -34,8 +34,6 @@
 /// Module Headers
 #import <Runtime/Modules/IO/IO.h>
 #import <Runtime/Modules/Memory/Memory.h>
-#import <Runtime/Modules/String/String.h>
-#import <Runtime/Modules/Math/Math.h>
 #import <Runtime/Modules/Proc/Proc.h>
 #import <Runtime/Modules/ArbCall/ArbCall.h>         // UNDER TEST!!!
 #import <Runtime/Modules/UI/UI.h>
@@ -46,17 +44,18 @@
 /// UI Headers
 #import <Nyxian-Swift.h>
 
+/// external include interface
+libnyxianInterface *extinclude = NULL;
+
 id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
 {
-    libnyxianInterface *extinclude = [[libnyxianInterface alloc] init];
-    
     // Checking if module with that name is already imported
     if([Runtime isModuleImported:LibName])
     {
         return NULL;
     }
     
-    if ([LibName isEqualToString:@"io"]) {
+    if ([LibName isEqualToString:@"IO"]) {
         IO_MACRO_MAP();
         
         Runtime.Context[@"STDIN_FILENO"] = @(stdfd_in[0]);
@@ -64,48 +63,40 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         Runtime.Context[@"STDERR_FILENO"] = @(stdfd_out[1]);
         
         IOModule *ioModule = [[IOModule alloc] init];
-        [Runtime.Context setObject:ioModule forKeyedSubscript:@"io"];
+        [Runtime.Context setObject:ioModule forKeyedSubscript:@"IO"];
         [Runtime handoffModule:ioModule];
         return NULL;
-    } else if ([LibName isEqual:@"string"]) {
-        StringModule *stringModule = [[StringModule alloc] init];
-        [Runtime.Context setObject:stringModule forKeyedSubscript:@"string"];
-        return NULL;
-    } else if ([LibName isEqualToString:@"memory"]) {
+    } else if ([LibName isEqualToString:@"Memory"]) {
         MEMORY_MACRO_MAP()
         
         MemoryModule *memoryModule = [[MemoryModule alloc] init];
-        [Runtime.Context setObject:memoryModule forKeyedSubscript:@"memory"];
+        [Runtime.Context setObject:memoryModule forKeyedSubscript:@"Memory"];
         [Runtime handoffModule:memoryModule];
         return NULL;
-    } else if ([LibName isEqualToString:@"math"]) {
-        MathModule *mathModule = [[MathModule alloc] init];
-        [Runtime.Context setObject:mathModule forKeyedSubscript:@"math"];
-        return NULL;
-    } else if ([LibName isEqualToString:@"proc"]) {
+    } else if ([LibName isEqualToString:@"Proc"]) {
         ProcModule *procModule = [[ProcModule alloc] init];
-        [Runtime.Context setObject:procModule forKeyedSubscript:@"proc"];
+        [Runtime.Context setObject:procModule forKeyedSubscript:@"Proc"];
         return NULL;
-    } else if ([LibName isEqualToString:@"arbcall"])
+    } else if ([LibName isEqualToString:@"ArbCall"])
     {
         ArbCallModule *arbCallModule = [[ArbCallModule alloc] init];
-        [Runtime.Context setObject:arbCallModule forKeyedSubscript:@"arbcall"];
+        [Runtime.Context setObject:arbCallModule forKeyedSubscript:@"ArbCall"];
         return NULL;
-    } else if ([LibName isEqualToString:@"ui"]) {
+    } else if ([LibName isEqualToString:@"UI"]) {
         UIModule *uiModule = [[UIModule alloc] init];
-        [Runtime.Context setObject:uiModule forKeyedSubscript:@"ui"];
+        [Runtime.Context setObject:uiModule forKeyedSubscript:@"UI"];
         return NULL;
-    } else if ([LibName isEqualToString:@"timer"]) {
+    } else if ([LibName isEqualToString:@"Timer"]) {
         TimerModule *timerModule = [[TimerModule alloc] init];
-        [Runtime.Context setObject:timerModule forKeyedSubscript:@"timer"];
+        [Runtime.Context setObject:timerModule forKeyedSubscript:@"Timer"];
         return NULL;
-    } else if ([LibName isEqualToString:@"langbridge"]) {
+    } else if ([LibName isEqualToString:@"LangBridge"]) {
         LBModule *lbModule = [[LBModule alloc] init];
-        [Runtime.Context setObject:lbModule forKeyedSubscript:@"langbridge"];
+        [Runtime.Context setObject:lbModule forKeyedSubscript:@"LangBridge"];
         return NULL;
-    } else if ([LibName isEqualToString:@"consent"]) {
+    } else if ([LibName isEqualToString:@"Consent"]) {
         ConsentModule *consentModule = [[ConsentModule alloc] init];
-        [Runtime.Context setObject:consentModule forKeyedSubscript:@"consent"];
+        [Runtime.Context setObject:consentModule forKeyedSubscript:@"Consent"];
         return NULL;
     } else if ([extinclude includeWithContext:Runtime.Context library:LibName]) {
         return NULL;
@@ -146,4 +137,13 @@ void add_include_symbols(NYXIAN_Runtime *Runtime)
             return NYXIAN_include(BlockRuntime, LibName);
         } forKeyedSubscript:@"include"];
     }
+}
+
+///
+/// Constructor for the libnyxian interface
+///
+__attribute__((constructor))
+void libnyxianinterfaceinit(void)
+{
+    extinclude = [[libnyxianInterface alloc] init];
 }
