@@ -24,7 +24,7 @@ int clangInterpret(int argc, const char **argv/*, llvm::raw_ostream &errorOutput
 const char* getIncludePath(void)
 {
     NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
-    return [[NSString stringWithFormat:@"-I%@/include/usr/include", bundlePath] UTF8String];
+    return [[NSString stringWithFormat:@"%@/iPhoneOS16.5.sdk", bundlePath] UTF8String];
 }
 
 // Helper function to construct NSString from a null-terminated C string (presumably UTF-8 encoded)
@@ -45,7 +45,7 @@ NSString* NSStringFromCString(const char *text) {
     input_file_path[fileName.length] = '\0';
 
     // Invoke the interpreter
-    const char* argv[] = { "clang", input_file_path };
+    const char* argv[] = { "clang", input_file_path, "-isysroot", getIncludePath() };
     clangInterpret(2, argv);
 }
 
