@@ -28,7 +28,7 @@ int dyexec(NSString *dylibPath,
 
     data.handle = dlopen([dylibPath UTF8String], RTLD_LAZY);
     if (!data.handle) {
-        fprintf(stderr, "[!] error: %s\n", dlerror());
+        dprintf(6, "[!] error: %s\n", dlerror());
         return -1;
     }
 
@@ -48,7 +48,7 @@ int dyexec(NSString *dylibPath,
     //threadripper approach (exit loop bypass)
     pthread_t thread;
     if (pthread_create(&thread, NULL, threadripper, (void *)&data) != 0) {
-        fprintf(stderr, "[!] error creating thread\n");
+        dprintf(6, "[!] error creating thread\n");
         return 1;
     }
     sleep(1);
