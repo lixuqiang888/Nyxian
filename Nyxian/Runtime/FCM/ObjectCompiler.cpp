@@ -57,8 +57,6 @@
 
 #include <stdio.h>
 
-const char* getIncludePath(void);
-
 using namespace clang;
 using namespace clang::driver;
 using namespace llvm::orc;
@@ -93,7 +91,6 @@ int CompileObject(int argc, const char **argv, const char *output) {
     TheDriver.setCheckInputsExist(false);
     
     SmallVector<const char *, 16> Args(argv, argv + argc);
-    Args.push_back(getIncludePath());
     Args.push_back("-fsyntax-only");
     Args.push_back("-Wno-nullability-completeness");
     Args.push_back("-Wno-nullability");
