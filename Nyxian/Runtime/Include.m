@@ -25,11 +25,7 @@
 /// Runtime Headers
 #import <Runtime/Include.h>
 #import <Runtime/ErrorThrow.h>
-#import <Runtime/Safety.h>
-#import <Runtime/Modules/UI/Alert.h>
 #import <Runtime/Hook/stdfd.h>
-
-#import <UIKit/UIKit.h>
 
 /// Module Headers
 #import <Runtime/Modules/IO/IO.h>
@@ -41,14 +37,14 @@
 #import <Runtime/Modules/LangBridge/LangBridge.h>   // UNDER TEST!!!
 #import <Runtime/Modules/Consent/Consent.h>
 
-/// UI Headers
-#import <Nyxian-Swift.h>
-
 /// external include interface
 libnyxianInterface *extinclude = NULL;
 
 id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
 {
+    // Placeholder for module to import
+    Module *IncludeModule = NULL;
+    
     // Checking if module with that name is already imported
     if([Runtime isModuleImported:LibName])
     {
@@ -62,68 +58,59 @@ id NYXIAN_include(NYXIAN_Runtime *Runtime, NSString *LibName)
         Runtime.Context[@"STDOUT_FILENO"] = @(stdfd_out[1]);
         Runtime.Context[@"STDERR_FILENO"] = @(stdfd_out[1]);
         
-        IOModule *ioModule = [[IOModule alloc] init];
-        [Runtime.Context setObject:ioModule forKeyedSubscript:@"IO"];
-        [Runtime handoffModule:ioModule];
-        return NULL;
+        IncludeModule = [[IOModule alloc] init];
     } else if ([LibName isEqualToString:@"Memory"]) {
         MEMORY_MACRO_MAP()
         
-        MemoryModule *memoryModule = [[MemoryModule alloc] init];
-        [Runtime.Context setObject:memoryModule forKeyedSubscript:@"Memory"];
-        [Runtime handoffModule:memoryModule];
-        return NULL;
+        IncludeModule = [[MemoryModule alloc] init];
     } else if ([LibName isEqualToString:@"Proc"]) {
-        ProcModule *procModule = [[ProcModule alloc] init];
-        [Runtime.Context setObject:procModule forKeyedSubscript:@"Proc"];
-        return NULL;
+        IncludeModule = [[ProcModule alloc] init];
     } else if ([LibName isEqualToString:@"ArbCall"])
     {
-        ArbCallModule *arbCallModule = [[ArbCallModule alloc] init];
-        [Runtime.Context setObject:arbCallModule forKeyedSubscript:@"ArbCall"];
-        return NULL;
+        IncludeModule = [[ArbCallModule alloc] init];
     } else if ([LibName isEqualToString:@"UI"]) {
-        UIModule *uiModule = [[UIModule alloc] init];
-        [Runtime.Context setObject:uiModule forKeyedSubscript:@"UI"];
-        return NULL;
+        IncludeModule = [[UIModule alloc] init];
     } else if ([LibName isEqualToString:@"Timer"]) {
-        TimerModule *timerModule = [[TimerModule alloc] init];
-        [Runtime.Context setObject:timerModule forKeyedSubscript:@"Timer"];
-        return NULL;
+        IncludeModule = [[TimerModule alloc] init];
     } else if ([LibName isEqualToString:@"LangBridge"]) {
-        LBModule *lbModule = [[LBModule alloc] init];
-        [Runtime.Context setObject:lbModule forKeyedSubscript:@"LangBridge"];
-        return NULL;
+        IncludeModule = [[LBModule alloc] init];
     } else if ([LibName isEqualToString:@"Consent"]) {
-        ConsentModule *consentModule = [[ConsentModule alloc] init];
-        [Runtime.Context setObject:consentModule forKeyedSubscript:@"Consent"];
-        return NULL;
+        IncludeModule = [[ConsentModule alloc] init];
     } else if ([extinclude includeWithContext:Runtime.Context library:LibName]) {
         return NULL;
+    } else {
+        NSString *path = [NSString stringWithFormat:@"%@.nxm", LibName];
+        NSURL *url = [[NSURL fileURLWithPath:path] URLByDeletingLastPathComponent];
+        NSString *code = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
+        NSString *currentPath = [[NSFileManager defaultManager] currentDirectoryPath];
+        
+        chdir([[url path] UTF8String]);
+        
+        NSString *realLibName = [[NSURL fileURLWithPath:LibName] lastPathComponent];
+        
+        if (!code) {
+            return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_FILE_NOT_FOUND]);
+        }
+        
+        [Runtime.Context evaluateScript:[NSString stringWithFormat:@"var %@ = (function() {\n%@}\n)();", realLibName, code]];
+        
+        JSValue *exception = Runtime.Context.exception;
+        if (exception && !exception.isUndefined && !exception.isNull) {
+            jsDoThrowError([NSString stringWithFormat:@"include: %@\n", [exception toString]]);
+            Runtime.Context.exception = nil;
+        }
+        
+        chdir([currentPath UTF8String]);
+        
+        return NULL;
     }
     
-    NSString *path = [NSString stringWithFormat:@"%@.nxm", LibName];
-    NSURL *url = [[NSURL fileURLWithPath:path] URLByDeletingLastPathComponent];
-    NSString *code = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
-    NSString *currentPath = [[NSFileManager defaultManager] currentDirectoryPath];
+    // complete include
+    if(!IncludeModule)
+        return NULL;
     
-    chdir([[url path] UTF8String]);
-    
-    NSString *realLibName = [[NSURL fileURLWithPath:LibName] lastPathComponent];
-    
-    if (!code) {
-        return jsDoThrowError([NSString stringWithFormat:@"include: %@\n", EW_FILE_NOT_FOUND]);
-    }
-    
-    [Runtime.Context evaluateScript:[NSString stringWithFormat:@"var %@ = (function() {\n%@}\n)();", realLibName, code]];
-    
-    JSValue *exception = Runtime.Context.exception;
-    if (exception && !exception.isUndefined && !exception.isNull) {
-        jsDoThrowError([NSString stringWithFormat:@"include: %@\n", [exception toString]]);
-        Runtime.Context.exception = nil;
-    }
-    
-    chdir([currentPath UTF8String]);
+    [Runtime.Context setObject:IncludeModule forKeyedSubscript:LibName];
+    [Runtime handoffModule:IncludeModule];
     
     return NULL;
 }
