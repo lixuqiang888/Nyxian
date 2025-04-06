@@ -13,5 +13,5 @@ func runCppAtPath(_ path: String) {
     //llvm.interpretProgram(filePath.path.data(using: .utf8)!)
     fcm.compileObject(filePath.path.data(using: .utf8)!, output: outPath.path.data(using: .utf8)!)
     
-    dyexec("\(Bundle.main.bundlePath)/ld.dylib", "ld -ObjC -lc -lc++ \(outPath.path) -syslibroot \(Bundle.main.bundlePath)/iPhoneOS16.5.sdk -framework CoreFoundation -o \(filePath.deletingLastPathComponent().appendingPathComponent("macho").path)")
+    dyexec("\(Bundle.main.bundlePath)/Frameworks/ld.dylib", "ld -ObjC -lc -lc++ \(outPath.path) -syslibroot \(Bundle.main.bundlePath)/iPhoneOS16.5.sdk -framework CoreFoundation -o \(filePath.deletingLastPathComponent().appendingPathComponent("macho").path)")
 }
