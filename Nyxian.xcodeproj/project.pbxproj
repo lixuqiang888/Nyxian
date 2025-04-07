@@ -19,6 +19,10 @@
 		AF51435D2D92E9B70058C41D /* TreeSitterPython in Frameworks */ = {isa = PBXBuildFile; productRef = AF51435C2D92E9B70058C41D /* TreeSitterPython */; };
 		AF7A29CB2DA3F3A100A1706D /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = AF7A29CA2DA3F3A100A1706D /* OpenSSL */; };
 		AF7A29CE2DA3F6BD00A1706D /* cert in Resources */ = {isa = PBXBuildFile; fileRef = AF7A29CD2DA3F6BC00A1706D /* cert */; };
+		AF7A29EB2DA46F5300A1706D /* Telegraph in Frameworks */ = {isa = PBXBuildFile; productRef = AF7A29EA2DA46F5300A1706D /* Telegraph */; };
+		AF7A29EE2DA46F8F00A1706D /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = AF7A29ED2DA46F8F00A1706D /* ZIPFoundation */; };
+		AF7A29F12DA47B4400A1706D /* localhost.direct.OP.key in Resources */ = {isa = PBXBuildFile; fileRef = AF7A29F02DA47B4400A1706D /* localhost.direct.OP.key */; };
+		AF7A29F22DA47B4400A1706D /* localhost.direct.OP.crt in Resources */ = {isa = PBXBuildFile; fileRef = AF7A29EF2DA47B4400A1706D /* localhost.direct.OP.crt */; };
 		AFB1651D2D91A36300872EDB /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1651C2D91A36300872EDB /* Runestone */; };
 		AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */ = {isa = PBXBuildFile; productRef = AFB165232D91A4AB00872EDB /* TreeSitterJavaScript */; };
 		AFB1653D2D91BBEB00872EDB /* TreeSitterC in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1653C2D91BBEB00872EDB /* TreeSitterC */; };
@@ -43,6 +47,8 @@
 		AF4E54672DA321A5008E4FF0 /* iPhoneOS16.5.sdk */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iPhoneOS16.5.sdk; path = ../../../Downloads/iPhoneOS16.5.sdk; sourceTree = "<group>"; };
 		AF7A29CC2DA3F6A400A1706D /* cert */ = {isa = PBXFileReference; lastKnownFileType = folder; name = cert; path = ../../../Downloads/cert; sourceTree = "<group>"; };
 		AF7A29CD2DA3F6BC00A1706D /* cert */ = {isa = PBXFileReference; lastKnownFileType = folder; name = cert; path = ../../../Downloads/cert; sourceTree = "<group>"; };
+		AF7A29EF2DA47B4400A1706D /* localhost.direct.OP.crt */ = {isa = PBXFileReference; lastKnownFileType = text; path = localhost.direct.OP.crt; sourceTree = "<group>"; };
+		AF7A29F02DA47B4400A1706D /* localhost.direct.OP.key */ = {isa = PBXFileReference; lastKnownFileType = text; path = localhost.direct.OP.key; sourceTree = "<group>"; };
 		AFBE41752D85E4B500315155 /* Nyxian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nyxian.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -107,9 +113,11 @@
 			files = (
 				AF7A29CB2DA3F3A100A1706D /* OpenSSL in Frameworks */,
 				AF504BEA2D9579E1005FA8D2 /* Swifter in Frameworks */,
+				AF7A29EE2DA46F8F00A1706D /* ZIPFoundation in Frameworks */,
 				AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */,
 				AFCF8EF12DA1572D006ECF22 /* TreeSitterCPP in Frameworks */,
 				AF504BED2D957A72005FA8D2 /* TreeSitterHTML in Frameworks */,
+				AF7A29EB2DA46F5300A1706D /* Telegraph in Frameworks */,
 				AF1C222D2D99CBB1003D83A9 /* TreeSitterObjc in Frameworks */,
 				AF504BD72D956849005FA8D2 /* TreeSitterXML in Frameworks */,
 				AFB1651D2D91A36300872EDB /* Runestone in Frameworks */,
@@ -141,6 +149,8 @@
 				AFBE41772D85E4B500315155 /* Nyxian */,
 				AF4E546A2DA32706008E4FF0 /* Frameworks */,
 				AFBE41762D85E4B500315155 /* Products */,
+				AF7A29EF2DA47B4400A1706D /* localhost.direct.OP.crt */,
+				AF7A29F02DA47B4400A1706D /* localhost.direct.OP.key */,
 			);
 			sourceTree = "<group>";
 		};
@@ -186,6 +196,8 @@
 				AF1C222C2D99CBB1003D83A9 /* TreeSitterObjc */,
 				AFCF8EF02DA1572D006ECF22 /* TreeSitterCPP */,
 				AF7A29CA2DA3F3A100A1706D /* OpenSSL */,
+				AF7A29EA2DA46F5300A1706D /* Telegraph */,
+				AF7A29ED2DA46F8F00A1706D /* ZIPFoundation */,
 			);
 			productName = FJS;
 			productReference = AFBE41752D85E4B500315155 /* Nyxian.app */;
@@ -230,6 +242,8 @@
 				AF1C222B2D99CBB1003D83A9 /* XCRemoteSwiftPackageReference "tree-sitter-objc" */,
 				AFCF8EEF2DA1572D006ECF22 /* XCRemoteSwiftPackageReference "tree-sitter-cpp" */,
 				AF7A29C92DA3F3A100A1706D /* XCRemoteSwiftPackageReference "OpenSSL" */,
+				AF7A29E92DA46F5300A1706D /* XCRemoteSwiftPackageReference "Telegraph" */,
+				AF7A29EC2DA46F8F00A1706D /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AFBE41762D85E4B500315155 /* Products */;
@@ -246,6 +260,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF7A29F12DA47B4400A1706D /* localhost.direct.OP.key in Resources */,
+				AF7A29F22DA47B4400A1706D /* localhost.direct.OP.crt in Resources */,
 				AF4E54682DA321A5008E4FF0 /* iPhoneOS16.5.sdk in Resources */,
 				AF4E54642DA3216A008E4FF0 /* include in Resources */,
 				AF7A29CE2DA3F6BD00A1706D /* cert in Resources */,
@@ -591,6 +607,22 @@
 				minimumVersion = 3.3.3000;
 			};
 		};
+		AF7A29E92DA46F5300A1706D /* XCRemoteSwiftPackageReference "Telegraph" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Building42/Telegraph";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.40.0;
+			};
+		};
+		AF7A29EC2DA46F8F00A1706D /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.19;
+			};
+		};
 		AFB1651B2D91A36300872EDB /* XCRemoteSwiftPackageReference "Runestone" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/simonbs/Runestone.git";
@@ -670,6 +702,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AF7A29C92DA3F3A100A1706D /* XCRemoteSwiftPackageReference "OpenSSL" */;
 			productName = OpenSSL;
+		};
+		AF7A29EA2DA46F5300A1706D /* Telegraph */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF7A29E92DA46F5300A1706D /* XCRemoteSwiftPackageReference "Telegraph" */;
+			productName = Telegraph;
+		};
+		AF7A29ED2DA46F8F00A1706D /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF7A29EC2DA46F8F00A1706D /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
 		};
 		AFB1651C2D91A36300872EDB /* Runestone */ = {
 			isa = XCSwiftPackageProductDependency;

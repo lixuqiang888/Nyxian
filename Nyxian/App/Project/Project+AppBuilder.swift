@@ -187,23 +187,19 @@ func BuildApp(_ project: Project) {
         }
         
         // now we are in game... now we gonna host the IPA
-        /*printfake("\u{001B}[33m[*] hosting .ipa onto port 8080\u{001B}[0m\n")
-        let server: HttpServer = HttpServer()
-        server["ipa"] = shareFile("\(totalpath)/\(project.name).ipa")
-        try server.start(8080)
-        
-        // generating manifest
-        guard let manifesturl: URL = createManifest(forIPA: /*"http://localhost:8080/ipa"*/ "file:/\(totalpath)/\(project.name).ipa") else {
-            return
+        if let url: URL = URL(string: uploadFile(URL(fileURLWithPath: "\(totalpath)/\(project.name).ipa")) ?? "") {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: { success in
+                    if success {
+                        print("Started app installation from: \(url)")
+                    } else {
+                        print("Failed to open URL. Could be a problem with the link.")
+                    }
+                })
+            } else {
+                print("Cannot open itms-services URL. Make sure the device supports OTA installation.")
+            }
         }
-        
-        server["manifest"] = shareFile(manifesturl.path)
-        
-        // installing it
-        printfake("\u{001B}[33m[*] installing .ipa onto idevice\u{001B}[0m\n")
-        DispatchQueue.main.sync {
-            installAppFromIPA(ipaURL: /*"http://localhost:8080/manifest"*/"file:/\(manifesturl.path)")
-        }*/
     } catch {
         print(error)
     }
