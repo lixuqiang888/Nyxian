@@ -31,7 +31,7 @@ struct Home: View {
     
     @State var name: String = ""
     
-    @State private var type = 1
+    @State private var type = 6
     
     var body: some View {
         NavigationView {

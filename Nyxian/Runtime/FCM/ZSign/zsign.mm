@@ -4,23 +4,25 @@
 @implementation zsign
 +(bool)sign:(NSString*)strCertFile privateKey:(NSString*)strPKeyFile provision:(NSString*)strProvFile entitlements:(NSString*)strEntitlementsFile password:(NSString*)strPassword bundlePath:(NSString*)strFolder  {
     ZSignAsset zSignAsset;
+    
+    // FIXME: Entitlements break the app and I dont know why
     zSignAsset.Init(strCertFile.UTF8String,
                     strPKeyFile.UTF8String,
                     strProvFile.UTF8String,
-                    strEntitlementsFile.UTF8String,
+                    "",
                     strPassword.UTF8String);
     
     ZAppBundle bundle;
     bool bEnableCache = true;
     bool bForce = false;
-    bool bInstall = false;
-    bool bWeakInject = false;
+    //bool bInstall = false;
+    //bool bWeakInject = false;
     bool bRet = bundle.SignFolder(&zSignAsset,
                                   strFolder.UTF8String,
                                   "",
                                   "",
                                   "",
-                                  strEntitlementsFile.UTF8String,
+                                  "",
                                   bForce,
                                   "",
                                   bEnableCache);
