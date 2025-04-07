@@ -34,7 +34,7 @@ int dyexec(NSString *dylibPath,
 
     dlerror();
 
-    hooker();
+    hooker([dylibPath UTF8String], data.handle);
 
     //argv prepare
     NSArray<NSString *> *components = [arguments componentsSeparatedByString:@" "];
