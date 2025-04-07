@@ -10,8 +10,7 @@ import Foundation
 func runCppAtPath(_ path: String) {
     let filePath: URL = URL(filePath: path)
     let outPath = filePath.deletingLastPathComponent().appendingPathComponent("main.o")
-    //llvm.interpretProgram(filePath.path.data(using: .utf8)!)
-    if(fcm.compileObject(filePath.path.data(using: .utf8)!, output: outPath.path.data(using: .utf8)!) != 0) {
+    if(fcm.compileObject(filePath.path) != 0) {
         return
     }
     

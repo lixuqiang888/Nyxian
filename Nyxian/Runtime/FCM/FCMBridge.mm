@@ -20,28 +20,19 @@ int dprintf(int fd, const char *format, ...);
 
 // Declaration for clangInterpret method, implemented in Interpreter.cpp
 // TODO Might want to extract a header
-int CompileObject(int argc, const char **argv, const char *output);
+int CompileObject(int argc, const char **argv);
 
 NSString* NSStringFromCString(const char *text);
 
 /// Implementation of LLVMBridge
 @implementation FCMBridge
 
-- (int)compileObject:(nonnull NSData*)fileName output:(nonnull NSData*)output
+- (int)compileObject:(nonnull NSString*)fileName
 {
-    // Prepare null terminate string from fileName buffer
-    char input_file_path[1024];
-    memcpy(input_file_path, fileName.bytes, fileName.length);
-    input_file_path[fileName.length] = '\0';
-    
-    char output_file_path[1024];
-    memcpy(output_file_path, fileName.bytes, fileName.length);
-    output_file_path[fileName.length] = '\0';
-
     // Invoke the interpreter
-    const char* argv[] = { "clang", "-isysroot", [[NSString stringWithFormat:@"%@/iPhoneOS16.5.sdk",  [[NSBundle mainBundle] bundlePath]] UTF8String], [[NSString stringWithFormat:@"-I%@/include",  [[NSBundle mainBundle] bundlePath]] UTF8String], input_file_path, "-o", output_file_path};
+    const char* argv[] = { "clang", "-isysroot", [[NSString stringWithFormat:@"%@/iPhoneOS16.5.sdk",  [[NSBundle mainBundle] bundlePath]] UTF8String], [[NSString stringWithFormat:@"-I%@/include",  [[NSBundle mainBundle] bundlePath]] UTF8String], [fileName UTF8String]};
     
-    return CompileObject(7, argv, output_file_path);
+    return CompileObject(5, argv);
 }
 
 @end /* implementation LLVMBridge */

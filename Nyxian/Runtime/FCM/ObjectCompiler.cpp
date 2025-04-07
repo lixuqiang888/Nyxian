@@ -65,7 +65,7 @@ extern std::string GetExecutablePath(const char *Argv0, void *MainAddr);
 
 llvm::ExitOnError ExitOnErr2;
 
-int CompileObject(int argc, const char **argv, const char *output) {
+int CompileObject(int argc, const char **argv) {
     std::string errorString;
     llvm::raw_string_ostream errorOutputStream(errorString);
     
