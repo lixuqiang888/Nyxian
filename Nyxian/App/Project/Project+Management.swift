@@ -29,6 +29,8 @@ func MakeMiniProject(Name: String, type: Int) -> Int {
     let v2uuid: UUID = UUID()
     let ProjectPath: String = "\(NSHomeDirectory())/Documents/\(v2uuid)"
 
+    let spcstr: String = "    "
+    
     do {
         try FileManager.default.createDirectory(atPath: ProjectPath, withIntermediateDirectories: true)
 
@@ -65,6 +67,13 @@ int main() {
 }
 """.utf8))
             break
+        case 6: // ObjC App
+                FileManager.default.createFile(atPath: "\(ProjectPath)/main.m", contents: Data("\(authorgen(file: "main.m"))#import <Foundation/Foundation.h>\n#import \"myAppDelegate.h\"\n\nint main(int argc, char *argv[]) {\n\(spcstr)@autoreleasepool {\n\(spcstr)\(spcstr)return UIApplicationMain(argc, argv, nil, NSStringFromClass(myAppDelegate.class));\n\(spcstr)}\n}".utf8))
+                FileManager.default.createFile(atPath: "\(ProjectPath)/myAppDelegate.h", contents: Data("\(authorgen(file: "myAppDelegate.h"))#import <UIKit/UIKit.h>\n \n@interface myAppDelegate : UIResponder <UIApplicationDelegate>\n \n@property (nonatomic, strong) UIWindow *window;\n@property (nonatomic, strong) UINavigationController *rootViewController;\n \n@end".utf8))
+                FileManager.default.createFile(atPath: "\(ProjectPath)/myAppDelegate.m", contents: Data("\(authorgen(file: "myAppDelegate.m"))#import \"myAppDelegate.h\"\n#import \"myRootViewController.h\"\n\n@implementation myAppDelegate\n\n- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {\n\(spcstr)_window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];\n\(spcstr)_rootViewController = [[UINavigationController alloc] initWithRootViewController:[[myRootViewController alloc] init]];\n\(spcstr)_window.rootViewController = _rootViewController;\n\(spcstr)[_window makeKeyAndVisible];\n\(spcstr)return YES;\n}\n\n@end".utf8))
+                FileManager.default.createFile(atPath: "\(ProjectPath)/myRootViewController.h", contents: Data("\(authorgen(file: "myRootViewController.h"))#import <UIKit/UIKit.h>\n \n@interface myRootViewController : UIViewController\n \n@end".utf8))
+                FileManager.default.createFile(atPath: "\(ProjectPath)/myRootViewController.m", contents: Data("\(authorgen(file: "myRootViewController.m"))#import \"myRootViewController.h\"\n@interface myRootViewController () <UITableViewDataSource>\n@property (nonatomic, strong) UITableView *logTableView;\n@property (nonatomic, strong) NSMutableArray *logEntries;\n@end\n\n@implementation myRootViewController\n- (void)viewDidLoad {\n\(spcstr)[super viewDidLoad];\n\(spcstr)self.title = @\"ObjectiveC support!\";\n\(spcstr)self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonTapped:)];\n\(spcstr)self.logTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];\n\(spcstr)self.logTableView.dataSource = self;\n\(spcstr)[self.view addSubview:self.logTableView];\n\(spcstr)self.logEntries = [NSMutableArray array];\n}\n- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {\n\(spcstr)return self.logEntries.count;\n}\n- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {\n\(spcstr)static NSString *CellIdentifier = @\"Cell\";\n\(spcstr)UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];\n\(spcstr)if (!cell) {\n\(spcstr)\(spcstr)cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];\n\(spcstr)}\n\(spcstr)cell.textLabel.text = self.logEntries[indexPath.row];\n\(spcstr)return cell;\n}\n- (void)addButtonTapped:(id)sender {\n\(spcstr)@try {\n\(spcstr)\(spcstr)NSString *logEntry = @\"Hello, World!\";\n\(spcstr)\(spcstr)[self.logEntries insertObject:logEntry atIndex:0];\n\(spcstr)\(spcstr)[self.logTableView reloadData];\n\(spcstr)} @catch (NSException *exception) {\n\(spcstr)\(spcstr)NSLog(@\"Exception: %@\", exception);\n\(spcstr)} @finally {\n\(spcstr)\(spcstr)NSLog(@\"Add button tapped\");\n\(spcstr)}\n}\n@end".utf8))
+                break
         default:
             return 2
         }

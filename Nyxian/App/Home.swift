@@ -46,7 +46,7 @@ struct Home: View {
                 BottomPopupView {
                     POHeader(title: "Create Project")
                     POTextField(title: "Name", content: $name)
-                    POPicker(function: createProject_trigger, title: "Schemes", arrays: [PickerArrays(title: "Scripting", items: [PickerItems(id: 1, name: "Nyxian"), PickerItems(id: 2, name: "C"), PickerItems(id: 5, name: "C++"), PickerItems(id: 3, name: "Lua")]), PickerArrays(title: "Miscellaneous", items: [PickerItems(id: 4, name: "WebServer")])], type: $type)
+                    POPicker(function: createProject_trigger, title: "Schemes", arrays: [PickerArrays(title: "App", items: [PickerItems(id: 6, name: "ObjC")]),PickerArrays(title: "Scripting", items: [PickerItems(id: 1, name: "Nyxian"), PickerItems(id: 2, name: "C"), PickerItems(id: 5, name: "C++"), PickerItems(id: 3, name: "Lua")]), PickerArrays(title: "Miscellaneous", items: [PickerItems(id: 4, name: "WebServer")])], type: $type)
                 }
                 .background(BackgroundClearView())
                 .edgesIgnoringSafeArea([.bottom])
