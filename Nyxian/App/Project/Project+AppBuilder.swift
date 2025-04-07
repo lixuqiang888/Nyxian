@@ -187,7 +187,7 @@ func BuildApp(_ project: Project) {
         }
         
         // now we are in game... now we gonna host the IPA
-        printfake("\u{001B}[33m[*] hosting .ipa onto port 8080\u{001B}[0m\n")
+        /*printfake("\u{001B}[33m[*] hosting .ipa onto port 8080\u{001B}[0m\n")
         let server: HttpServer = HttpServer()
         server["ipa"] = shareFile("\(totalpath)/\(project.name).ipa")
         try server.start(8080)
@@ -203,9 +203,7 @@ func BuildApp(_ project: Project) {
         printfake("\u{001B}[33m[*] installing .ipa onto idevice\u{001B}[0m\n")
         DispatchQueue.main.sync {
             installAppFromIPA(ipaURL: /*"http://localhost:8080/manifest"*/"file:/\(manifesturl.path)")
-        }
-        
-        
+        }*/
     } catch {
         print(error)
     }
