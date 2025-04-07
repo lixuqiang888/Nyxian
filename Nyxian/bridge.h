@@ -31,6 +31,7 @@
 #import <Runtime/FCM/FCMBridge.h>
 #import <Runtime/FCM/Dycall/libdycall.h>
 #import <Runtime/FCM/libzip.h>
+#import <Runtime/FCM/ZSign/zsign.h>
 
 // Coding/C implementation
 int c_interpret(NSString *files, NSString *proot);

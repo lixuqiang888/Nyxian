@@ -17,6 +17,8 @@
 		AF504BEA2D9579E1005FA8D2 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = AF504BE92D9579E1005FA8D2 /* Swifter */; };
 		AF504BED2D957A72005FA8D2 /* TreeSitterHTML in Frameworks */ = {isa = PBXBuildFile; productRef = AF504BEC2D957A72005FA8D2 /* TreeSitterHTML */; };
 		AF51435D2D92E9B70058C41D /* TreeSitterPython in Frameworks */ = {isa = PBXBuildFile; productRef = AF51435C2D92E9B70058C41D /* TreeSitterPython */; };
+		AF7A29CB2DA3F3A100A1706D /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = AF7A29CA2DA3F3A100A1706D /* OpenSSL */; };
+		AF7A29CE2DA3F6BD00A1706D /* cert in Resources */ = {isa = PBXBuildFile; fileRef = AF7A29CD2DA3F6BC00A1706D /* cert */; };
 		AFB1651D2D91A36300872EDB /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1651C2D91A36300872EDB /* Runestone */; };
 		AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */ = {isa = PBXBuildFile; productRef = AFB165232D91A4AB00872EDB /* TreeSitterJavaScript */; };
 		AFB1653D2D91BBEB00872EDB /* TreeSitterC in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1653C2D91BBEB00872EDB /* TreeSitterC */; };
@@ -39,6 +41,8 @@
 /* Begin PBXFileReference section */
 		AF4E54632DA3216A008E4FF0 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
 		AF4E54672DA321A5008E4FF0 /* iPhoneOS16.5.sdk */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iPhoneOS16.5.sdk; path = ../../../Downloads/iPhoneOS16.5.sdk; sourceTree = "<group>"; };
+		AF7A29CC2DA3F6A400A1706D /* cert */ = {isa = PBXFileReference; lastKnownFileType = folder; name = cert; path = ../../../Downloads/cert; sourceTree = "<group>"; };
+		AF7A29CD2DA3F6BC00A1706D /* cert */ = {isa = PBXFileReference; lastKnownFileType = folder; name = cert; path = ../../../Downloads/cert; sourceTree = "<group>"; };
 		AFBE41752D85E4B500315155 /* Nyxian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nyxian.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -101,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF7A29CB2DA3F3A100A1706D /* OpenSSL in Frameworks */,
 				AF504BEA2D9579E1005FA8D2 /* Swifter in Frameworks */,
 				AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */,
 				AFCF8EF12DA1572D006ECF22 /* TreeSitterCPP in Frameworks */,
@@ -122,6 +127,7 @@
 		AF4E546A2DA32706008E4FF0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AF7A29CC2DA3F6A400A1706D /* cert */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -129,6 +135,7 @@
 		AFBE416C2D85E4B500315155 = {
 			isa = PBXGroup;
 			children = (
+				AF7A29CD2DA3F6BC00A1706D /* cert */,
 				AF4E54672DA321A5008E4FF0 /* iPhoneOS16.5.sdk */,
 				AF4E54632DA3216A008E4FF0 /* include */,
 				AFBE41772D85E4B500315155 /* Nyxian */,
@@ -178,6 +185,7 @@
 				AF504BEC2D957A72005FA8D2 /* TreeSitterHTML */,
 				AF1C222C2D99CBB1003D83A9 /* TreeSitterObjc */,
 				AFCF8EF02DA1572D006ECF22 /* TreeSitterCPP */,
+				AF7A29CA2DA3F3A100A1706D /* OpenSSL */,
 			);
 			productName = FJS;
 			productReference = AFBE41752D85E4B500315155 /* Nyxian.app */;
@@ -221,6 +229,7 @@
 				AF504BEB2D957A72005FA8D2 /* XCRemoteSwiftPackageReference "tree-sitter-html" */,
 				AF1C222B2D99CBB1003D83A9 /* XCRemoteSwiftPackageReference "tree-sitter-objc" */,
 				AFCF8EEF2DA1572D006ECF22 /* XCRemoteSwiftPackageReference "tree-sitter-cpp" */,
+				AF7A29C92DA3F3A100A1706D /* XCRemoteSwiftPackageReference "OpenSSL" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AFBE41762D85E4B500315155 /* Products */;
@@ -239,6 +248,7 @@
 			files = (
 				AF4E54682DA321A5008E4FF0 /* iPhoneOS16.5.sdk in Resources */,
 				AF4E54642DA3216A008E4FF0 /* include in Resources */,
+				AF7A29CE2DA3F6BD00A1706D /* cert in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -573,6 +583,14 @@
 				kind = branch;
 			};
 		};
+		AF7A29C92DA3F3A100A1706D /* XCRemoteSwiftPackageReference "OpenSSL" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/OpenSSL.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.3.3000;
+			};
+		};
 		AFB1651B2D91A36300872EDB /* XCRemoteSwiftPackageReference "Runestone" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/simonbs/Runestone.git";
@@ -647,6 +665,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AF51435B2D92E9B70058C41D /* XCRemoteSwiftPackageReference "tree-sitter-python" */;
 			productName = TreeSitterPython;
+		};
+		AF7A29CA2DA3F3A100A1706D /* OpenSSL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF7A29C92DA3F3A100A1706D /* XCRemoteSwiftPackageReference "OpenSSL" */;
+			productName = OpenSSL;
 		};
 		AFB1651C2D91A36300872EDB /* Runestone */ = {
 			isa = XCSwiftPackageProductDependency;

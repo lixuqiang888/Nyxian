@@ -6,6 +6,67 @@
 //
 
 import Foundation
+import Swifter
+
+func createManifest(forIPA ipaURL: String, manifestFileName: String = "manifest.plist") -> URL? {
+    // Customize these values as needed
+    let bundleIdentifier = "com.example.enterpriseapp"
+    let bundleVersion = "1.0.0"
+    let title = "Enterprise App"
+    
+    let manifestDict: [String: Any] = [
+        "items": [
+            [
+                "assets": [
+                    [
+                        "kind": "software-package",
+                        "url": ipaURL
+                    ]
+                ],
+                "metadata": [
+                    "bundle-identifier": bundleIdentifier,
+                    "bundle-version": bundleVersion,
+                    "kind": "software",
+                    "title": title
+                ]
+            ]
+        ]
+    ]
+    
+    do {
+        let plistData = try PropertyListSerialization.data(fromPropertyList: manifestDict, format: .xml, options: 0)
+        let tempPath = NSTemporaryDirectory().appending(manifestFileName)
+        let fileURL = URL(fileURLWithPath: tempPath)
+        try plistData.write(to: fileURL)
+        return fileURL
+    } catch {
+        print("Error creating manifest: \(error)")
+        return nil
+    }
+}
+
+func installAppFromIPA(ipaURL: String) {
+    // Ensure the IPA URL is properly encoded
+    guard let encodedURL = ipaURL.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+          let url = URL(string: "itms-services://?action=download-manifest&url=\(encodedURL)") else {
+        print("Invalid IPA URL.")
+        return
+    }
+
+    // Check if the device can handle the itms-services URL
+    if UIApplication.shared.canOpenURL(url) {
+        // Open the URL to trigger the installation
+        UIApplication.shared.open(url, options: [:], completionHandler: { success in
+            if success {
+                print("Started app installation from: \(ipaURL)")
+            } else {
+                print("Failed to open URL. Could be a problem with the link.")
+            }
+        })
+    } else {
+        print("Cannot open itms-services URL. Make sure the device supports OTA installation.")
+    }
+}
 
 func BuildApp(_ project: Project) {
     do {
@@ -73,6 +134,7 @@ func BuildApp(_ project: Project) {
             printfake("\u{001B}[31m[*] failed to link object files\u{001B}[0m\n")
             return;
         }
+        
         printfake("\u{001B}[32m[*] successfully linked object files\u{001B}[0m\n")
         
         // generating URL scheme for opening the app
@@ -101,6 +163,15 @@ func BuildApp(_ project: Project) {
         let infoPlistDataSerialized = try PropertyListSerialization.data(fromPropertyList: infoPlistData, format: .xml, options: 0)
         FileManager.default.createFile(atPath:"\(totalpath)/Payload/\(project.name).app/Info.plist", contents: infoPlistDataSerialized, attributes: nil)
         
+        // now before we bundling our .ipa file we sign our app
+        printfake("\u{001B}[33m[*] signing .ipa file\u{001B}[0m\n")
+        zsign.sign("\(Bundle.main.bundlePath)/cert/cert.p12",
+                   privateKey: "\(Bundle.main.bundlePath)/cert/cert.p12",
+                   provision: "\(Bundle.main.bundlePath)/cert/prov.mobileprovision",
+                   entitlements: "\(totalpath)/Entitlements.plist",
+                   password: "kravasign",
+                   bundlePath: "\(totalpath)/Payload/\(project.name).app")
+        
         // now as our payload is done we create the ipa file using my custom libzip i created in the past for FCM, before tho we make sure the IPA doesnt exist yet from a previous compilation attempt
         printfake("\u{001B}[33m[*] bundling .ipa file\u{001B}[0m\n")
         if(FileManager.default.fileExists(atPath: "\(totalpath)/\(project.name).ipa")) {
@@ -114,6 +185,27 @@ func BuildApp(_ project: Project) {
         for item in object_files_stack {
             try FileManager.default.removeItem(atPath: item)
         }
+        
+        // now we are in game... now we gonna host the IPA
+        /*printfake("\u{001B}[33m[*] hosting .ipa onto port 8080\u{001B}[0m\n")
+        let server: HttpServer = HttpServer()
+        server["ipa"] = shareFile("\(totalpath)/\(project.name).ipa")
+        try server.start(8080)
+        
+        // generating manifest
+        guard let manifesturl: URL = createManifest(forIPA: /*"http://localhost:8080/ipa"*/ "file:/\(totalpath)/\(project.name).ipa") else {
+            return
+        }
+        
+        server["manifest"] = shareFile(manifesturl.path)
+        
+        // installing it
+        printfake("\u{001B}[33m[*] installing .ipa onto idevice\u{001B}[0m\n")
+        DispatchQueue.main.sync {
+            installAppFromIPA(ipaURL: /*"http://localhost:8080/manifest"*/"file:/\(manifesturl.path)")
+        }*/
+        
+        
     } catch {
         print(error)
     }

@@ -1,5 +1,5 @@
 {
-  "originHash" : "dc28b173720c816e5530425d531f7fc9925f817b286b76663ff1d0b62db9e997",
+  "originHash" : "a92b06ae000fb46e0aa012d839bd3f5d5a5522ddbbb156a87c552532df75a273",
   "pins" : [
     {
       "identity" : "fluidgradient",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "9ddda4cf23671ef0228e88681ec6210cb3e0d7f7",
         "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "openssl",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzyzanowskim/OpenSSL.git",
+      "state" : {
+        "revision" : "fc1a97a787482af67514d4630a7184480fea423e",
+        "version" : "3.3.3000"
       }
     },
     {
