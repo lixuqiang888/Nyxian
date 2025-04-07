@@ -75,6 +75,11 @@ func BuildApp(_ project: Project) {
         }
         printfake("\u{001B}[32m[*] successfully linked object files\u{001B}[0m\n")
         
+        // generating URL scheme for opening the app
+        let openscheme: String = "\(UUID().uuidString.lowercased())"
+        
+        printfake("\u{001B}[32m[*] generated openscheme for opening: \(openscheme)\u{001B}[0m\n")
+        
         // now we create the info.plist file
         printfake("\u{001B}[33m[*] generating plist file\u{001B}[0m\n")
         let infoPlistData: [String: Any] = [
@@ -87,7 +92,7 @@ func BuildApp(_ project: Project) {
             "CFBundleURLTypes": [
                 [
                     "CFBundleURLName": "com.test.\(project.name)",
-                    "CFBundleURLSchemes": ["\(project.name.lowercased())"]
+                    "CFBundleURLSchemes": [openscheme]
                 ]
             ]
         ]
