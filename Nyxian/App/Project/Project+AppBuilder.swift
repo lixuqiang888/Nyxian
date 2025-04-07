@@ -84,6 +84,12 @@ func BuildApp(_ project: Project) {
             "CFBundleShortVersionString": "1.0",
             "CFBundleVersion": "1.0",
             "MinimumOSVersion": "18.0",
+            "CFBundleURLTypes": [
+                [
+                    "CFBundleURLName": "com.test.\(project.name)",
+                    "CFBundleURLSchemes": ["\(project.name.lowercased())"]
+                ]
+            ]
         ]
         
         // now we try to generate it
