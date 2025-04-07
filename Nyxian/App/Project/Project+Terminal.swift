@@ -123,18 +123,6 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
     @State var project: Project
     @Binding var title: String
     
-    func printfake(_ message: String) {
-        let data = message.data(using: .utf8)!
-
-        let bytesWritten = data.withUnsafeBytes { buffer in
-            write(stdfd_out.1, buffer.baseAddress, buffer.count)
-        }
-
-        if bytesWritten < 0 {
-            print("Error writing to stdout")
-        }
-    }
-    
     func didExit(tview: NyxianTerminal) {
         printfake("\nPress any key to continue\n");
         DispatchQueue.main.sync {
@@ -235,5 +223,20 @@ struct HeadTerminalView: View {
         }
         .navigationViewStyle(.stack)
         .onDisappear(perform: RevertUI)
+    }
+}
+
+///
+/// Global function to print to the Terminal
+///
+func printfake(_ message: String) {
+    let data = message.data(using: .utf8)!
+
+    let bytesWritten = data.withUnsafeBytes { buffer in
+        write(stdfd_out.1, buffer.baseAddress, buffer.count)
+    }
+
+    if bytesWritten < 0 {
+        print("Error writing to stdout")
     }
 }

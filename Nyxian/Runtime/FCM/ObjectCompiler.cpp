@@ -147,7 +147,7 @@ int CompileObject(int argc, const char **argv) {
     Clang.ExecuteAction(*Act);
     
     errorString = errorOutputStream.str();
-    fprintf(stdfd_out_fp, "%s\n", errorString.c_str());
+    fprintf(stdfd_out_fp, "%s", errorString.c_str());
     fflush(stdfd_out_fp);
     
     bool hasErrors = Clang.getDiagnostics().hasErrorOccurred();
