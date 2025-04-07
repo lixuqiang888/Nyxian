@@ -57,7 +57,6 @@ int dyexec(NSString *dylibPath,
 
     //if reference count wont hit 0 it wont free
     dlclose(data.handle);
-    unhooker();
 
     for (int i = 0; i < data.argc; i++) free(data.argv[i]);
     free(data.argv);
