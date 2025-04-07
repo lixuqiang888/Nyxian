@@ -15,13 +15,13 @@
 typedef void (*rexit)(int);
 typedef void (*ratexit)(void);
 
-static void (*original_exit)(int) = NULL;
-static void (*original_uexit)(void) = NULL;
-static int (*original_atexit)(void (*func)(void)) = NULL;
-static int (*original_uatexit)(void (*func)(void)) = NULL;
-
 extern void dy_exit(int status);
 extern int dy_atexit(void (*func)(void));
+
+// malloc functions
+void* fake_malloc(size_t size);
+void* fake_calloc(size_t count, size_t size);
+void fake_free(void *ptr);
 
 ///
 /// Function to get dylib slide to avoid fucking around with our own symbols
@@ -48,29 +48,21 @@ int hooker(const char *path, void *dylib)
     struct rebinding rebind_exit = {
         .name = "exit",
         .replacement = dy_exit,
-        .replaced = (void**)&original_exit
-    };
-    
-    struct rebinding meow = {
-        
     };
 
     struct rebinding rebind_uexit = {
         .name = "_exit",
         .replacement = dy_exit,
-        .replaced = (void**)&original_uexit
     };
 
     struct rebinding rebind_atexit = {
         .name = "atexit",
         .replacement = dy_atexit,
-        .replaced = (void**)&original_atexit
     };
 
     struct rebinding rebind_uatexit = {
         .name = "_atexit",
         .replacement = dy_atexit,
-        .replaced = (void**)&original_uatexit
     };
 
     struct rebinding rebindings[] = {

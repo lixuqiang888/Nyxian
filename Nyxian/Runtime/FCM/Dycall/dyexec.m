@@ -15,6 +15,9 @@
 #include "hooker.h"
 #include "thread.h"
 
+void init_malloc_hook(void);
+void deinit_malloc_hook(void);
+
 int hooked = 0;
 
 /**
@@ -34,6 +37,7 @@ int dyexec(NSString *dylibPath,
 
     dlerror();
 
+    init_malloc_hook();
     hooker([dylibPath UTF8String], data.handle);
 
     //argv prepare
@@ -60,6 +64,8 @@ int dyexec(NSString *dylibPath,
 
     for (int i = 0; i < data.argc; i++) free(data.argv[i]);
     free(data.argv);
+    
+    deinit_malloc_hook();
 
     return (intptr_t)status;
 }

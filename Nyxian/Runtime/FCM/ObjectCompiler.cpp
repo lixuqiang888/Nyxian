@@ -140,10 +140,7 @@ int CompileObject(int argc, const char **argv) {
     
     std::unique_ptr<CodeGenAction> Act(new EmitObjAction());
     
-    llvm::InitializeNativeTarget();
-    llvm::InitializeNativeTargetAsmPrinter();
-    llvm::InitializeNativeTargetAsmParser();
-    
+    // FIXME: Memory leak happens here, also note that LLVM has a lot of static caches that simply will not free but I bet we can somehow degrees memory usage more. one possibility for example would be to forcefully unload llvm and reopen it using dlclose and dlopen but this could make things worse if llvm uses a lot of heap and gets reloaded.
     Clang.ExecuteAction(*Act);
     
     errorString = errorOutputStream.str();
@@ -151,9 +148,22 @@ int CompileObject(int argc, const char **argv) {
     fflush(stdfd_out_fp);
     
     bool hasErrors = Clang.getDiagnostics().hasErrorOccurred();
+    
+    // TODO: Finish the cleanup
+    Clang.clearOutputFiles(true);
+    Clang.getDiagnostics().Reset();
+    Act.reset();
+    
     if (hasErrors)
         return 1;
     
     return 0;
 }
 
+__attribute__((constructor))
+void llvm_init(void)
+{
+    llvm::InitializeNativeTarget();
+    llvm::InitializeNativeTargetAsmPrinter();
+    llvm::InitializeNativeTargetAsmParser();
+}
