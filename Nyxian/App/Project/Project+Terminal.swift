@@ -188,6 +188,9 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
             case "5": // CPP
                 runCppAtPath("\(NSHomeDirectory())/Documents/\(project.path)/main.cpp")
                 break
+            case "6": // ObjectiveC
+                runCppAtPath("\(NSHomeDirectory())/Documents/\(project.path)/main.m")
+                break
             default:
                 break
             }

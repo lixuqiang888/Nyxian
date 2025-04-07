@@ -15,7 +15,7 @@
 @interface FCMBridge : NSObject
 
 // Interpret the C++ source code file
-- (void)compileObject:(nonnull NSData*)fileName output:(nonnull NSData*)output;
+- (int)compileObject:(nonnull NSData*)fileName output:(nonnull NSData*)output;
 
 @end
 
