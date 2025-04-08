@@ -6,7 +6,7 @@
 //
 
 #include <Runtime/Hook/stdfd.h>
-#include <Runtime/LLI/Linker.h>
+#include <Runtime/LLVM/LLI/Linker.h>
 #include <dlfcn.h>
 
 bool NyxianLLVMLinker(llvm::ExecutionEngine* engine,

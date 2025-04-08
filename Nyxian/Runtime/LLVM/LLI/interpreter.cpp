@@ -39,9 +39,9 @@
 #include "llvm/IR/Mangler.h"
 #include "llvm/IR/Module.h"
 #include <Runtime/Hook/stdfd.h>
-#include <Runtime/LLI/ErrorHandler.h>
-#include <Runtime/LLI/Linker.h>
-#include <Runtime/LLI/JustInTimeHelper.h>
+#include <Runtime/LLVM/LLI/ErrorHandler.h>
+#include <Runtime/LLVM/LLI/Linker.h>
+#include <Runtime/LLVM/LLI/JustInTimeHelper.h>
 #include <stdio.h>
 
 using namespace clang;

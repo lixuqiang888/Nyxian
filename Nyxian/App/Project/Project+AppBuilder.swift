@@ -91,6 +91,19 @@ func BuildApp(_ project: Project) {
             try FileManager.default.removeItem(atPath: item)
         }
         
+        // typecheck every clang file
+        /*printfake("\u{001B}[34m[*] typechecking code\u{001B}[0m\n")
+        for item in clang_files_stack {
+            let fileName: String = URL(filePath: item).lastPathComponent
+            if(typecheck(["-isysroot", "\(Bundle.main.bundlePath)/iPhoneOS16.5.sdk", "-I\(Bundle.main.bundlePath)/include", item]) != 0) {
+                // remove already compiled object files
+                printfake("\u{001B}[31m[!] typechecking \(fileName) failed\u{001B}[0m\n")
+                return
+            } else {
+                printfake("\u{001B}[32m[*] \(fileName) typechecked\u{001B}[0m\n")
+            }
+        }*/
+        
         // compile object file out of every clang file
         printfake("\u{001B}[34m[*] compiling code to object files\u{001B}[0m\n")
         for item in clang_files_stack {

@@ -27,11 +27,11 @@
 #import <Runtime/Hook/stdfd.h>
 #import <Runtime/UISurface/UISurface.h>
 #import <Foundation/Foundation.h>
-#import <Runtime/LLI/LLVMBridge.h>
-#import <Runtime/FCM/FCMBridge.h>
-#import <Runtime/FCM/Dycall/libdycall.h>
-#import <Runtime/FCM/libzip.h>
-#import <Runtime/FCM/ZSign/zsign.h>
+#import <Runtime/LLVM/LLI/LLVMBridge.h>
+#import <Runtime/LLVM/FCM/FCMBridge.h>
+#import <Runtime/LLVM/FCM/Dycall/libdycall.h>
+#import <Runtime/Libraries/libzip/libzip.h>
+#import <Runtime/LLVM/FCM/ZSign/zsign.h>
 
 // Coding/C implementation
 int c_interpret(NSString *files, NSString *proot);

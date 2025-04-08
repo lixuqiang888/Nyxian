@@ -20,7 +20,6 @@
 		AF7A29CB2DA3F3A100A1706D /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = AF7A29CA2DA3F3A100A1706D /* OpenSSL */; };
 		AF7A29CE2DA3F6BD00A1706D /* cert in Resources */ = {isa = PBXBuildFile; fileRef = AF7A29CD2DA3F6BC00A1706D /* cert */; };
 		AF7A29EB2DA46F5300A1706D /* Telegraph in Frameworks */ = {isa = PBXBuildFile; productRef = AF7A29EA2DA46F5300A1706D /* Telegraph */; };
-		AF7A29EE2DA46F8F00A1706D /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = AF7A29ED2DA46F8F00A1706D /* ZIPFoundation */; };
 		AFB1651D2D91A36300872EDB /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1651C2D91A36300872EDB /* Runestone */; };
 		AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */ = {isa = PBXBuildFile; productRef = AFB165232D91A4AB00872EDB /* TreeSitterJavaScript */; };
 		AFB1653D2D91BBEB00872EDB /* TreeSitterC in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1653C2D91BBEB00872EDB /* TreeSitterC */; };
@@ -53,13 +52,13 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				Runtime/FCM/MessyLinker/ld.dylib,
-				Runtime/FCM/MessyLinker/libcrypto.3.dylib,
-				Runtime/FCM/MessyLinker/libiosexec.1.dylib,
-				Runtime/FCM/MessyLinker/libncursesw.6.dylib,
-				Runtime/FCM/MessyLinker/libtapi.dylib,
-				Runtime/FCM/MessyLinker/libxar.1.dylib,
-				Runtime/FCM/MessyLinker/libzstd.1.dylib,
+				Runtime/LLVM/FCM/MessyLinker/ld.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libcrypto.3.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libiosexec.1.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libncursesw.6.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libtapi.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libxar.1.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libzstd.1.dylib,
 				Runtime/OtherLang/Lua/onelua.ch,
 			);
 			target = AFBE41742D85E4B500315155 /* Nyxian */;
@@ -70,23 +69,23 @@
 		AF4E546D2DA32706008E4FF0 /* Exceptions for "Nyxian" folder in "Embed Frameworks" phase from "Nyxian" target */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			attributesByRelativePath = {
-				Runtime/FCM/MessyLinker/ld.dylib = (CodeSignOnCopy, );
-				Runtime/FCM/MessyLinker/libcrypto.3.dylib = (CodeSignOnCopy, );
-				Runtime/FCM/MessyLinker/libiosexec.1.dylib = (CodeSignOnCopy, );
-				Runtime/FCM/MessyLinker/libncursesw.6.dylib = (CodeSignOnCopy, );
-				Runtime/FCM/MessyLinker/libtapi.dylib = (CodeSignOnCopy, );
-				Runtime/FCM/MessyLinker/libxar.1.dylib = (CodeSignOnCopy, );
-				Runtime/FCM/MessyLinker/libzstd.1.dylib = (CodeSignOnCopy, );
+				Runtime/LLVM/FCM/MessyLinker/ld.dylib = (CodeSignOnCopy, );
+				Runtime/LLVM/FCM/MessyLinker/libcrypto.3.dylib = (CodeSignOnCopy, );
+				Runtime/LLVM/FCM/MessyLinker/libiosexec.1.dylib = (CodeSignOnCopy, );
+				Runtime/LLVM/FCM/MessyLinker/libncursesw.6.dylib = (CodeSignOnCopy, );
+				Runtime/LLVM/FCM/MessyLinker/libtapi.dylib = (CodeSignOnCopy, );
+				Runtime/LLVM/FCM/MessyLinker/libxar.1.dylib = (CodeSignOnCopy, );
+				Runtime/LLVM/FCM/MessyLinker/libzstd.1.dylib = (CodeSignOnCopy, );
 			};
 			buildPhase = AF0D03512D9ED5DC0091495A /* Embed Frameworks */;
 			membershipExceptions = (
-				Runtime/FCM/MessyLinker/ld.dylib,
-				Runtime/FCM/MessyLinker/libcrypto.3.dylib,
-				Runtime/FCM/MessyLinker/libiosexec.1.dylib,
-				Runtime/FCM/MessyLinker/libncursesw.6.dylib,
-				Runtime/FCM/MessyLinker/libtapi.dylib,
-				Runtime/FCM/MessyLinker/libxar.1.dylib,
-				Runtime/FCM/MessyLinker/libzstd.1.dylib,
+				Runtime/LLVM/FCM/MessyLinker/ld.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libcrypto.3.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libiosexec.1.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libncursesw.6.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libtapi.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libxar.1.dylib,
+				Runtime/LLVM/FCM/MessyLinker/libzstd.1.dylib,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
@@ -110,7 +109,6 @@
 			files = (
 				AF7A29CB2DA3F3A100A1706D /* OpenSSL in Frameworks */,
 				AF504BEA2D9579E1005FA8D2 /* Swifter in Frameworks */,
-				AF7A29EE2DA46F8F00A1706D /* ZIPFoundation in Frameworks */,
 				AF4836272D8AF4AA00830CED /* SwiftTerm in Frameworks */,
 				AFCF8EF12DA1572D006ECF22 /* TreeSitterCPP in Frameworks */,
 				AF504BED2D957A72005FA8D2 /* TreeSitterHTML in Frameworks */,
@@ -192,7 +190,6 @@
 				AFCF8EF02DA1572D006ECF22 /* TreeSitterCPP */,
 				AF7A29CA2DA3F3A100A1706D /* OpenSSL */,
 				AF7A29EA2DA46F5300A1706D /* Telegraph */,
-				AF7A29ED2DA46F8F00A1706D /* ZIPFoundation */,
 			);
 			productName = FJS;
 			productReference = AFBE41752D85E4B500315155 /* Nyxian.app */;
@@ -238,7 +235,6 @@
 				AFCF8EEF2DA1572D006ECF22 /* XCRemoteSwiftPackageReference "tree-sitter-cpp" */,
 				AF7A29C92DA3F3A100A1706D /* XCRemoteSwiftPackageReference "OpenSSL" */,
 				AF7A29E92DA46F5300A1706D /* XCRemoteSwiftPackageReference "Telegraph" */,
-				AF7A29EC2DA46F8F00A1706D /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AFBE41762D85E4B500315155 /* Products */;
@@ -440,6 +436,7 @@
 					"$(PROJECT_DIR)/Nyxian/LLVM.xcframework/ios-arm64-simulator",
 					"$(PROJECT_DIR)/Nyxian/Runtime/FCM/MessyLinker",
 					"$(PROJECT_DIR)/Nyxian/Runtime/FCM",
+					"$(PROJECT_DIR)/Nyxian/Runtime/Libraries/libzip",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.nyxian;
@@ -495,6 +492,7 @@
 					"$(PROJECT_DIR)/Nyxian/LLVM.xcframework/ios-arm64-simulator",
 					"$(PROJECT_DIR)/Nyxian/Runtime/FCM/MessyLinker",
 					"$(PROJECT_DIR)/Nyxian/Runtime/FCM",
+					"$(PROJECT_DIR)/Nyxian/Runtime/Libraries/libzip",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.nyxian;
@@ -610,14 +608,6 @@
 				minimumVersion = 0.40.0;
 			};
 		};
-		AF7A29EC2DA46F8F00A1706D /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.9.19;
-			};
-		};
 		AFB1651B2D91A36300872EDB /* XCRemoteSwiftPackageReference "Runestone" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/simonbs/Runestone.git";
@@ -702,11 +692,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AF7A29E92DA46F5300A1706D /* XCRemoteSwiftPackageReference "Telegraph" */;
 			productName = Telegraph;
-		};
-		AF7A29ED2DA46F8F00A1706D /* ZIPFoundation */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AF7A29EC2DA46F8F00A1706D /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
-			productName = ZIPFoundation;
 		};
 		AFB1651C2D91A36300872EDB /* Runestone */ = {
 			isa = XCSwiftPackageProductDependency;

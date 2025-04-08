@@ -4,8 +4,7 @@
 /// Fuck you other developers that close the source of ur overpriced coding apps, lick my ass madeline btw
 ///
 
-#include <TargetConditionals.h>
-
+#include <Runtime/Hook/stdfd.h>
 #include "clang/Basic/DiagnosticOptions.h"
 #include "clang/CodeGen/CodeGenAction.h"
 #include "clang/Driver/Compilation.h"
@@ -15,10 +14,6 @@
 #include "clang/Frontend/CompilerInvocation.h"
 #include "clang/Frontend/FrontendDiagnostic.h"
 #include "clang/Frontend/TextDiagnosticPrinter.h"
-#include "llvm/ADT/SmallString.h"
-#include "llvm/IR/DataLayout.h"
-#include "llvm/IR/Mangler.h"
-#include "llvm/IR/Module.h"
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/Host.h"
 #include "llvm/Support/ManagedStatic.h"
@@ -26,40 +21,16 @@
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Target/TargetMachine.h"
-#include "llvm/ExecutionEngine/SectionMemoryManager.h"
-#include "llvm/ExecutionEngine/Interpreter.h"
-#include "llvm/ExecutionEngine/GenericValue.h"
-#include "llvm/ExecutionEngine/Orc/CompileUtils.h"
-#include "llvm/ExecutionEngine/Orc/ExecutionUtils.h"
-#include "llvm/ExecutionEngine/Orc/IRCompileLayer.h"
-#include "llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h"
-#include "llvm/IR/Verifier.h"
-#include "llvm/ExecutionEngine/Orc/LLJIT.h"
-#include "llvm/IR/DataLayout.h"
-#include "llvm/IR/Mangler.h"
-#include "llvm/IR/Module.h"
-#include <Runtime/Hook/stdfd.h>
-#include <Runtime/LLI/ErrorHandler.h>
-#include <Runtime/LLI/Linker.h>
-#include <Runtime/LLI/JustInTimeHelper.h>
-
-#include "llvm/IR/LegacyPassManager.h"
-#include "llvm/IR/Module.h"
-#include "llvm/IR/LLVMContext.h"
 #include "llvm/Target/TargetMachine.h"
-//#include "llvm/Support/TargetRegistry.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/Host.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/FileSystem.h"
-#include "llvm/ADT/Optional.h"           // for llvm::Optional (if using pre-C++17)
-#include "llvm/MC/TargetRegistry.h"      // for llvm::Target
 
 #include <stdio.h>
 
 using namespace clang;
 using namespace clang::driver;
-using namespace llvm::orc;
 
 extern std::string GetExecutablePath(const char *Argv0, void *MainAddr);
 
