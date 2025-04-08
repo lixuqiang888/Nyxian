@@ -66,7 +66,7 @@ struct Home: View {
                 name = ""
                 showProj = true
             }) {
-                listItem(label: "Create Project", systemImageName: "+", text: "Creates a Nyxian Project")
+                listItem(label: "Create Project", systemImageName: "plus.app.fill", text: "Creates a Nyxian Project")
             }
         }
     }
@@ -75,7 +75,7 @@ struct Home: View {
         Button(action: {
             about = true
         }) {
-            listItem(label: "About", systemImageName: "i", text: "Shows Information about this App")
+            listItem(label: "About", systemImageName: "questionmark.app.fill", text: "Shows Information about this App")
         }
         .sheet(isPresented: $about) {
             Frida()
@@ -89,17 +89,11 @@ struct Home: View {
                 Text(text).font(.subheadline).foregroundColor(.gray)
             }
             Spacer()
-            ZStack {
-                Rectangle()
-                    .foregroundColor(.secondary)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 30, height: 30)
-                    .cornerRadius(4)
-                Text(systemImageName)
-                    .foregroundColor(Color(.systemBackground))
-                    .frame(width: 20, height: 20)
-                    .font(Font.custom("Menlo", size: 16).bold())
-            }
+            Image(systemName: systemImageName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 30, height: 30)
+                .clipped()
         }
     }
 }
