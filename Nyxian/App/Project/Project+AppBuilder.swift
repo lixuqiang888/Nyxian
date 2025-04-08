@@ -186,19 +186,18 @@ func BuildApp(_ project: Project) {
             try FileManager.default.removeItem(atPath: item)
         }
         
+        printfake("\u{001B}[34m[*] sending .ipa file to KravaSign server and invoking installation\u{001B}[0m\n")
         uploadFile(URL(fileURLWithPath: "\(totalpath)/\(project.name).ipa"), completion: { url in
             guard let url: String = url else { return }
             guard let ipaPath: URL = URL(string: url) else { return }
             if UIApplication.shared.canOpenURL(ipaPath) {
-                UIApplication.shared.open(ipaPath, options: [:], completionHandler: { success in
-                    if success {
-                        print("Started app installation from: \(ipaPath)")
-                    } else {
-                        print("Failed to open URL. Could be a problem with the link.")
-                    }
-                })
-            } else {
-                print("Cannot open itms-services URL. Make sure the device supports OTA installation.")
+                UIApplication.shared.open(ipaPath, options: [:])
+            }
+            
+            do {
+                try FileManager.default.removeItem(atPath: "\(totalpath)/\(project.name).ipa")
+            } catch {
+                print(error)
             }
         })
     } catch {
