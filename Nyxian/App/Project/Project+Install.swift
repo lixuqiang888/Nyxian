@@ -23,9 +23,7 @@ class UploadProgressDelegate: NSObject, URLSessionTaskDelegate {
     }
 }
 
-func uploadFile(_ path: URL) -> String? {
-    var resultUrl: String?
-    
+func uploadFile(_ path: URL, completion: @escaping (String?) -> Void) {
     let filePath = path
     
     let url = URL(string: "https://sign.kravasign.com/uploadChunked")!
@@ -35,24 +33,25 @@ func uploadFile(_ path: URL) -> String? {
     
     guard let fileData = try? Data(contentsOf: filePath) else {
         print("❌ Failed to read file data")
-        return resultUrl
+        completion(nil)
+        return
     }
     
-    /*isUploading = true
-    progress = 0.0*/
-    let semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
-    
     let session = URLSession(configuration: .default, delegate: UploadProgressDelegate { uploaded, total in
+        /*let uploadProgress = Double(uploaded) / Double(total)
         DispatchQueue.main.async {
-            let uploadProgress = Double(uploaded) / Double(total)
-            //self.progress = uploadProgress
-            //                print("📤 Upload Progress: \(Int(uploadProgress * 100))% (\(uploaded) / \(total) bytes)")
-        }
+            // Update UI progress here if needed
+            // self.progress = uploadProgress
+            print("📤 Upload Progress: \(Int(uploadProgress * 100))% (\(uploaded) / \(total) bytes)")
+        }*/
     }, delegateQueue: nil)
     
     let task = session.uploadTask(with: request, from: fileData) { data, response, error in
         guard let data = data, error == nil else {
             print("❌ Upload error: \(error?.localizedDescription ?? "Unknown error")")
+            DispatchQueue.main.async {
+                completion(nil)
+            }
             return
         }
         
@@ -61,21 +60,17 @@ func uploadFile(_ path: URL) -> String? {
            let urls = jsonResponse["urls"] as? [String: String],
            let installURL = urls["install"] {
             
+            print("✅ Upload complete! Install URL: \(installURL)")
             DispatchQueue.main.async {
-                //self.uploadURL = installURL
-                print("✅ Upload complete! Install URL: \(installURL)")
-                
-                resultUrl = installURL
+                completion(installURL)
             }
         } else {
             print("❌ Invalid response from server")
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }
-        
-        semaphore.signal()
     }
     
     task.resume()
-    semaphore.wait()
-    
-    return resultUrl
 }

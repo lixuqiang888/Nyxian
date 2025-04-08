@@ -21,8 +21,6 @@
 		AF7A29CE2DA3F6BD00A1706D /* cert in Resources */ = {isa = PBXBuildFile; fileRef = AF7A29CD2DA3F6BC00A1706D /* cert */; };
 		AF7A29EB2DA46F5300A1706D /* Telegraph in Frameworks */ = {isa = PBXBuildFile; productRef = AF7A29EA2DA46F5300A1706D /* Telegraph */; };
 		AF7A29EE2DA46F8F00A1706D /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = AF7A29ED2DA46F8F00A1706D /* ZIPFoundation */; };
-		AF7A29F12DA47B4400A1706D /* localhost.direct.OP.key in Resources */ = {isa = PBXBuildFile; fileRef = AF7A29F02DA47B4400A1706D /* localhost.direct.OP.key */; };
-		AF7A29F22DA47B4400A1706D /* localhost.direct.OP.crt in Resources */ = {isa = PBXBuildFile; fileRef = AF7A29EF2DA47B4400A1706D /* localhost.direct.OP.crt */; };
 		AFB1651D2D91A36300872EDB /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1651C2D91A36300872EDB /* Runestone */; };
 		AFB165242D91A4AB00872EDB /* TreeSitterJavaScript in Frameworks */ = {isa = PBXBuildFile; productRef = AFB165232D91A4AB00872EDB /* TreeSitterJavaScript */; };
 		AFB1653D2D91BBEB00872EDB /* TreeSitterC in Frameworks */ = {isa = PBXBuildFile; productRef = AFB1653C2D91BBEB00872EDB /* TreeSitterC */; };
@@ -47,8 +45,6 @@
 		AF4E54672DA321A5008E4FF0 /* iPhoneOS16.5.sdk */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iPhoneOS16.5.sdk; path = ../../../Downloads/iPhoneOS16.5.sdk; sourceTree = "<group>"; };
 		AF7A29CC2DA3F6A400A1706D /* cert */ = {isa = PBXFileReference; lastKnownFileType = folder; name = cert; path = ../../../Downloads/cert; sourceTree = "<group>"; };
 		AF7A29CD2DA3F6BC00A1706D /* cert */ = {isa = PBXFileReference; lastKnownFileType = folder; name = cert; path = ../../../Downloads/cert; sourceTree = "<group>"; };
-		AF7A29EF2DA47B4400A1706D /* localhost.direct.OP.crt */ = {isa = PBXFileReference; lastKnownFileType = text; path = localhost.direct.OP.crt; sourceTree = "<group>"; };
-		AF7A29F02DA47B4400A1706D /* localhost.direct.OP.key */ = {isa = PBXFileReference; lastKnownFileType = text; path = localhost.direct.OP.key; sourceTree = "<group>"; };
 		AFBE41752D85E4B500315155 /* Nyxian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nyxian.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -149,8 +145,6 @@
 				AFBE41772D85E4B500315155 /* Nyxian */,
 				AF4E546A2DA32706008E4FF0 /* Frameworks */,
 				AFBE41762D85E4B500315155 /* Products */,
-				AF7A29EF2DA47B4400A1706D /* localhost.direct.OP.crt */,
-				AF7A29F02DA47B4400A1706D /* localhost.direct.OP.key */,
 			);
 			sourceTree = "<group>";
 		};
@@ -260,8 +254,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF7A29F12DA47B4400A1706D /* localhost.direct.OP.key in Resources */,
-				AF7A29F22DA47B4400A1706D /* localhost.direct.OP.crt in Resources */,
 				AF4E54682DA321A5008E4FF0 /* iPhoneOS16.5.sdk in Resources */,
 				AF4E54642DA3216A008E4FF0 /* include in Resources */,
 				AF7A29CE2DA3F6BD00A1706D /* cert in Resources */,

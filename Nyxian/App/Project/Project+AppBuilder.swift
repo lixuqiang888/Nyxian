@@ -186,12 +186,13 @@ func BuildApp(_ project: Project) {
             try FileManager.default.removeItem(atPath: item)
         }
         
-        // now we are in game... now we gonna host the IPA
-        if let url: URL = URL(string: uploadFile(URL(fileURLWithPath: "\(totalpath)/\(project.name).ipa")) ?? "") {
-            if UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url, options: [:], completionHandler: { success in
+        uploadFile(URL(fileURLWithPath: "\(totalpath)/\(project.name).ipa"), completion: { url in
+            guard let url: String = url else { return }
+            guard let ipaPath: URL = URL(string: url) else { return }
+            if UIApplication.shared.canOpenURL(ipaPath) {
+                UIApplication.shared.open(ipaPath, options: [:], completionHandler: { success in
                     if success {
-                        print("Started app installation from: \(url)")
+                        print("Started app installation from: \(ipaPath)")
                     } else {
                         print("Failed to open URL. Could be a problem with the link.")
                     }
@@ -199,7 +200,7 @@ func BuildApp(_ project: Project) {
             } else {
                 print("Cannot open itms-services URL. Make sure the device supports OTA installation.")
             }
-        }
+        })
     } catch {
         print(error)
     }
