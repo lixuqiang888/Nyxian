@@ -261,16 +261,13 @@ struct FileList: View {
     private func rename_selected() -> Void {
         if !potextfield.isEmpty && potextfield.rangeOfCharacter(from: CharacterSet(charactersIn: String(invalidFS))) == nil {
             _ = mv("\(directoryPath.path)/\(selpath)", "\(directoryPath.path)/\(potextfield)")
-            //haptfeedback(1)
             activeSheet = nil
         } else {
-            //haptfeedback(2)
         }
     }
     
     private func remove_selected() -> Void {
         _ = rm(selpath)
-        //haptfeedback(1)
         activeSheet = nil
     }
     
@@ -334,10 +331,6 @@ private func gProperty(_ fileURL: URL) -> FileProperty {
            property.symbol = "nxm"
            property.color = Color.blue
            property.size = 5
-       case "c":
-           property.symbol = "c"
-           property.color = Color.gray
-           property.size = 10
        case "lua":
            property.symbol = "lua"
            property.color = Color.orange
@@ -346,6 +339,32 @@ private func gProperty(_ fileURL: URL) -> FileProperty {
            property.symbol = "py"
            property.color = Color.green
            property.size = 8
+       case "m":
+            property.symbol = "m"
+            property.color = Color.orange
+            property.size = 8
+       case "c":
+            property.symbol = "c"
+            property.color = Color.blue
+            property.size = 8
+       case "mm":
+            property.symbol = "mm"
+            property.color = Color.yellow
+            property.size = 5
+       case "cpp":
+            property.symbol = "cpp"
+            property.color = Color.green
+            property.size = 4
+       case "hpp":
+            property.symbol = "hpp"
+            property.color = Color.secondary
+            property.size = 4
+       case "swift":
+            property.color = Color.red
+       case "h":
+            property.symbol = "h"
+            property.color = Color.secondary
+            property.size = 8
        default:
            property.color = Color.primary
    }
