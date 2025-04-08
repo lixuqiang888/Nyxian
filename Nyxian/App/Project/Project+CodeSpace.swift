@@ -13,7 +13,6 @@ struct CodeSpace: View {
     @Binding var pathstate: String
     @Binding var action: Int
     var body: some View {
-        //FileList(title: ProjectInfo.name, directoryPath: URL(fileURLWithPath: "\(NSHomeDirectory())/Documents/\(ProjectInfo.path)"), buildv: $buildv,  actpath: $pathstate, action: $action, project: $ProjectInfo)
         FileList(title: ProjectInfo.name, directoryPath: URL(fileURLWithPath: "\(NSHomeDirectory())/Documents/\(ProjectInfo.path)"), actpath: $pathstate, action: $action, buildv: $buildv)
             .fullScreenCover(isPresented: $buildv) {
                 if ProjectInfo.type != "4" {

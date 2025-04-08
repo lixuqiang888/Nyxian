@@ -149,8 +149,6 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         view.backgroundColor = UIColor.clear
         
         let tview: NyxianTerminal = NyxianTerminal(frame: view.bounds, title: $title)
-        tview.isUserInteractionEnabled = false
-        _ = tview.resignFirstResponder()
         
         view.addSubview(tview)
         tview.translatesAutoresizingMaskIntoConstraints = false
@@ -177,23 +175,20 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
                     break
                 case 1: // LLVM
                     let filePath: URL = URL(filePath: "\(NSHomeDirectory())/Documents/\(project.path)/main.c")
-                    llvm.interpretProgram(path.data(using: .utf8)!)
+                    llvm.interpretProgram(filePath.path.data(using: .utf8)!)
                     break
                 default:
                     break
                 }
                 break
             case "3": // Lua
-                enableTView(tview: tview)
                 o_lua("\(NSHomeDirectory())/Documents/\(project.path)/main.lua")
                 break
             case "5": // CPP
-                enableTView(tview: tview)
                 let filePath: URL = URL(filePath: "\(NSHomeDirectory())/Documents/\(project.path)/main.cpp")
-                llvm.interpretProgram(path.data(using: .utf8)!)
+                llvm.interpretProgram(filePath.path.data(using: .utf8)!)
                 break
             case "6": // App (FridaCodeManager mode)
-                enableTView(tview: tview)
                 BuildApp(project)
                 break
             default:
