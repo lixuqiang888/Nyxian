@@ -132,7 +132,11 @@ func BuildApp(_ project: Project) {
                 try FileManager.default.removeItem(atPath: item)
             }
             printfake("\u{001B}[31m[*] failed to link object files\u{001B}[0m\n")
-            return;
+            
+            // FIXME: Based on previous TODO this is our current approach
+            printfake("\u{001B}[34m[!] exits in 5 seconds\u{001B}[0m\n")
+            sleep(5)
+            exit(0)
         }
         
         // We craft a bundle identifier that is unique
