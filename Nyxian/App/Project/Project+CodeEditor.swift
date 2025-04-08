@@ -459,7 +459,7 @@ struct NeoEditor: UIViewRepresentable {
             let languageMode = TreeSitterLanguageMode(language: language)
             textView.setLanguageMode(languageMode)
             break
-        case "m":
+        case "m","h":
             let objcHighlightsURL = URL(fileURLWithPath: "\(Bundle.main.bundlePath)/objc.scm")
             let cHighlightsURL = URL(fileURLWithPath: "\(Bundle.main.bundlePath)/c.scm")
             
