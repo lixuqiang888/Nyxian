@@ -60,6 +60,9 @@ func BuildAppExitOnErr() {
 ///
 func BuildApp(_ project: Project) {
     do {
+        // change dir to tmp folder
+        FileManager.default.changeCurrentDirectoryPath("\(NSHomeDirectory())/tmp")
+        
         ABLog(AL.msg, "Nyxian app builder v1.0")
         
         // temporary FCM bridge

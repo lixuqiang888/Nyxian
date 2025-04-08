@@ -31,7 +31,7 @@ struct Frida: View {
            ("SeanIsTethered", "Main Developer", "https://github.com/seanistethered.png"),
            ("Rayan Khan", "Developer", "https://github.com/iRayanKhan.png"),
            ("Dosojin", "Developer", "https://github.com/Dosojin1.png"),
-           ("FuzzyCat13901", "Networking", "https://github.com/FuzzyCat13901.png"),
+           ("FuzzyCat13901", "Contributor", "https://github.com/FuzzyCat13901.png"),
        ]
        return save
    }()
