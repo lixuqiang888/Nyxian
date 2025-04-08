@@ -1,52 +1,33 @@
-//
-//  Project+AppBuilder.swift
-//  Nyxian
-//
-//  Created by fridakitten on 07.04.25.
-//
+/*
+ MIT License
+
+ Copyright (c) 2025 SeanIsTethered
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
 
 import Foundation
 import Swifter
 
-private func obfuscatedClass(_ className: String) -> AnyClass? {
-    return NSClassFromString(className)
-}
-
-private func obfuscatedSelector(_ selectorName: String) -> Selector? {
-    return NSSelectorFromString(selectorName)
-}
-
-func OpenApp(_ bundleID: String) -> Void {
-    guard let workspaceClass = obfuscatedClass("LSApplicationWorkspace") as? NSObject.Type else {
-        print("Failed to find LSApplicationWorkspace")
-        return
-    }
-    
-    guard let defaultWorkspaceSelector = obfuscatedSelector("defaultWorkspace") else {
-        print("Failed to find defaultWorkspace selector")
-        return
-    }
-    
-    let workspace = workspaceClass.perform(defaultWorkspaceSelector)?.takeUnretainedValue() as? NSObject
-    
-    guard let openAppSelector = obfuscatedSelector("openApplicationWithBundleID:") else {
-        print("Failed to find openApplicationWithBundleID selector")
-        return
-    }
-    
-    if let workspace = workspace {
-        let result = workspace.perform(openAppSelector, with: bundleID)
-        if result == nil {
-            print("Failed to open app with bundle ID \(bundleID)")
-        } else {
-            // FIXME: As we have some memory leaks and stuff and LLVM issues after first compile we exit in a ellegant way
-            exit(0)
-        }
-    } else {
-        print("Failed to initialize LSApplicationWorkspace")
-    }
-}
-
+///
+/// Function to loop open a app
+///
 func OpenAppLoop(_ urlScheme: String, retryInterval: TimeInterval = 0.25) {
     var attempts = 0
 
@@ -62,39 +43,51 @@ func OpenAppLoop(_ urlScheme: String, retryInterval: TimeInterval = 0.25) {
     attemptOpen()
 }
 
+///
+/// Helper function for the error exists
+///
+func BuildAppExitOnErr() {
+    ABLog(AL.msg, "exits in 5 seconds")
+    sleep(5)
+    exit(0)
+}
+
+///
+/// Function to build a app based on a passed project structure
+///
 func BuildApp(_ project: Project) {
     do {
-        printfake("\u{001B}[34m[*] Nyxian app builder v1.0\u{001B}[0m\n")
+        ABLog(AL.msg, "Nyxian app builder v1.0")
         
         // temporary FCM bridge
         let fcm: FCMBridge = FCMBridge()
         
         // getting total path
         let totalpath: String = "\(NSHomeDirectory())/Documents/\(project.path)"
-        printfake("\u{001B}[34m[*] build path:\u{001B}[0m \(totalpath)\n")
+        ABLog(AL.msg, "build path: &\(totalpath)§")
         
         // getting all C language files
         let clang_files_stack: [String] = FindFilesStack(totalpath, ["c","cpp","m","mm"], [])
-        printfake("\u{001B}[34m[*] files to compile:\u{001B}[0m\n\(clang_files_stack.map { URL(filePath: $0).lastPathComponent }.joined(separator: "\n"))\n")
+        ABLog(AL.msg, "files to compile:&\n\(clang_files_stack.map { URL(filePath: $0).lastPathComponent }.joined(separator: "\n"))§")
         
         // getting current list of object files
-        printfake("\u{001B}[34m[*] looking for left overs from previous compile\u{001B}[0m\n")
+        ABLog(AL.msg, "looking for left overs from previous compile")
         var object_files_stack: [String] = FindFilesStack(totalpath, ["o"], [])
         
         // looking for previously compiled object files to not mess up things and removing them
         if(FileManager.default.fileExists(atPath: "\(totalpath)/Payload")) {
-            printfake("\u{001B}[34m[*] detected old payload folder, removing it...\u{001B}[0m\n")
+            ABLog(AL.msg, "removing Payload...")
             try FileManager.default.removeItem(atPath: "\(totalpath)/Payload")
         }
         for item in object_files_stack {
-            printfake("\u{001B}[34m[*] removing\u{001B}[0m \(item)...\n")
+            ABLog(AL.msg, "removing \(item)...")
             try FileManager.default.removeItem(atPath: item)
         }
         
         // TODO: Implement a typechecking stage using libclang to avoid memory leakage, so we can abort the app building process right away without doing too many things that cause memory lekage in this early stage of development
         
         // compile object file out of every clang file
-        printfake("\u{001B}[34m[*] compiling code to object files\u{001B}[0m\n")
+        ABLog(AL.msg, "compiling code to object files")
         for item in clang_files_stack {
             let fileName: String = URL(filePath: item).lastPathComponent
             if(fcm.compileObject(item) != 0) {
@@ -103,14 +96,12 @@ func BuildApp(_ project: Project) {
                 for item in object_files_stack {
                     try FileManager.default.removeItem(atPath: item)
                 }
-                printfake("\u{001B}[31m[!] compiling \(fileName) failed\u{001B}[0m\n")
+                ABLog(AL.err, "compiling \(fileName) failed")
                 
                 // FIXME: Based on previous TODO this is our current approach
-                printfake("\u{001B}[34m[!] exits in 5 seconds\u{001B}[0m\n")
-                sleep(5)
-                exit(0)
+                BuildAppExitOnErr()
             } else {
-                printfake("\u{001B}[32m[*] \(fileName) compiled\u{001B}[0m\n")
+                ABLog(AL.suc, "\(fileName) compiled")
             }
         }
         
@@ -118,36 +109,32 @@ func BuildApp(_ project: Project) {
         object_files_stack = FindFilesStack(totalpath, ["o"], [])
         
         // creating Payload
-        printfake("\u{001B}[34m[*] creating app payload folder\u{001B}[0m\n")
+        ABLog(AL.msg, "creating app payload folder")
         try FileManager.default.createDirectory(atPath: "\(totalpath)/Payload/\(project.name).app", withIntermediateDirectories: true)
         
         // linking all together to a macho
         // FIXME: Memory leak here in dycall, not really severe tho, not as severe as the clang crash bug of FCM stock alpha, just a bug over time
         // TODO: write a linker based on LLD headers and the LLD project
-        printfake("\u{001B}[34m[*] files to link:\u{001B}[0m\n\(object_files_stack.map { URL(filePath: $0).lastPathComponent }.joined(separator: "\n"))\n")
+        ABLog(AL.msg, "files to link:&\n\(object_files_stack.map { URL(filePath: $0).lastPathComponent }.joined(separator: "\n"))§")
         if(dyexec("\(Bundle.main.bundlePath)/Frameworks/ld.dylib", "ld -ObjC -lc -lc++ \(object_files_stack.joined(separator: " ")) -syslibroot \(Bundle.main.bundlePath)/iPhoneOS16.5.sdk -framework CoreGraphics -framework UIKit -framework Foundation -framework CoreFoundation -o \(totalpath)/Payload/\(project.name).app/\(project.name)") != 0) {
             // remove already compiled object files
             object_files_stack = FindFilesStack(totalpath, ["o"], [])
             for item in object_files_stack {
                 try FileManager.default.removeItem(atPath: item)
             }
-            printfake("\u{001B}[31m[*] failed to link object files\u{001B}[0m\n")
+            ABLog(AL.err, "failed to link object files")
             
             // FIXME: Based on previous TODO this is our current approach
-            printfake("\u{001B}[34m[!] exits in 5 seconds\u{001B}[0m\n")
-            sleep(5)
-            exit(0)
+            BuildAppExitOnErr()
         }
         
         // We craft a bundle identifier that is unique
-        printfake("\u{001B}[34m[*] generating bundle identifier\u{001B}[0m\n")
+        ABLog(AL.msg, "generating unique bundle identifier")
         let bundleid: String = "com.test.\(project.name)_NYXIAN_UUID_\(UUID().uuidString)"
         printfake("\(bundleid)\n")
         
-        printfake("\u{001B}[32m[*] successfully linked object files\u{001B}[0m\n")
-        
         // now we create the info.plist file
-        printfake("\u{001B}[34m[*] generating plist file\u{001B}[0m\n")
+        ABLog(AL.msg, "generating plist file")
         let infoPlistData: [String: Any] = [
             "CFBundleExecutable": project.name,
             "CFBundleIdentifier": bundleid,
@@ -162,7 +149,7 @@ func BuildApp(_ project: Project) {
         FileManager.default.createFile(atPath:"\(totalpath)/Payload/\(project.name).app/Info.plist", contents: infoPlistDataSerialized, attributes: nil)
         
         // now before we bundling our .ipa file we sign our app
-        printfake("\u{001B}[34m[*] signing app bundle\u{001B}[0m\n")
+        ABLog(AL.msg, "signing unsigned app bundle")
         zsign.sign("\(Bundle.main.bundlePath)/cert/cert.p12",
                    privateKey: "\(Bundle.main.bundlePath)/cert/cert.p12",
                    provision: "\(Bundle.main.bundlePath)/cert/prov.mobileprovision",
@@ -171,21 +158,21 @@ func BuildApp(_ project: Project) {
                    bundlePath: "\(totalpath)/Payload/\(project.name).app")
         
         // now as our payload is done we create the ipa file using my custom libzip i created in the past for FCM, before tho we make sure the IPA doesnt exist yet from a previous compilation attempt
-        printfake("\u{001B}[34m[*] bundling app into .ipa file\u{001B}[0m\n")
+        ABLog(AL.msg, "bundling signed app into .ipa file")
         if(FileManager.default.fileExists(atPath: "\(totalpath)/\(project.name).ipa")) {
             try FileManager.default.removeItem(atPath: "\(totalpath)/\(project.name).ipa")
         }
         libzip_zip("\(totalpath)/Payload", "\(totalpath)/\(project.name).ipa", true)
         
         // and now we remove the left overs
-        printfake("\u{001B}[34m[*] removing left overs\u{001B}[0m\n")
+        ABLog(AL.msg, "performing cleanup")
         try FileManager.default.removeItem(atPath: "\(totalpath)/Payload/")
         for item in object_files_stack {
             try FileManager.default.removeItem(atPath: item)
         }
         
         // installation
-        printfake("\u{001B}[34m[*] sending .ipa file to KravaSign server and invoking installation\u{001B}[0m\n")
+        ABLog(AL.msg, "sending .ipa file to KravaSign server and invoking installation")
         uploadFile(URL(fileURLWithPath: "\(totalpath)/\(project.name).ipa"), completion: { url in
             guard let url: String = url else { return }
             guard let ipaPath: URL = URL(string: url) else { return }
