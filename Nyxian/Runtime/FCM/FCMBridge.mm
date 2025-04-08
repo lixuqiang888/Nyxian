@@ -30,9 +30,9 @@ NSString* NSStringFromCString(const char *text);
 - (int)compileObject:(nonnull NSString*)fileName
 {
     // Invoke the interpreter
-    const char* argv[] = { "clang", "-isysroot", [[NSString stringWithFormat:@"%@/iPhoneOS16.5.sdk",  [[NSBundle mainBundle] bundlePath]] UTF8String], [[NSString stringWithFormat:@"-I%@/include",  [[NSBundle mainBundle] bundlePath]] UTF8String], [fileName UTF8String]};
+    const char* argv[] = { "clang", "-fobjc-arc", "-isysroot", [[NSString stringWithFormat:@"%@/iPhoneOS16.5.sdk",  [[NSBundle mainBundle] bundlePath]] UTF8String], [[NSString stringWithFormat:@"-I%@/include",  [[NSBundle mainBundle] bundlePath]] UTF8String], [fileName UTF8String]};
     
-    return CompileObject(5, argv);
+    return CompileObject(6, argv);
 }
 
 @end /* implementation LLVMBridge */

@@ -130,7 +130,7 @@ func BuildApp(_ project: Project) {
         }
         
         // We craft a bundle identifier that is unique
-        printfake("\u{001B}[34m[*] generating bundle identifier{001B}[0m\n")
+        printfake("\u{001B}[34m[*] generating bundle identifier\u{001B}[0m\n")
         let bundleid: String = "com.test.\(project.name)_NYXIAN_UUID_\(UUID().uuidString)"
         printfake("\(bundleid)\n")
         
