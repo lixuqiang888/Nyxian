@@ -18,14 +18,9 @@
 #include "llvm/Support/Host.h"
 #include "llvm/Support/ManagedStatic.h"
 #include "llvm/Support/Path.h"
-#include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Target/TargetMachine.h"
-#include "llvm/Target/TargetMachine.h"
 #include "llvm/Support/TargetSelect.h"
-#include "llvm/Support/Host.h"
-#include "llvm/Support/raw_ostream.h"
-#include "llvm/Support/FileSystem.h"
 
 #include <stdio.h>
 
@@ -129,12 +124,4 @@ int CompileObject(int argc, const char **argv) {
         return 1;
     
     return 0;
-}
-
-__attribute__((constructor))
-void llvm_init(void)
-{
-    llvm::InitializeNativeTarget();
-    llvm::InitializeNativeTargetAsmPrinter();
-    llvm::InitializeNativeTargetAsmParser();
 }
