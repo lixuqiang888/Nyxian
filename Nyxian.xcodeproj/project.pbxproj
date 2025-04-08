@@ -52,6 +52,7 @@
 		AF0DF6562D9EB3AF0091495A /* Exceptions for "Nyxian" folder in "Nyxian" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Info.plist,
 				Runtime/FCM/MessyLinker/ld.dylib,
 				Runtime/FCM/MessyLinker/libcrypto.3.dylib,
 				Runtime/FCM/MessyLinker/libiosexec.1.dylib,

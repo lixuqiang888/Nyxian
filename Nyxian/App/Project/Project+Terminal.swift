@@ -136,11 +136,26 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         }
     }
     
+    func wontExit(tview: NyxianTerminal) {
+        while true {
+            getchar()
+        }
+    }
+    
+    func enableTView(tview: NyxianTerminal) {
+        DispatchQueue.main.sync {
+            tview.isUserInteractionEnabled = true
+            _ = tview.becomeFirstResponder()
+        }
+    }
+    
     func makeUIView(context: Context) -> some UIView {
         let view: UIView = UIView(frame: UIScreen.main.bounds)
         view.backgroundColor = UIColor.clear
         
         let tview: NyxianTerminal = NyxianTerminal(frame: view.bounds, title: $title)
+        tview.isUserInteractionEnabled = false
+        _ = tview.resignFirstResponder()
         
         view.addSubview(tview)
         tview.translatesAutoresizingMaskIntoConstraints = false
@@ -154,11 +169,13 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
             switch(project.type)
             {
             case "1": // Nyxian
+                enableTView(tview: tview)
                 UISurface_Handoff_Slave(view)
                 let runtime: NYXIAN_Runtime = NYXIAN_Runtime()
                 runtime.run("\(NSHomeDirectory())/Documents/\(project.path)/main.nx")
                 break
             case "2": // C
+                enableTView(tview: tview)
                 switch(C_EXC) {
                 case 0: // PICOC
                     c_interpret(FindFilesStack("\(NSHomeDirectory())/Documents/\(project.path)", [".c"], []).joined(separator: " "), "\(NSHomeDirectory())/Documents/\(project.path)")
@@ -171,13 +188,16 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
                 }
                 break
             case "3": // Lua
+                enableTView(tview: tview)
                 o_lua("\(NSHomeDirectory())/Documents/\(project.path)/main.lua")
                 break
             case "5": // CPP
+                enableTView(tview: tview)
                 runCppAtPath("\(NSHomeDirectory())/Documents/\(project.path)/main.cpp")
                 break
             case "6": // App (FridaCodeManager mode)
                 BuildApp(project)
+                wontExit(tview: tview)
                 break
             default:
                 break

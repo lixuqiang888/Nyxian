@@ -47,7 +47,7 @@ func OpenApp(_ bundleID: String) -> Void {
     }
 }
 
-func tryOpenURLScheme(_ urlScheme: String, retryInterval: TimeInterval = 1.0, maxRetries: Int = 60) {
+func tryOpenURLScheme(_ urlScheme: String, retryInterval: TimeInterval = 0.25, maxRetries: Int = 60) {
     var attempts = 0
 
     func attemptOpen() {
@@ -134,13 +134,18 @@ func BuildApp(_ project: Project) {
             return;
         }
         
+        // We craft a bundle identifier that is unique
+        printfake("\u{001B}[34m[*] generating bundle identifier{001B}[0m\n")
+        let bundleid: String = "com.test.\(project.name)_NYXIAN_UUID_\(UUID().uuidString)"
+        printfake("\(bundleid)\n")
+        
         printfake("\u{001B}[32m[*] successfully linked object files\u{001B}[0m\n")
         
         // now we create the info.plist file
         printfake("\u{001B}[34m[*] generating plist file\u{001B}[0m\n")
         let infoPlistData: [String: Any] = [
             "CFBundleExecutable": project.name,
-            "CFBundleIdentifier": "com.test.\(project.name)",
+            "CFBundleIdentifier": bundleid,
             "CFBundleName": project.name,
             "CFBundleShortVersionString": "1.0",
             "CFBundleVersion": "1.0",
@@ -184,7 +189,7 @@ func BuildApp(_ project: Project) {
                 DispatchQueue.global(qos: .background).async {
                     sleep(1)
                     //tryOpenURLScheme(openscheme)
-                    tryOpenURLScheme("com.test.\(project.name)")
+                    tryOpenURLScheme(bundleid)
                 }
             }
             do {
