@@ -49,5 +49,6 @@ void *threadripper(void *arg)
     int status = dylib_main(data->argc, data->argv);
 
     pthread_exit((void*)(intptr_t)status);
+    
     return NULL;
 }

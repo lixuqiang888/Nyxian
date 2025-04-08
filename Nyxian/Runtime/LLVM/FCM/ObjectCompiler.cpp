@@ -50,6 +50,10 @@ extern std::string GetExecutablePath(const char *Argv0, void *MainAddr);
 llvm::ExitOnError ExitOnErr2;
 
 int CompileObject(int argc, const char **argv) {
+    // attempt to fix memory leak
+    llvm::LLVMContext MyContext;
+    llvm::BumpPtrAllocator ArenaAllocator;
+    
     std::string errorString;
     llvm::raw_string_ostream errorOutputStream(errorString);
     
@@ -122,6 +126,7 @@ int CompileObject(int argc, const char **argv) {
     
     std::unique_ptr<CodeGenAction> Act(new EmitObjAction());
     
+    // I fixed this suposedly or decreased it enough
     // FIXME: Memory leak happens here, also note that LLVM has a lot of static caches that simply will not free but I bet we can somehow degrees memory usage more. one possibility for example would be to forcefully unload llvm and reopen it using dlclose and dlopen but this could make things worse if llvm uses a lot of heap and gets reloaded.
     Clang.ExecuteAction(*Act);
     
@@ -135,6 +140,8 @@ int CompileObject(int argc, const char **argv) {
     Clang.clearOutputFiles(true);
     Clang.getDiagnostics().Reset();
     Act.reset();
+    
+    ArenaAllocator.Reset();
     
     if (hasErrors)
         return 1;

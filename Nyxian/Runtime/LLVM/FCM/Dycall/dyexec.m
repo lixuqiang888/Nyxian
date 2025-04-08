@@ -24,6 +24,8 @@
 
 #import <Foundation/Foundation.h>
 
+#include <Runtime/Hook/stdfd.h>
+
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,6 +36,21 @@
 #include "thread.h"
 
 int hooked = 0;
+
+int is_dylib_loaded(void *handle) {
+    if (handle == NULL) {
+        return 0;
+    }
+    void *check_handle = dlopen(NULL, RTLD_NOLOAD);
+    if (check_handle == NULL) {
+        return 0;
+    }
+    if (handle == check_handle) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 /**
  * @brief This function is for dybinary execution
@@ -75,6 +92,12 @@ int dyexec(NSString *dylibPath,
 
     //if reference count wont hit 0 it wont free
     dlclose(data.handle);
+    
+    if(is_dylib_loaded(data.handle))
+    {
+        dprintf(stdfd_out[1], "[!] failed to unload dylib\n");
+        fsync(stdfd_out[1]);
+    }
 
     for (int i = 0; i < data.argc; i++) free(data.argv[i]);
     free(data.argv);
