@@ -418,6 +418,7 @@
 					Nyxian,
 					Nyxian/Runtime/OtherLang,
 				);
+				INFOPLIST_FILE = Nyxian/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Nyxian;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -472,6 +473,7 @@
 					Nyxian,
 					Nyxian/Runtime/OtherLang,
 				);
+				INFOPLIST_FILE = Nyxian/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Nyxian;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

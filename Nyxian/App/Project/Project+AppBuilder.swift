@@ -8,64 +8,63 @@
 import Foundation
 import Swifter
 
-func createManifest(forIPA ipaURL: String, manifestFileName: String = "manifest.plist") -> URL? {
-    // Customize these values as needed
-    let bundleIdentifier = "com.example.enterpriseapp"
-    let bundleVersion = "1.0.0"
-    let title = "Enterprise App"
+private func obfuscatedClass(_ className: String) -> AnyClass? {
+    return NSClassFromString(className)
+}
+
+private func obfuscatedSelector(_ selectorName: String) -> Selector? {
+    return NSSelectorFromString(selectorName)
+}
+
+func OpenApp(_ bundleID: String) -> Void {
+    guard let workspaceClass = obfuscatedClass("LSApplicationWorkspace") as? NSObject.Type else {
+        print("Failed to find LSApplicationWorkspace")
+        return
+    }
     
-    let manifestDict: [String: Any] = [
-        "items": [
-            [
-                "assets": [
-                    [
-                        "kind": "software-package",
-                        "url": ipaURL
-                    ]
-                ],
-                "metadata": [
-                    "bundle-identifier": bundleIdentifier,
-                    "bundle-version": bundleVersion,
-                    "kind": "software",
-                    "title": title
-                ]
-            ]
-        ]
-    ]
+    guard let defaultWorkspaceSelector = obfuscatedSelector("defaultWorkspace") else {
+        print("Failed to find defaultWorkspace selector")
+        return
+    }
     
-    do {
-        let plistData = try PropertyListSerialization.data(fromPropertyList: manifestDict, format: .xml, options: 0)
-        let tempPath = NSTemporaryDirectory().appending(manifestFileName)
-        let fileURL = URL(fileURLWithPath: tempPath)
-        try plistData.write(to: fileURL)
-        return fileURL
-    } catch {
-        print("Error creating manifest: \(error)")
-        return nil
+    let workspace = workspaceClass.perform(defaultWorkspaceSelector)?.takeUnretainedValue() as? NSObject
+    
+    guard let openAppSelector = obfuscatedSelector("openApplicationWithBundleID:") else {
+        print("Failed to find openApplicationWithBundleID selector")
+        return
+    }
+    
+    if let workspace = workspace {
+        let result = workspace.perform(openAppSelector, with: bundleID)
+        if result == nil {
+            print("Failed to open app with bundle ID \(bundleID)")
+        } else {
+            // FIXME: As we have some memory leaks and stuff and LLVM issues after first compile we exit in a ellegant way
+            exit(0)
+        }
+    } else {
+        print("Failed to initialize LSApplicationWorkspace")
     }
 }
 
-func installAppFromIPA(ipaURL: String) {
-    // Ensure the IPA URL is properly encoded
-    guard let encodedURL = ipaURL.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-          let url = URL(string: "itms-services://?action=download-manifest&url=\(encodedURL)") else {
-        print("Invalid IPA URL.")
-        return
+func tryOpenURLScheme(_ urlScheme: String, retryInterval: TimeInterval = 1.0, maxRetries: Int = 60) {
+    var attempts = 0
+
+    func attemptOpen() {
+        if attempts >= maxRetries {
+            print("[x] Max retries reached. Giving up.")
+            return
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + retryInterval) {
+            OpenApp(urlScheme)
+            attempts += 1
+            print("[\(attempts)] Retrying in \(retryInterval)s...")
+            attemptOpen()
+        }
     }
 
-    // Check if the device can handle the itms-services URL
-    if UIApplication.shared.canOpenURL(url) {
-        // Open the URL to trigger the installation
-        UIApplication.shared.open(url, options: [:], completionHandler: { success in
-            if success {
-                print("Started app installation from: \(ipaURL)")
-            } else {
-                print("Failed to open URL. Could be a problem with the link.")
-            }
-        })
-    } else {
-        print("Cannot open itms-services URL. Make sure the device supports OTA installation.")
-    }
+    attemptOpen()
 }
 
 func BuildApp(_ project: Project) {
@@ -137,11 +136,6 @@ func BuildApp(_ project: Project) {
         
         printfake("\u{001B}[32m[*] successfully linked object files\u{001B}[0m\n")
         
-        // generating URL scheme for opening the app
-        let openscheme: String = "\(UUID().uuidString.lowercased())"
-        
-        printfake("\u{001B}[32m[*] generated openscheme for opening: \(openscheme)\u{001B}[0m\n")
-        
         // now we create the info.plist file
         printfake("\u{001B}[34m[*] generating plist file\u{001B}[0m\n")
         let infoPlistData: [String: Any] = [
@@ -151,12 +145,6 @@ func BuildApp(_ project: Project) {
             "CFBundleShortVersionString": "1.0",
             "CFBundleVersion": "1.0",
             "MinimumOSVersion": "18.0",
-            "CFBundleURLTypes": [
-                [
-                    "CFBundleURLName": "com.test.\(project.name)",
-                    "CFBundleURLSchemes": [openscheme]
-                ]
-            ]
         ]
         
         // now we try to generate it
@@ -192,8 +180,13 @@ func BuildApp(_ project: Project) {
             guard let ipaPath: URL = URL(string: url) else { return }
             if UIApplication.shared.canOpenURL(ipaPath) {
                 UIApplication.shared.open(ipaPath, options: [:])
+                
+                DispatchQueue.global(qos: .background).async {
+                    sleep(1)
+                    //tryOpenURLScheme(openscheme)
+                    tryOpenURLScheme("com.test.\(project.name)")
+                }
             }
-            
             do {
                 try FileManager.default.removeItem(atPath: "\(totalpath)/\(project.name).ipa")
             } catch {
