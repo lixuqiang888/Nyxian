@@ -58,8 +58,6 @@ int CompileObject(int argc, const char **argv) {
     
     SmallVector<const char *, 16> Args(argv, argv + argc);
     Args.push_back("-fsyntax-only");
-    Args.push_back("-Wno-nullability-completeness");
-    Args.push_back("-Wno-nullability");
     std::unique_ptr<Compilation> C(TheDriver.BuildCompilation(Args));
     if (!C)
         return 0;
