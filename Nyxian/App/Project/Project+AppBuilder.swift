@@ -91,18 +91,7 @@ func BuildApp(_ project: Project) {
             try FileManager.default.removeItem(atPath: item)
         }
         
-        // typecheck every clang file
-        /*printfake("\u{001B}[34m[*] typechecking code\u{001B}[0m\n")
-        for item in clang_files_stack {
-            let fileName: String = URL(filePath: item).lastPathComponent
-            if(typecheck(["-isysroot", "\(Bundle.main.bundlePath)/iPhoneOS16.5.sdk", "-I\(Bundle.main.bundlePath)/include", item]) != 0) {
-                // remove already compiled object files
-                printfake("\u{001B}[31m[!] typechecking \(fileName) failed\u{001B}[0m\n")
-                return
-            } else {
-                printfake("\u{001B}[32m[*] \(fileName) typechecked\u{001B}[0m\n")
-            }
-        }*/
+        // TODO: Implement a typechecking stage using libclang to avoid memory leakage, so we can abort the app building process right away without doing too many things that cause memory lekage in this early stage of development
         
         // compile object file out of every clang file
         printfake("\u{001B}[34m[*] compiling code to object files\u{001B}[0m\n")
@@ -115,7 +104,11 @@ func BuildApp(_ project: Project) {
                     try FileManager.default.removeItem(atPath: item)
                 }
                 printfake("\u{001B}[31m[!] compiling \(fileName) failed\u{001B}[0m\n")
-                return
+                
+                // FIXME: Based on previous TODO this is our current approach
+                printfake("\u{001B}[34m[!] exits in 5 seconds\u{001B}[0m\n")
+                sleep(5)
+                exit(0)
             } else {
                 printfake("\u{001B}[32m[*] \(fileName) compiled\u{001B}[0m\n")
             }
