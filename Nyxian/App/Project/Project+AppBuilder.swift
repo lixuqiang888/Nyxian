@@ -47,15 +47,10 @@ func OpenApp(_ bundleID: String) -> Void {
     }
 }
 
-func tryOpenURLScheme(_ urlScheme: String, retryInterval: TimeInterval = 0.25, maxRetries: Int = 60) {
+func OpenAppLoop(_ urlScheme: String, retryInterval: TimeInterval = 0.25) {
     var attempts = 0
 
     func attemptOpen() {
-        if attempts >= maxRetries {
-            print("[x] Max retries reached. Giving up.")
-            return
-        }
-
         DispatchQueue.main.asyncAfter(deadline: .now() + retryInterval) {
             OpenApp(urlScheme)
             attempts += 1
@@ -157,7 +152,7 @@ func BuildApp(_ project: Project) {
         FileManager.default.createFile(atPath:"\(totalpath)/Payload/\(project.name).app/Info.plist", contents: infoPlistDataSerialized, attributes: nil)
         
         // now before we bundling our .ipa file we sign our app
-        printfake("\u{001B}[34m[*] signing .ipa file\u{001B}[0m\n")
+        printfake("\u{001B}[34m[*] signing app bundle\u{001B}[0m\n")
         zsign.sign("\(Bundle.main.bundlePath)/cert/cert.p12",
                    privateKey: "\(Bundle.main.bundlePath)/cert/cert.p12",
                    provision: "\(Bundle.main.bundlePath)/cert/prov.mobileprovision",
@@ -166,7 +161,7 @@ func BuildApp(_ project: Project) {
                    bundlePath: "\(totalpath)/Payload/\(project.name).app")
         
         // now as our payload is done we create the ipa file using my custom libzip i created in the past for FCM, before tho we make sure the IPA doesnt exist yet from a previous compilation attempt
-        printfake("\u{001B}[34m[*] bundling .ipa file\u{001B}[0m\n")
+        printfake("\u{001B}[34m[*] bundling app into .ipa file\u{001B}[0m\n")
         if(FileManager.default.fileExists(atPath: "\(totalpath)/\(project.name).ipa")) {
             try FileManager.default.removeItem(atPath: "\(totalpath)/\(project.name).ipa")
         }
@@ -179,18 +174,17 @@ func BuildApp(_ project: Project) {
             try FileManager.default.removeItem(atPath: item)
         }
         
+        // installation
         printfake("\u{001B}[34m[*] sending .ipa file to KravaSign server and invoking installation\u{001B}[0m\n")
         uploadFile(URL(fileURLWithPath: "\(totalpath)/\(project.name).ipa"), completion: { url in
             guard let url: String = url else { return }
             guard let ipaPath: URL = URL(string: url) else { return }
             if UIApplication.shared.canOpenURL(ipaPath) {
-                UIApplication.shared.open(ipaPath, options: [:])
-                
-                DispatchQueue.global(qos: .background).async {
-                    sleep(1)
-                    //tryOpenURLScheme(openscheme)
-                    tryOpenURLScheme(bundleid)
-                }
+                UIApplication.shared.open(ipaPath, options: [:], completionHandler: { _ in
+                    DispatchQueue.global(qos: .background).async {
+                        OpenAppLoop(bundleid)
+                    }
+                })
             }
             do {
                 try FileManager.default.removeItem(atPath: "\(totalpath)/\(project.name).ipa")
