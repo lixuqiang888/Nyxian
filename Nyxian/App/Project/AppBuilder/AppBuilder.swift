@@ -28,12 +28,15 @@ import Swifter
 ///
 /// Function to loop open a app
 ///
-func OpenAppLoop(_ urlScheme: String, retryInterval: TimeInterval = 0.25) {
+func OpenAppLoop(_ urlScheme: String, retryInterval: TimeInterval = 0.25, semaphore: DispatchSemaphore) {
     var attempts = 0
 
     func attemptOpen() {
         DispatchQueue.main.asyncAfter(deadline: .now() + retryInterval) {
-            OpenApp(urlScheme)
+            if OpenApp(urlScheme) {
+                semaphore.signal()
+                return
+            }
             attempts += 1
             print("[\(attempts)] Retrying in \(retryInterval)s...")
             attemptOpen()
@@ -99,7 +102,8 @@ func BuildApp(_ project: Project) {
                 ABLog(AL.err, "compiling \(fileName) failed")
                 
                 // FIXME: Based on previous TODO this is our current approach
-                BuildAppExitOnErr()
+                //BuildAppExitOnErr()
+                return
             } else {
                 ABLog(AL.suc, "\(fileName) compiled")
             }
@@ -125,7 +129,8 @@ func BuildApp(_ project: Project) {
             ABLog(AL.err, "failed to link object files")
             
             // FIXME: Based on previous TODO this is our current approach
-            BuildAppExitOnErr()
+            //BuildAppExitOnErr()
+            return
         }
         
         // We craft a bundle identifier that is unique
@@ -172,14 +177,16 @@ func BuildApp(_ project: Project) {
         }
         
         // installation
+        let waitonmebaby: DispatchSemaphore = DispatchSemaphore(value: 0)
+        
         ABLog(AL.msg, "sending .ipa file to KravaSign server and invoking installation")
         uploadFile(URL(fileURLWithPath: "\(totalpath)/\(project.name).ipa"), completion: { url in
             guard let url: String = url else { return }
             guard let ipaPath: URL = URL(string: url) else { return }
             if UIApplication.shared.canOpenURL(ipaPath) {
                 UIApplication.shared.open(ipaPath, options: [:], completionHandler: { _ in
-                    DispatchQueue.global(qos: .background).async {
-                        OpenAppLoop(bundleid)
+                    DispatchQueue(label: "\(UUID().uuidString)").async {
+                        OpenAppLoop(bundleid, semaphore: waitonmebaby)
                     }
                 })
             }
@@ -189,6 +196,8 @@ func BuildApp(_ project: Project) {
                 print(error)
             }
         })
+        
+        waitonmebaby.wait()
     } catch {
         print(error)
     }

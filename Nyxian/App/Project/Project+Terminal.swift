@@ -125,6 +125,7 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
     
     func didExit(tview: NyxianTerminal) {
         printfake("\nPress any key to continue\n");
+        
         DispatchQueue.main.sync {
             tview.isUserInteractionEnabled = true
             _ = tview.becomeFirstResponder()
@@ -197,7 +198,7 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
                 break
             case "6": // App (FridaCodeManager mode)
                 BuildApp(project)
-                wontExit(tview: tview)
+                //wontExit(tview: tview)
                 break
             default:
                 break

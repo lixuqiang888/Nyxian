@@ -36,22 +36,22 @@ private func obfuscatedSelector(_ selectorName: String) -> Selector? {
     return NSSelectorFromString(selectorName)
 }
 
-func OpenApp(_ bundleID: String) -> Void {
+func OpenApp(_ bundleID: String) -> Bool {
     guard let workspaceClass = obfuscatedClass("LSApplicationWorkspace") as? NSObject.Type else {
         print("Failed to find LSApplicationWorkspace")
-        return
+        return false
     }
     
     guard let defaultWorkspaceSelector = obfuscatedSelector("defaultWorkspace") else {
         print("Failed to find defaultWorkspace selector")
-        return
+        return false
     }
     
     let workspace = workspaceClass.perform(defaultWorkspaceSelector)?.takeUnretainedValue() as? NSObject
     
     guard let openAppSelector = obfuscatedSelector("openApplicationWithBundleID:") else {
         print("Failed to find openApplicationWithBundleID selector")
-        return
+        return false
     }
     
     if let workspace = workspace {
@@ -59,10 +59,10 @@ func OpenApp(_ bundleID: String) -> Void {
         if result == nil {
             print("Failed to open app with bundle ID \(bundleID)")
         } else {
-            // FIXME: As we have some memory leaks and stuff and LLVM issues after first compile we exit in a ellegant way
-            exit(0)
+            return true
         }
     } else {
         print("Failed to initialize LSApplicationWorkspace")
     }
+    return false
 }
