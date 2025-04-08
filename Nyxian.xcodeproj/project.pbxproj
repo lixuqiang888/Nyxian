@@ -437,6 +437,7 @@
 					"$(PROJECT_DIR)/Nyxian/Runtime/FCM/MessyLinker",
 					"$(PROJECT_DIR)/Nyxian/Runtime/FCM",
 					"$(PROJECT_DIR)/Nyxian/Runtime/Libraries/libzip",
+					"$(PROJECT_DIR)/Nyxian/Runtime/LLVM/FCM/MessyLinker",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.nyxian;
@@ -493,6 +494,7 @@
 					"$(PROJECT_DIR)/Nyxian/Runtime/FCM/MessyLinker",
 					"$(PROJECT_DIR)/Nyxian/Runtime/FCM",
 					"$(PROJECT_DIR)/Nyxian/Runtime/Libraries/libzip",
+					"$(PROJECT_DIR)/Nyxian/Runtime/LLVM/FCM/MessyLinker",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sinac.nyxian;

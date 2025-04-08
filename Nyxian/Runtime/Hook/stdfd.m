@@ -22,9 +22,8 @@
  SOFTWARE.
  */
 
-#include <stdio.h>
-#include <unistd.h>
 #include <Runtime/Hook/stdfd.h>
+#include <unistd.h>
 
 ///
 /// stdfd pipes
@@ -37,16 +36,6 @@ int stdfd_in[2] = {-1, -1};;
 ///
 FILE *stdfd_out_fp = NULL;
 FILE *stdfd_in_fp = NULL;
-
-///
-/// function to update stdfd
-///
-void stdfd_update(void)
-{
-    // reprepare the file pointers
-    stdfd_in_fp = fdopen(stdfd_in[1], "w");
-    stdfd_out_fp = fdopen(stdfd_out[1], "w");
-}
 
 ///
 /// Initilizer for the entire stdfd system
@@ -70,7 +59,4 @@ void stdfd_init(void)
     // prepare the file pointers
     stdfd_in_fp = fdopen(stdfd_in[1], "w");
     stdfd_out_fp = fdopen(stdfd_out[1], "w");
-    
-    // so we are still here...
-    // now ur on ur own
 }

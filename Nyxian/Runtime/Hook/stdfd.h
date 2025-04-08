@@ -22,6 +22,9 @@
  SOFTWARE.
  */
 
+#ifndef NYXIAN_STDFD_H
+#define NYXIAN_STDFD_H
+
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -36,3 +39,5 @@ extern int stdfd_in[2];
 ///
 extern FILE *stdfd_out_fp;
 extern FILE *stdfd_in_fp;
+
+#endif /* NYXIAN_STDFD_H */
