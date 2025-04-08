@@ -68,6 +68,10 @@ struct Home: View {
             }) {
                 listItem(label: "Create Project", systemImageName: "plus.app.fill", text: "Creates a Nyxian Project")
             }
+            Button(action: {
+            }) {
+                listItem(label: "Manage Certificates", systemImageName: "scroll.fill", text: "Manage ur certificates and orders")
+            }
         }
     }
     
