@@ -176,7 +176,8 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
                     c_interpret(FindFilesStack("\(NSHomeDirectory())/Documents/\(project.path)", [".c"], []).joined(separator: " "), "\(NSHomeDirectory())/Documents/\(project.path)")
                     break
                 case 1: // LLVM
-                    runCppAtPath("\(NSHomeDirectory())/Documents/\(project.path)/main.c")
+                    let filePath: URL = URL(filePath: "\(NSHomeDirectory())/Documents/\(project.path)/main.c")
+                    llvm.interpretProgram(path.data(using: .utf8)!)
                     break
                 default:
                     break
@@ -188,7 +189,8 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
                 break
             case "5": // CPP
                 enableTView(tview: tview)
-                runCppAtPath("\(NSHomeDirectory())/Documents/\(project.path)/main.cpp")
+                let filePath: URL = URL(filePath: "\(NSHomeDirectory())/Documents/\(project.path)/main.cpp")
+                llvm.interpretProgram(path.data(using: .utf8)!)
                 break
             case "6": // App (FridaCodeManager mode)
                 enableTView(tview: tview)
