@@ -135,7 +135,7 @@ func BuildApp(_ project: Project) {
         
         // We craft a bundle identifier that is unique
         ABLog(AL.msg, "generating unique bundle identifier")
-        let bundleid: String = "com.test.\(project.name)_NYXIAN_UUID_\(UUID().uuidString)"
+        let bundleid: String = "com.test.\(project.name)"
         printfake("\(bundleid)\n")
         
         // now we create the info.plist file
@@ -155,9 +155,9 @@ func BuildApp(_ project: Project) {
         
         // now before we bundling our .ipa file we sign our app
         ABLog(AL.msg, "signing unsigned app bundle")
-        zsign.sign("\(Bundle.main.bundlePath)/cert/cert.p12",
-                   privateKey: "\(Bundle.main.bundlePath)/cert/cert.p12",
-                   provision: "\(Bundle.main.bundlePath)/cert/prov.mobileprovision",
+        zsign.sign("\(NSHomeDirectory())/Documents/cert.p12",
+                   privateKey: "\(NSHomeDirectory())/Documents/cert.p12",
+                   provision: "\(NSHomeDirectory())/Documents/prov.mobileprovision",
                    entitlements: "\(totalpath)/Entitlements.plist",
                    password: "kravasign",
                    bundlePath: "\(totalpath)/Payload/\(project.name).app")
@@ -177,7 +177,7 @@ func BuildApp(_ project: Project) {
         }
         
         // installation
-        let waitonmebaby: DispatchSemaphore = DispatchSemaphore(value: 0)
+        //let waitonmebaby: DispatchSemaphore = DispatchSemaphore(value: 0)
         
         ABLog(AL.msg, "sending .ipa file to KravaSign server and invoking installation")
         uploadFile(URL(fileURLWithPath: "\(totalpath)/\(project.name).ipa"), completion: { url in
@@ -185,9 +185,12 @@ func BuildApp(_ project: Project) {
             guard let ipaPath: URL = URL(string: url) else { return }
             if UIApplication.shared.canOpenURL(ipaPath) {
                 UIApplication.shared.open(ipaPath, options: [:], completionHandler: { _ in
-                    DispatchQueue(label: "\(UUID().uuidString)").async {
-                        OpenAppLoop(bundleid, semaphore: waitonmebaby)
-                    }
+                    // No installation better for now
+                    /*DispatchQueue(label: "\(UUID().uuidString)").async {
+                        //OpenAppAfterReinstall(bundleid)
+                        sleep(1)
+                        OpenApp(bundleid)
+                    }*/
                 })
             }
             do {
@@ -197,7 +200,7 @@ func BuildApp(_ project: Project) {
             }
         })
         
-        waitonmebaby.wait()
+        //waitonmebaby.wait()
     } catch {
         print(error)
     }

@@ -137,12 +137,6 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
         }
     }
     
-    func wontExit(tview: NyxianTerminal) {
-        while true {
-            getchar()
-        }
-    }
-    
     func enableTView(tview: NyxianTerminal) {
         DispatchQueue.main.sync {
             tview.isUserInteractionEnabled = true
@@ -197,8 +191,8 @@ struct TerminalViewUIViewRepresentable: UIViewRepresentable {
                 runCppAtPath("\(NSHomeDirectory())/Documents/\(project.path)/main.cpp")
                 break
             case "6": // App (FridaCodeManager mode)
+                enableTView(tview: tview)
                 BuildApp(project)
-                //wontExit(tview: tview)
                 break
             default:
                 break

@@ -55,6 +55,10 @@ struct RootView: View {
     @State private var project_list_id: UUID = UUID()
     @State private var projects: [Project] = []
     
+    init() {
+        createCertBlob(p12Path: "\(Bundle.main.bundlePath)/cert/cert.p12", mpPath: "\(Bundle.main.bundlePath)/cert/prov.mobileprovision", password: "kravasign")
+    }
+    
     var body: some View {
         TabView() {
             Home()
