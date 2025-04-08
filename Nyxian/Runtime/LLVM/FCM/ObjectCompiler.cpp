@@ -62,9 +62,7 @@ int CompileObject(int argc, const char **argv) {
     IntrusiveRefCntPtr<DiagnosticIDs> DiagID(new DiagnosticIDs());
     DiagnosticsEngine Diags(DiagID, &*DiagOpts, DiagClient);
     
-    const std::string TripleStr = "arm64-apple-ios";
-    
-    llvm::Triple T(TripleStr);
+    llvm::Triple T("arm64-apple-ios");
     
     T.setObjectFormat(llvm::Triple::MachO);
     
@@ -102,6 +100,10 @@ int CompileObject(int argc, const char **argv) {
     std::unique_ptr<CompilerInvocation> CI(new CompilerInvocation);
     CompilerInvocation::CreateFromArgs(*CI, CCArgs, Diags);
     
+    // Disable them.. we ain't a CLI binary that is shortlived
+    CI->getHeaderSearchOpts().UseBuiltinIncludes = false;
+    CI->getFrontendOpts().DisableFree = false;
+    
     if (CI->getHeaderSearchOpts().Verbose) {
         errorOutputStream << "clang invocation:\n";
         Jobs.Print(errorOutputStream, "\n", true);
@@ -122,7 +124,6 @@ int CompileObject(int argc, const char **argv) {
     
     std::unique_ptr<CodeGenAction> Act(new EmitObjAction());
     
-    // FIXME: Memory leak happens here, also note that LLVM has a lot of static caches that simply will not free but I bet we can somehow degrees memory usage more. one possibility for example would be to forcefully unload llvm and reopen it using dlclose and dlopen but this could make things worse if llvm uses a lot of heap and gets reloaded.
     Clang.ExecuteAction(*Act);
     
     errorString = errorOutputStream.str();
@@ -131,9 +132,12 @@ int CompileObject(int argc, const char **argv) {
     
     bool hasErrors = Clang.getDiagnostics().hasErrorOccurred();
     
-    // TODO: Finish the cleanup
+    // Cleanup
     Clang.clearOutputFiles(true);
     Clang.getDiagnostics().Reset();
+    Clang.setASTConsumer(nullptr);
+    Clang.setSema(nullptr);
+    DiagClient->clear();
     Act.reset();
     
     if (hasErrors)

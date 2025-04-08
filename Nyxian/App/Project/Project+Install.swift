@@ -8,7 +8,6 @@
 import SwiftUI
 import Telegraph
 import Network
-import ZIPFoundation
 import Foundation
 
 class UploadProgressDelegate: NSObject, URLSessionTaskDelegate {
@@ -38,12 +37,7 @@ func uploadFile(_ path: URL, completion: @escaping (String?) -> Void) {
     }
     
     let session = URLSession(configuration: .default, delegate: UploadProgressDelegate { uploaded, total in
-        /*let uploadProgress = Double(uploaded) / Double(total)
-        DispatchQueue.main.async {
-            // Update UI progress here if needed
-            // self.progress = uploadProgress
-            print("📤 Upload Progress: \(Int(uploadProgress * 100))% (\(uploaded) / \(total) bytes)")
-        }*/
+
     }, delegateQueue: nil)
     
     let task = session.uploadTask(with: request, from: fileData) { data, response, error in
